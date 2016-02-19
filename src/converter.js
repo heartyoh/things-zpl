@@ -2,6 +2,8 @@ var buf = {};
 
 exports.convert = function(zpl) {
 
+	if (!zpl) return;
+
   var models = [];
   var obj;
 
@@ -15,13 +17,13 @@ exports.convert = function(zpl) {
 		if (command.substr(0, 1) === 'A') {
   		var params = c.substr(1);
   		
-  		var properties = handler(params);		  	
+  		var properties = handler(params);
 			obj = Object.assign(obj || {}, properties);
 		} else {
 			switch(command) {
 				case 'FS':
 					if (!obj.type) {
-		  			obj.type = 'text';
+		  			obj.type = 'fitted_text';
 		  		}
 
 		  		obj = specific(obj);
@@ -31,8 +33,12 @@ exports.convert = function(zpl) {
 		  		
 		  		break;
 		  	case 'CF':
-		  		Object.assign(buf, obj);
-		  		obj = null;
+		  		var params = c.substr(2);
+			  	var handler = commandMap.get(command);
+					var properties = handler(params);
+
+		  		Object.assign(buf, properties);
+		  		break;
 		  	default:
 		  		var params = c.substr(2);
 		  		// TODO ~ command
@@ -40,7 +46,7 @@ exports.convert = function(zpl) {
 			  	var handler = commandMap.get(command);
 			  	if(!handler) return;
 
-			  	var properties = handler(params);		  	
+			  	var properties = handler(params);
 			  	obj = Object.assign(obj || {}, properties);
 			}
 		}
@@ -78,11 +84,11 @@ function specific(obj) {
 			delete obj.top
 
 			break;
-		case 'text':
+		case 'fitted_text':
 			if (buf) {
-				// TODO
+				Object.assign(obj, buf);
 			}
-			// TODO calculate fontsize by width or height
+
 			break;
 		case 'rect':
 			break;
@@ -149,22 +155,22 @@ var commandMap = new Map([
 		}
 	}],
 	['B1', function(params) {
-		var obj = fiveParser(params);
+		var obj = oehfg(params);
 		obj.symbol = 'code11';
 		return obj;
 	}],
 	['B2', function(params) {
-		var obj = fiveParser(params);
+		var obj = ohfge(params);
 		obj.symbol = 'interleaved2of5';
 		return obj;
 	}],
 	['B3', function(params) {
-		var obj = fiveParser(params);
+		var obj = oehfg(params);
 		obj.symbol = 'code39';
 		return obj;
 	}],
 	['B4', function(params) {
-		var obj = fiveParser(params);
+		var obj = ohfm(params);
 		obj.symbol = 'code49';
 		return obj;
 	}],
@@ -176,8 +182,8 @@ var commandMap = new Map([
 		var p = params.split(',');
 
 		var obj = {};
-		obj.width = new Number(p[1]);
-		obj.height = new Number(p[2]);
+		obj.height = new Number(p[1]);
+		obj.width = new Number(p[2]);
 		switch(p[0]) {
 			case 0:
 				obj.fontFamily = 'serif';
@@ -210,7 +216,7 @@ var commandMap = new Map([
 		var p = params.split(',')
 		
 		var obj = {};
-		obj.type = 'rect'
+		obj.type = 'fitted_rect'
 		obj.width = new Number(p[0])
 		obj.height = new Number(p[1])
 		obj.lineWidth = new Number(p[2])
@@ -267,7 +273,7 @@ var commandMap = new Map([
 
 
 // 바코드 생성 커맨드의 파라미터가 o,e,h,f,g 일때 호출
-function fiveParser(params) {	// ^B1o,e,h,f,g : e: check digit(y:1digit/n:2digit), f: print interpretation line(y/n), g: print interpretation line above code
+function oehfg(params) {	// ^B1o,e,h,f,g : e: check digit(y:1digit/n:2digit), f: print interpretation line(y/n), g: print interpretation line above code
 		var p = params.split(',');
 		
 		var obj = {};
@@ -280,8 +286,22 @@ function fiveParser(params) {	// ^B1o,e,h,f,g : e: check digit(y:1digit/n:2digit
 		return obj;
 }
 
+// 바코드 생성 커맨드의 파라미터가 o,e,h,f,g 일때 호출
+function ohfge(params) {
+		var p = params.split(',');
+		
+		var obj = {};
+		obj.type = 'barcode';
+		obj.rot = p[0];
+		obj.height = p[1];
+		obj.showText = p[2];
+		obj.textAbove = p[3];
+
+		return obj;
+}
+
 // 바코드 생성 커맨드의 파라미터가 o,h,f,m 일때 호출
-function fourParser(params) {	// ^B4o,h,f,m : m: starting mode
+function ohfm(params) {	// ^B4o,h,f,m : m: starting mode
 	var p = params.split(',');
 
 	var obj = {};
@@ -301,6 +321,8 @@ function fourParser(params) {	// ^B4o,h,f,m : m: starting mode
 			obj.showText = 'Y';
 			obj.textAbove = 'N';
 	}
+
+	return obj;
 }
 
 function getRotation(r) {
