@@ -6,7 +6,7 @@
 ^FO75,75^FR^GB100,100,100^FS
 ^FO88,88^GB50,50,50^FS
 
-^FO220,50^FDInternational Shipping, Inc.^FS
+^FO220,50^FD   International Shipping, Inc.^FS
 ^CF0,40
 ^FO220,100^FD1000 Shipping Lane^FS
 ^FO220,135^FDShelbyville TN 38102^FS
