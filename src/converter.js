@@ -174,9 +174,118 @@ var commandMap = new Map([
 		obj.symbol = 'code49';
 		return obj;
 	}],
-
+	['B5', function(params) {
+		var obj = ohfg(params);
+		obj.symbol = 'planet'
+		return obj;
+	}],
+	['B7', function(params) {
+		var obj = ohscrt(params);
+		obj.symbol = 'pdf417'
+		return obj;
+	}],
+	['B8', function(params) {
+		var obj = ohfg(params);
+		obj.symbol = 'ean8'
+		return obj;
+	}],
+	['B9', function(params) {
+		var obj = ohfge(params);
+		obj.symbol = 'upce'
+		return obj;
+	}],
+	['BA', function(params) {
+		var obj = ohfge(params);
+		obj.symbol = 'code93'
+		return obj;
+	}],
+	['BB', function(params) {
+		var obj = ohscrm(params);
+		obj.symbol = 'codablock'
+		return obj;
+	}],
+	['BC', function(params) {
+		var obj = ohscrm(params);
+		obj.symbol = 'code128'
+		return obj;
+	}],
+	['BD', function(params) {
+		var obj = mpt(params);
+		obj.symbol = 'maxicode'
+		return obj;
+	}],
+	['BE', function(params) {
+		var obj = ohfg(params);
+		obj.symbol = 'ean13'
+		return obj;
+	}],
+	['BF', function(params) {
+		var obj = ohm(params);
+		obj.symbol = 'micropdf417'
+		return obj;
+	}],
+	['BI', function(params) {
+		var obj = ohfg(params);
+		obj.symbol = 'industrial2of5'
+		return obj;
+	}],
+	['BJ', function(params) {
+		var obj = ohfg(params);
+		obj.symbol = 'standard2of5'
+		return obj;
+	}],
+	['BK', function(params) {
+		var obj = oehfgki(params);
+		obj.symbol = 'ansicodabar'
+		return obj;
+	}],
+	['BL', function(params) {	
+		var obj = ohg(params);
+		obj.symbol = 'logmars'
+		return obj;
+	}],
+	['BM', function(params) {
+		var obj = oehfge2(params);
+		obj.symbol = 'msi'
+		return obj;
+	}],
+	// ['BO', function(params) {      // 메뉴얼에 없음
+	// 	var obj = oceeyyi(params);
+	// 	obj.symbol = 'azteccode'
+	// 	return obj;
+	// }],
+	['BP', function(params) {
+		var obj = oehfg(params);
+		obj.symbol = 'plessey'
+		return obj;
+	}],
+	['BQ', function(params) {
+		var obj = abcq(params);
+		obj.symbol = 'qrcode'
+		return obj;
+	}],
+	['BS', function(params) {
+		var obj = ohfg(params);
+		obj.symbol = 'upceanextension'	// 우리 DB에 없음
+		return obj;
+	}],
+	['BU', function(params) {
+		var obj = ohfge(params);
+		obj.symbol = 'upca'
+		return obj;
+	}],
+	['BX', function(params) {
+		var obj = ohscrfg(params);
+		obj.symbol = 'datamatrix'
+		return obj;
+	}],
 	['BY', function(params) {	// barcode field default
 
+	}],
+	['BZ', function(params) {
+		var obj = ohfg(params);
+		obj.symbol = 'postal'
+		return obj;
 	}],
 	['CF', function(params) {	// ^CFf,h,w : f: font
 		var p = params.split(',');
@@ -323,6 +432,133 @@ function ohfm(params) {	// ^B4o,h,f,m : m: starting mode
 	}
 
 	return obj;
+}
+
+// 바코드 생성 커맨드의 파라미터가 o,h,f,g 일때 호출
+function ohfge(params) {
+		var p = params.split(',');
+		
+		var obj = {};
+		obj.type = 'barcode';
+		obj.rot = p[0];
+		obj.height = p[1];
+		obj.showText = p[2];
+		obj.textAbove = p[3];
+
+		return obj;
+}
+
+function ohscrt(params) {
+		var p = params.split(',');
+		
+		var obj = {};
+		obj.type = 'barcode';
+		obj.rot = p[0];
+		obj.height = p[1];
+		obj.security = p[2];
+		obj.columns = p[3];
+		obj.rows = p[4];
+		obj.truncate = p[5];
+
+		return obj;
+}
+
+function ohscrm(params) {
+		var p = params.split(',');
+		
+		var obj = {};
+		obj.type = 'barcode';
+		obj.rot = p[0];
+		obj.height = p[1];
+		obj.security = p[2];
+		obj.columns = p[3];
+		obj.rows = p[4];
+
+		return obj;
+}
+
+function ohm(params) {
+		var p = params.split(',');
+		
+		var obj = {};
+		obj.type = 'barcode';
+		obj.rot = p[0];
+		obj.height = p[1];
+		obj.mode = p[2];
+
+		return obj;
+}
+
+function oehfgki(params) {
+		var p = params.split(',');
+		
+		var obj = {};
+		obj.type = 'barcode';
+		obj.rot = p[0];
+		obj.checkDigit = p[1];
+		obj.height = p[2];
+		obj.showText = p[3];
+		obj.textAbove = p[4];
+		obj.startChar = p[5];
+		obj.stopChar = p[6];
+
+		return obj;
+}
+
+function ohg(params) {
+		var p = params.split(',');
+		
+		var obj = {};
+		obj.type = 'barcode';
+		obj.rot = p[0];
+		obj.height = p[1];
+		obj.textAbove = p[2];
+
+		return obj;
+}
+
+function oehfge(params) {
+		var p = params.split(',');
+		
+		var obj = {};
+		obj.type = 'barcode';
+		obj.rot = p[0];
+		obj.checkDigit = p[1];
+		obj.height = p[2];
+		obj.showText = p[3];
+		obj.textAbove = p[4];
+		obj.checkDigit = p[5];
+
+		return obj;
+}
+
+function abcq(params) {
+		var p = params.split(',');
+		
+		var obj = {};
+		obj.type = 'qrcode';
+		obj.model = p[0];
+		obj.position = p[1];
+		obj.magnification = p[2];
+		obj.hqml = p[3];
+
+		return obj;
+}
+
+function ohscrfg(params) {
+		var p = params.split(',');
+		
+		var obj = {};
+		obj.type = 'barcode';
+		obj.orientation = p[0];
+		obj.height = p[1];
+		obj.quality = p[2];
+		obj.columns = p[3];
+		obj.rows = p[4];
+		obj.format = p[5];
+		obj.escape = p[6];
+
+		return obj;
 }
 
 function getRotation(r) {
