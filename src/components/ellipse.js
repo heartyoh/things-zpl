@@ -9,9 +9,9 @@ function ellipse(properties) {
 		var fillStyle = this.mode.fillStyle || '';
 
 		if(rx == ry)
-			zpl += 'GC' + ',' + rx + '.' + ry + ',' + lineWidth + ',' + fillStyle;
+			zpl += 'GC' + rx + '.' + ry + ',' + lineWidth + ',' + fillStyle;
 		else
-			zpl += 'GE' + ',' + rx + '.' + ry + ',' + lineWidth + ',' + fillStyle;
+			zpl += 'GE' + rx + '.' + ry + ',' + lineWidth + ',' + fillStyle;
 
 		return zpl;
   }
