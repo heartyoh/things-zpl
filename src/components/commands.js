@@ -7,8 +7,8 @@ exports.commands = new Map([
 		if (sign === '0') {
 			var p = params.split(',');
 
-			obj.width = new Number(p[1]);
-			obj.height = new Number(p[2]);
+			obj.width = parseInt(p[1]);
+			obj.height = parseInt(p[2]);
 
 			switch(p[0]) {
 				// TODO font family
@@ -20,8 +20,8 @@ exports.commands = new Map([
 			return obj;
 		} else if(sign === '@') {	// ^A@o,h,w,d:o.x	// o: rotation(n,r,i,b), d: drive location of font, o: font name, x: extension
 			var p = params.split(',');
-			obj.width = new Number(p[1]);
-			obj.height = new Number(p[2]);
+			obj.width = parseInt(p[1]);
+			obj.height = parseInt(p[2]);
 
 			if(p.length === 4) {
 				var fonts = p[3];
@@ -191,8 +191,8 @@ exports.commands = new Map([
 	}],
 	['CF', function(p) {	// ^CFf,h,w : f: font
 		var obj = {};
-		obj.height = new Number(p[1]);
-		obj.width = new Number(p[2]);
+		obj.height = parseInt(p[1]);
+		obj.width = parseInt(p[2]);
 		switch(p[0]) {
 			case 0:
 				obj.fontFamily = 'serif';
@@ -214,7 +214,7 @@ exports.commands = new Map([
 			return;
 		}
 
-		return { left: new Number(p[0]), top: new Number(p[1]) }
+		return { left: parseInt(p[0]), top: parseInt(p[1]) }
 	}],
 	['FS', function(p) {
 	}],
@@ -224,10 +224,10 @@ exports.commands = new Map([
 		
 		var obj = {};
 		obj.type = 'fitted_rect'
-		obj.width = new Number(p[0])
-		obj.height = new Number(p[1])
-		obj.lineWidth = new Number(p[2])
-		obj.strokeStyle = new Number(p[3])
+		obj.width = parseInt(p[0])
+		obj.height = parseInt(p[1])
+		obj.lineWidth = parseInt(p[2])
+		obj.strokeStyle = parseInt(p[3])
 
 		return obj
 	}],
@@ -235,9 +235,9 @@ exports.commands = new Map([
 		
 		var obj = {};
 		obj.type = 'ellipse'
-		obj.rx = new Number(p[0])
-		obj.ry = new Number(p[0])
-		obj.lineWidth = new Number(p[1])
+		obj.rx = parseInt(p[0])
+		obj.ry = parseInt(p[0])
+		obj.lineWidth = parseInt(p[1])
 		obj.fillStyle = p[2]
 
 		return obj
@@ -246,9 +246,9 @@ exports.commands = new Map([
 
 		var obj = {};
 		obj.type = 'line'
-		obj.width = new Number(p[0])
-		obj.height = new Number(p[1])
-		obj.lineWidth = new Number(p[2])
+		obj.width = parseInt(p[0])
+		obj.height = parseInt(p[1])
+		obj.lineWidth = parseInt(p[2])
 		obj.fillStyle = p[3]
 		obj.rotate = p[4]
 
@@ -258,9 +258,9 @@ exports.commands = new Map([
 
 		var obj = {};
 		obj.type = 'ellipse'
-		obj.rx = new Number(p[0])
-		obj.ry = new Number(p[1])
-		obj.lineWidth = new Number(p[1])
+		obj.rx = parseInt(p[0])
+		obj.ry = parseInt(p[1])
+		obj.lineWidth = parseInt(p[1])
 		obj.fillStyle = p[2]
 
 		return obj
