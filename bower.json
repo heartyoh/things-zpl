@@ -1,0 +1,29 @@
+{
+  "name": "things-zpl",
+  "description": "zpl command converter: zpl command -> things-scene's model, things-scene's model -> zpl command",
+  "main": "index.js",
+  "authors": [
+    "heartyoh@hatiolab.com"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "zpl",
+    "things-scene"
+  ],
+  "homepage": "https://github.com/heartyoh/things-zpl#readme",
+  "moduleType": [
+    "globals",
+    "node"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "src",
+    "lib",
+    "DEPLOYMENT.md",
+    "DEVELOPMENT.md"
+  ]
+}

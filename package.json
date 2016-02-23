@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel src -d lib",
+    "watcher": "watchify --extension=js -o things-zpl.js index.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +17,9 @@
   "bugs": {
     "url": "https://github.com/heartyoh/things-zpl/issues"
   },
-  "homepage": "https://github.com/heartyoh/things-zpl#readme"
+  "homepage": "https://github.com/heartyoh/things-zpl#readme",
+  "devDependencies": {
+    "babel-cli": "^6.3.17",
+    "watchify": "^3.3.1"
+  }
 }

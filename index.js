@@ -1,6 +1,4 @@
-// import * as zpl from './src/things-zpl'
+var zpl = require("./src/api");
 
-// export default zpl
-
-// if(window)
-//   window.zpl = zpl
+if(window)
+  window.zpl = zpl
