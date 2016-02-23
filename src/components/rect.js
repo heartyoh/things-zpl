@@ -1,4 +1,4 @@
-export function Rect(properties) {
+function rect(properties) {
   this.model = properties;
 
   function toZpl() {
@@ -8,3 +8,4 @@ export function Rect(properties) {
   }
 }
 
+exports.Rect = rect;

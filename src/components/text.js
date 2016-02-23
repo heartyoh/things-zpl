@@ -1,4 +1,4 @@
-export function Text(properties) {
+function text(properties) {
   this.model = properties;
 
   function toZpl() {
@@ -8,3 +8,4 @@ export function Text(properties) {
   }
 }
 
+exports.Text = text;
