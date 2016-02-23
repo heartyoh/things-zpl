@@ -1,4 +1,4 @@
-var commands = require('./commands')
+var commands = require('./components/commands')
 var commandsMap = commands.commands
 var buf = {};
 
