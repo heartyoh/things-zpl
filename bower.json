@@ -19,11 +19,7 @@
     "**/.*",
     "node_modules",
     "bower_components",
-    "test",
-    "tests",
     "src",
-    "lib",
-    "DEPLOYMENT.md",
-    "DEVELOPMENT.md"
+    "lib"
   ]
 }
