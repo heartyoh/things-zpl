@@ -1,3 +1,8 @@
+var Text = require('./components/text').Text
+var Barcode = require('./components/barcode').Barcode
+var Rect = require('./components/rect').Rect
+var ellipse = require('./components/text').Ellipse
+
 exports.revert = function(components) {
 
 	if (!components) return;
@@ -7,6 +12,7 @@ exports.revert = function(components) {
 	components.forEach((c, i) => {
 		switch(c.type) {
 			case 'text':
+			case 'fitted_text':
 				var obj = new Text(c);
 				zpl += obj.toZpl();
 				break;
@@ -21,6 +27,8 @@ exports.revert = function(components) {
 			case 'image':
 				break;
 		}
+
+		zpl += '\n';
 	});
 
   return zpl;

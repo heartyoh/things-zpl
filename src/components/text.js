@@ -1,7 +1,7 @@
 function text(properties) {
   this.model = properties;
 
-  function toZpl() {
+  this.toZpl = function() {
     var zpl = '';
 
     return zpl;

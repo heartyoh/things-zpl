@@ -1,7 +1,7 @@
 function barcode(properties) {
 	this.model = properties;
 
-	function toZpl() {
+	this.toZpl = function() {
 		var zpl = '';
 		var height = this.model.height;
 		var rotate = this.model.rot;
