@@ -107,7 +107,7 @@ exports.commands = new Map([
 		return obj;
 	}],
 	['BC', function(params) {
-		var obj = ohscrm(params);
+		var obj = ohfgem(params);
 		obj.symbol = 'code128'
 		return obj;
 	}],
@@ -354,6 +354,19 @@ function ohfge(p) {
 		obj.showText = p[2];
 		obj.textAbove = p[3];
 		obj.checkDigit = p[4];
+
+		return obj;
+}
+
+function ohfgem(p) {
+		var obj = {};
+		obj.type = 'barcode';
+		obj.rot = p[0];
+		obj.height = p[1];
+		obj.showText = p[2];
+		obj.textAbove = p[3];
+		obj.checkDigit = p[4];
+		obj.mode = p[5];
 
 		return obj;
 }
