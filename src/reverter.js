@@ -1,4 +1,4 @@
-exports.convert = function(components) {
+exports.revert = function(components) {
 
 	if (!components) return;
 
