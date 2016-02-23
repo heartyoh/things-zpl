@@ -26,7 +26,7 @@ exports.sample001 = [{
   top: 350,
   width: 300,
   height: 300,
-  symbol: "qrcode",
+  symbol: "planet",
   text: "http://www.hatiolab.com",
   scale_h: 1,
   scale_w: 2,
