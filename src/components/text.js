@@ -5,8 +5,10 @@ function text(properties) {
     var zpl = '';
 
     var text = this.model.text || '';
+    var top = this.model.top || '0';
+    var left = this.model.left || '0';
 
-    zpl += 'FD' + text
+    zpl += '^FO' + left + ',' + top + '^FD' + text + '^FS'
 
     return zpl;
   }

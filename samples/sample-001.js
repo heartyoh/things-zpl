@@ -30,7 +30,7 @@ exports.sample001 = [{
   text: "http://www.hatiolab.com",
   scale_h: 1,
   scale_w: 2,
-  rot: "N",
+  rot: "I",
   rotation: .5
 }, {
   type: 'text',
