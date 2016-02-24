@@ -1,69 +1,96 @@
 var commands = require('./components/commands')
 var commandsMap = commands.commands
-var buf = {};
+
+var fontBuf;
+var barcodeBuf;
+var imageBuf;
 
 exports.convert = function(zpl) {
 
 	if (!zpl) return;
 
-  var models = [];
-  var obj;
+  fontBuf = {};
+	barcodeBuf = {};
+	imageBuf = new Map();
+
+	var models = [];
+	var obj;
 
 	var commands = zpl.split('^');
 	commands.forEach((c, i) => {
 		if (c.trim().length === 0) return;
 
 		c = c.replace('\n','')
-
 		var command = c.substr(0, 2);
+		var commandHandler = commandsMap.get(command);
+
+		if(!commandHandler) return;
+
+
 		if (command.substr(0, 1) === 'A') {
   		var params = c.substr(1);
   		
-  		var properties = handler(params);
+  		var properties = commandHandler.handler(params);
 			obj = Object.assign(obj || {}, properties);
-		} else {
-			switch(command) {
-				case 'FS':
-					if (!obj.type) {
-		  			obj.type = 'fitted_text';
-		  		}
 
-		  		obj = specific(obj);
-		  		models.push(obj);
-		  		
-		  		obj = null;
-		  		
-		  		break;
-		  	case 'CF':
-		  		var params = c.substr(2).split(',').map(function(value) {
-						return value.trim();
-					});
+			return;
+		}
 
-			  	var handler = commandsMap.get(command);
-			  	if(!handler) return;
+		var params = c.substr(2).split(',').map(function(value) {
+			return value.trim();
+		});
+		var properties = commandHandler.handler(params);
 
-					var properties = handler(params);
+		switch(command) {
+			case 'FS':
+				if (!obj.type) {
+	  			obj.type = 'fitted_text';
+	  		}
 
-		  		Object.assign(buf, properties || {});
-		  		break;
-		  	default:
-		  		var params = c.substr(2);
-		  		// TODO ~ command
+	  		obj = specific(obj);
+	  		models.push(obj);
+	  		
+	  		obj = null;
+	  		break;
 
-			  	var handler = commandsMap.get(command);
-			  	if(!handler) return;
+	  	case 'BY':
+	  		Object.assign(barcodeBuf, properties || {});
+	  		break;
 
-			  	params = params.split(',').map(function(value) {
-						return value.trim();
-					});
+	  	case 'CF':
+	  		Object.assign(fontBuf, properties || {});
+	  		break;
 
-			  	var properties = handler(params);
-			  	obj = Object.assign(obj || {}, properties);
-			}
+	  	default:
+		  	obj = Object.assign(obj || {}, properties);
 		}
 	})
 
   return models;
+}
+
+function dashParser(zpl) {
+  var startIdx = zpl.indexOf('~');
+  var tmp = zpl.substr(startIdx + 1);
+  var endIdx = Math.min(command.indexOf('~'), command.indexOf('^'));
+
+  var dashCommand = zpl.substr(startIdx, endIdx);
+  var command = dashCommand.substr(0, 2);
+  switch(command) {
+  	case 'DG':
+  		var commandHandler = commandsMap.get(command);
+  		var properties = commandHandler.handler(params);
+  		imageBuf.set(properties.id, properties.data);
+
+  		break;
+  	case '':
+  		break;
+  }
+
+  zpl.replace(dashCommand, '');
+  dashParser(zpl);
+
+ 	return zpl;
 }
 
 
@@ -96,12 +123,16 @@ function specific(obj) {
 
 			break;
 		case 'fitted_text':
-			if (buf) {
-				Object.assign(obj, buf);
+			if (fontBuf) {
+				Object.assign(obj, fontBuf);
 			}
-
 			break;
+
 		case 'rect':
+			break;
+
+		case 'image_view':
+			
 			break;
 	}
 
