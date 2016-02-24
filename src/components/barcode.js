@@ -8,79 +8,100 @@ function barcode(properties) {
 		var showText = this.model.showText || '';
 		var textAbove = this.model.textAbove || '';
 
-
 		switch(this.model.symbol) {	
 			case 'code11': 				// B1
-				zpl += ('^B1' + rotate + ',' +   'N'   + ',' + height + ',' + showText + ',' + textAbove)
+				var tmp = ['^B1', rotate, 'N', height, showText, textAbove];
+				tmp.join(',');
 				break;
 			case 'interleaved2of5': 		// B2
-				zpl += ('^B2' + rotate + ',' + height + ',' + showText + ',' + textAbove + 'N')
+				var tmp = ['^B2', rotate, height, showText, textAbove, 'N'];
+				tmp.join(',');
 				break;
 			case 'code39': 				// B3
-				zpl += ('^B3' + rotate + ',' +   'N'   + ',' + height   + ',' + showText  + ',' + textAbove)
+				var tmp = ['^B3', rotate, 'N', height, showText, textAbove];
+				tmp.join(',');
 				break;
 			case 'code49': 				// B4
-				zpl += ('^B4' + rotate + ',' + height + ',' + showText + ',' + 'A')
+				var tmp = ['^B4', rotate, height, showText, 'A'];
+				tmp.join(',');
 				break;
 			case 'planet': 				// B5
-				zpl += ('^B5' + rotate + ',' + height + ',' + showText + ',' + textAbove)
+				var tmp = ['^B5', rotate, height, showText, textAbove];
+				tmp.join(',');
 				break;
 			case 'pdf417': 				// B7
-				zpl += ('^B7' + rotate + ',' + height + ',' +     '0'    + ',' + 	  '1:2'   + ',' + '1:2' + ',' + 'N')
+				var tmp = ['^B7', rotate, height, '0', '1:2', '1:2', 'N'];
+				tmp.join(',');
 				break;
 			case 'ean8': 				// B8
-				zpl += ('^B8' + rotate + ',' + height + ',' + showText + ',' + textAbove)
+				var tmp = ['^B8', rotate, height, showText, textAbove];
+				tmp.join(',');
 				break; 
 			case 'upce': 				// B9
-				zpl += ('^B9' + rotate + ',' + height + ',' + showText + ',' + textAbove +  ',' + 'N')
+				var tmp = ['^B9', rotate, height, showText, textAbove, 'N'];
+				tmp.join(',');
 				break;
 			case 'code93': 				// BA
-				zpl += ('^BA' + rotate + ',' + height + ',' + showText + ',' + textAbove +  ',' + 'N')
+				var tmp = ['^BA', rotate, height, showText, textAbove, 'N'];
+				tmp.join(',');
 				break;
-			case 'codablock': 			// BB
-				// zpl += ('^BB' + rotate + ',' + height + ',' + 'Y' + '1:2' + '1:2' + 'F')   	디폴트 값 없음
+			case 'codablock': 			// BB 	
+				// var tmp = ['^BB', rotate, height, 'Y', '1:2', '1:2', 'F'];		디폴트 값 없음
+				// tmp.join(',');
 				break;
 			case 'code128': 				// BC
-				zpl += ('^BC' + rotate + ',' + height + ',' + showText + ',' + textAbove +  ',' + 'N' + ',' + 'N')
+				var tmp = ['^BC', rotate, height, showText, textAbove, 'N', 'N'];
+				tmp.join(',');
 				break;
 			case 'codemaxicode': 		// BD
-				zpl += ('^BD' +    '2'   + ',' +   '1'   + ',' + '1')
+				var tmp = ['^BD', '2', '1', '1'];
+				tmp.join(',');
 				break;
 			case 'ean13': 				// BE
-				zpl += ('^BE' + rotate + ',' + height + ',' + showText + ',' + textAbove)
+				var tmp = ['^BE', rotate, height, showText, textAbove];
+				tmp.join(',');
 				break;
 			case 'micropdf417': 			// BF
-				zpl += ('^BF' + rotate + ',' + height + ',' + '0')
+				var tmp = ['^BF', rotate, height, '0'];
+				tmp.join(',');
 				break;
 			case 'industrial2of5': 		// BI
-				zpl += ('^BI' + rotate + ',' + height + ',' + showText + ',' + textAbove)
+				var tmp = ['^BI', rotate, height, showText, textAbove];
+				tmp.join(',');
 				break;
 			case 'standard2of5': 			// BJ
-				zpl += ('^BJ' + rotate + ',' + height + ',' + showText + ',' + textAbove)
+				var tmp = ['^BJ', rotate, height, showText, textAbove];
+				tmp.join(',');
 				break;
 			case 'ansicodabar': 			// BK
-				zpl += ('^BK' + rotate + ',' +   'N' 	 + ',' +   height  + ',' + showText + ',' + textAbove + ',' + 'A' + ',' + 'A')
+				var tmp = ['^BK', rotate, 'N', height, showText, textAbove, 'A', 'A'];
+				tmp.join(',');
 				break;
 			case 'logmars': 				// BL
-				zpl += ('^BL' + rotate + ',' + height + ',' + textAbove)
+				var tmp = ['^BL', rotate, height, textAbove];
+				tmp.join(',');
 				break;
 			case 'msi': 					// BM
-				zpl += ('^BM' + rotate + ',' +   '^B'   + ',' +   height  + ',' + showText + ',' + textAbove + ',' + 'N')
+				var tmp = ['^BM', rotate, 'B', height, showText, textAbove, 'N'];
+				tmp.join(',');
 				break;
 			case 'plessey': 				// BP
-				zpl += ('^BP' + rotate + ',' +   'N'   + ',' +   height  + ',' + showText + ',' + textAbove)
+				var tmp = ['^BP', rotate, 'N',  height, showText, textAbove];
+				tmp.join(',');
 				break;
 			case 'qrcode': 				// BQ
 				// zpl += ('^BQ' + )		디폴트 값 없음
 				break;
 			case 'upca': 				// BU
-				zpl += ('^BU' + rotate + ',' + height + ',' + showText + ',' + textAbove + ',' + 'Y')
+				var tmp = ['^BU', rotate, height, showText, textAbove, 'Y'];
+				tmp.join(',');
 				break;
 			case 'datamatrix': 			// BX
 				// zpl += ('^BX' + rotate + ',' + height + ',' + )		디폴트 값 없음
 				break;
 			case 'postnet': 				// BZ
-				zpl += ('^BZ' + rotate + ',' + height + ',' + showText + ',' + textAbove)
+				var tmp = ['^BZ', rotate, height, showText, textAbove];
+				tmp.join(',');
 				break;
 		}		
 
