@@ -2,108 +2,43 @@ function barcode(properties) {
 	this.model = properties;
 
 	this.toZpl = function() {
-		var zpl = '';
 		var height = this.model.height || '';
-		var rotate = this.model.rot || '';
+		var rotate = this.model.rotate || '';
 		var showText = this.model.showText || '';
-		var textAbove = this.model.textAbove || '';
+		var textAbove = this.model.textAbove || ''
+		var text = this.model.text;
 
-		switch(this.model.symbol) {	
-			case 'code11': 				// B1
-				var tmp = ['^B1', rotate, 'N', height, showText, textAbove];
-				tmp.join(',');
-				break;
-			case 'interleaved2of5': 		// B2
-				var tmp = ['^B2', rotate, height, showText, textAbove, 'N'];
-				tmp.join(',');
-				break;
-			case 'code39': 				// B3
-				var tmp = ['^B3', rotate, 'N', height, showText, textAbove];
-				tmp.join(',');
-				break;
-			case 'code49': 				// B4
-				var tmp = ['^B4', rotate, height, showText, 'A'];
-				tmp.join(',');
-				break;
-			case 'planet': 				// B5
-				var tmp = ['^B5', rotate, height, showText, textAbove];
-				tmp.join(',');
-				break;
-			case 'pdf417': 				// B7
-				var tmp = ['^B7', rotate, height, '0', '1:2', '1:2', 'N'];
-				tmp.join(',');
-				break;
-			case 'ean8': 				// B8
-				var tmp = ['^B8', rotate, height, showText, textAbove];
-				tmp.join(',');
-				break; 
-			case 'upce': 				// B9
-				var tmp = ['^B9', rotate, height, showText, textAbove, 'N'];
-				tmp.join(',');
-				break;
-			case 'code93': 				// BA
-				var tmp = ['^BA', rotate, height, showText, textAbove, 'N'];
-				tmp.join(',');
-				break;
-			case 'codablock': 			// BB 	
-				// var tmp = ['^BB', rotate, height, 'Y', '1:2', '1:2', 'F'];		디폴트 값 없음
-				// tmp.join(',');
-				break;
-			case 'code128': 				// BC
-				var tmp = ['^BC', rotate, height, showText, textAbove, 'N', 'N'];
-				tmp.join(',');
-				break;
-			case 'codemaxicode': 		// BD
-				var tmp = ['^BD', '2', '1', '1'];
-				tmp.join(',');
-				break;
-			case 'ean13': 				// BE
-				var tmp = ['^BE', rotate, height, showText, textAbove];
-				tmp.join(',');
-				break;
-			case 'micropdf417': 			// BF
-				var tmp = ['^BF', rotate, height, '0'];
-				tmp.join(',');
-				break;
-			case 'industrial2of5': 		// BI
-				var tmp = ['^BI', rotate, height, showText, textAbove];
-				tmp.join(',');
-				break;
-			case 'standard2of5': 			// BJ
-				var tmp = ['^BJ', rotate, height, showText, textAbove];
-				tmp.join(',');
-				break;
-			case 'ansicodabar': 			// BK
-				var tmp = ['^BK', rotate, 'N', height, showText, textAbove, 'A', 'A'];
-				tmp.join(',');
-				break;
-			case 'logmars': 				// BL
-				var tmp = ['^BL', rotate, height, textAbove];
-				tmp.join(',');
-				break;
-			case 'msi': 					// BM
-				var tmp = ['^BM', rotate, 'B', height, showText, textAbove, 'N'];
-				tmp.join(',');
-				break;
-			case 'plessey': 				// BP
-				var tmp = ['^BP', rotate, 'N',  height, showText, textAbove];
-				tmp.join(',');
-				break;
-			case 'qrcode': 				// BQ
-				// zpl += ('^BQ' + )		디폴트 값 없음
-				break;
-			case 'upca': 				// BU
-				var tmp = ['^BU', rotate, height, showText, textAbove, 'Y'];
-				tmp.join(',');
-				break;
-			case 'datamatrix': 			// BX
-				// zpl += ('^BX' + rotate + ',' + height + ',' + )		디폴트 값 없음
-				break;
-			case 'postnet': 				// BZ
-				var tmp = ['^BZ', rotate, height, showText, textAbove];
-				tmp.join(',');
-				break;
-		}		
+		var symbolMap = new Map([
+			['code11', 					['^B1'+rotate, 'N', height, showText, textAbove]],
+			['interleaved2of5', ['^B2'+rotate, height, showText, textAbove, 'N']],
+			['code39', 					['^B3'+rotate, 'N', height, showText, textAbove]],
+			['code49', 					['^B4'+rotate, height, showText, 'A']],
+			['pdf417', 					['^B5'+rotate, height, showText, textAbove]],
+			['ean8', 						['^B7'+rotate, height, '0', '1:2', '1:2', 'N']],
+			['upce', 						['^B8'+rotate, height, showText, textAbove]],
+			['code93', 					['^B9'+rotate, height, showText, textAbove, 'N']],
+			['codablock', 			['^BA'+rotate, height, showText, textAbove, 'N']],
+			['code128', 				['^BC'+rotate, height, showText, textAbove, 'N', 'N']],
+			['codemaxicode', 		['^BD'+rotate, 'N', height, showText, textAbove]],
+			['ean13', 					['^BE'+rotate, 'N', height, showText, textAbove]],
+			['micropdf417', 		['^BF'+'2', '1', '1']],
+			['industrial2of5', 	['^BI'+rotate, height, showText, textAbove]],
+			['standard2of5', 		['^BJ'+rotate, height, showText, textAbove]],
+			['ansicodabar', 		['^BK'+rotate, 'N', height, showText, textAbove, 'A', 'A']],
+			['logmars', 				['^BL'+rotate, height, textAbove]],
+			['msi', 						['^BM'+rotate, 'B', height, showText, textAbove, 'N']],
+			['plessey', 				['^BP'+rotate, 'N',  height, showText, textAbove]],
+			['qrcode', 					['^BQ'+'']],
+			['upca', 						['^BU'+rotate, height, showText, textAbove, 'Y']],
+			['datamatrix', 			['^BX'+'']],
+			['postnet', 				['^BZ'+rotate, height, showText, textAbove]]
+		]);
+
+		var zpl = '';
+		var params = symbolMap.get[this.model.symbol];
+		zpl += params;
+
+		// TODO text
 
 		return zpl;
 	}

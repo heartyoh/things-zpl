@@ -10,8 +10,9 @@ function rect(properties) {
 	var top = this.model.top || '0';
 	var left = this.model.left || '0';
 
-    zpl +=  '^FO' + left + ',' + top + 'GB' + ',' + width + '.' + height + ',' + lineWidth + ',' + strokeStyle;
+    var params = ['^FO' + left, top, 'GB' + width, height ,lineWidth, strokeStyle]
 
+    zpl += params.join(',')
     return zpl;
   }
 }
