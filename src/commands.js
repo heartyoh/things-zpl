@@ -186,7 +186,7 @@ exports.commands = new Map([
 	}],
 	['BZ', function(params) {
 		var obj = ohfg(params);
-		obj.symbol = 'postal'
+		obj.symbol = 'postnet'
 		return obj;
 	}],
 	['CF', function(p) {	// ^CFf,h,w : f: font

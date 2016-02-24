@@ -79,7 +79,7 @@ function barcode(properties) {
 			case 'datamatrix': 			// BX
 				// zpl += ('^BX' + rotate + ',' + height + ',' + )		디폴트 값 없음
 				break;
-			case 'postal': 				// BZ
+			case 'postnet': 				// BZ
 				zpl += ('^BZ' + rotate + ',' + height + ',' + showText + ',' + textAbove)
 				break;
 		}		
