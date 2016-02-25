@@ -2,6 +2,7 @@ var Text = require('./components/text').Text
 var Barcode = require('./components/barcode').Barcode
 var Rect = require('./components/rect').Rect
 var Ellipse = require('./components/ellipse').Ellipse
+var Line = require('./components/line').Line
 
 exports.revert = function(components) {
 
@@ -24,6 +25,9 @@ exports.revert = function(components) {
 				var obj = new Ellipse(c);
 				break;
 			case 'image':
+				break;
+			case 'line':
+				var obj = new  Line(c);
 				break;
 		}
 

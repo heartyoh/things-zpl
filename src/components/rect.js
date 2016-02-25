@@ -6,7 +6,7 @@ function rect(properties) {
 		var width = this.model.width || '';
 		var height = this.model.height || '';
 		var lineWidth = this.model.lineWidth || '';
-		var strokeStyle = this.mode.strokeStyle || '';
+		var strokeStyle = this.model.strokeStyle || '';
 		var top = this.model.top || '0';
 		var left = this.model.left || '0';
 

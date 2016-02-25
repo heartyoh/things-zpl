@@ -7,13 +7,13 @@ exports.sample001 = [{
   fontFamily: 'serif',
   text: '이 모델은 바코드 컴포넌트를 위한 샘플입니다.'
 },  {
-    type: 'ellipse',
-    rx: 250,
-    ry: 250,
-    lineWidth: 10,
+    type: 'line',
+    lineWidth: 5,
     fillStyle: 'B',
-    cx: 290,
-    cy: 290
+    x1: 200,
+    x2: 280,
+    y1: 200,
+    y2: 400
   },{
     type: 'ellipse',
     rx: 300,
@@ -22,6 +22,12 @@ exports.sample001 = [{
     fillStyle: 'W',
     cx: 340,
     cy: 340
+  },{
+    type: 'rect',
+    top: 120,
+    left:140,
+    width: 200,
+    height: 190
   },{
   type: 'barcode',
 
