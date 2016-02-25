@@ -7,9 +7,14 @@ function text(properties) {
     var top = this.model.top || '0';
     var left = this.model.left || '0';
 
-    zpl += '^FO' + left + ',' + top
-    zpl += '^FD' + text
-    zpl += '^FS'
+
+    var symbolMap = new Map([
+      ['FD',    ['^FO' + left, top + '^FD' + text + '^FS']]
+    ]);
+
+    var zpl = '';
+    var params = symbolMap.get('FD');
+    zpl += params.join(',');
 
     return zpl;
   }

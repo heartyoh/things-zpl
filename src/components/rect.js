@@ -10,10 +10,16 @@ function rect(properties) {
 	var top = this.model.top || '0';
 	var left = this.model.left || '0';
 
-    var params = ['^FO' + left, top, 'GB' + width, height ,lineWidth, strokeStyle]
 
-    zpl += params.join(',')
-    return zpl;
+    	var symbolMap = new Map([
+		['GB', 	['^GB' + width, height ,lineWidth, strokeStyle]]		
+	]);
+
+    	var zpl = '';
+	var params = symbolMap.get('GB');
+	zpl += '^FO' + left + ',' + top + params.join(',') + '^FS';
+
+	return zpl;
   }
 }
 

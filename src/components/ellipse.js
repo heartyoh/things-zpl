@@ -7,15 +7,26 @@ function ellipse(properties) {
 		var ry = this.model.ry || '';
 		var lineWidth = this.model.lineWidth || '';
 		var fillStyle = this.mode.fillStyle || '';
-
-		// TODO calculate ^FO
+		var top = this.model.top || '0';
+		var left = this.model.left || '0';
+		var symbol;
 
 		if(rx == ry)
-			zpl += '^GC' + rx + ','+ lineWidth + ',' + fillStyle;
+			symbol = 'GC'
 		else
-			zpl += '^GE' + rx + ',' + ry + ',' + lineWidth + ',' + fillStyle;
+			symbol = 'GE'
 
-		zpl += '^FS'
+
+		var symbolMap = new Map([
+			['GC', 		['^GC' + rx, lineWidth, fillStyle]],
+			['GE', 		['^GE' + rx, ry, lineWidth, fillStyle]]
+		]);
+
+		var zpl = '';
+		var params = symbolMap.get(symbol);
+		zpl += '^FO' + left + ',' + top + params.join(',') + '^FS';
+
+
 		return zpl;
   }
 }
