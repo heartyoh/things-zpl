@@ -6,10 +6,13 @@ function text(properties) {
     var text = this.model.text || '';
     var top = this.model.top || '0';
     var left = this.model.left || '0';
+    var fontSize = this.model.fontSize || 5;
+    var rotate = this.model.rotate || 'N';
 
 
     var commands = [
       ['^FO'+left, top],
+      ['^A0', fontSize, fontSize],
       ['^FD'+text],
       ['^FS'],
     ];
