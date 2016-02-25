@@ -1189,11 +1189,14 @@ exports.revert = function(components) {
 				break;
 		}
 
-		zpl += obj.toZpl();
-		zpl += '\n';
+    if(obj) {
+      zpl += obj.toZpl();
+      zpl += '\n';
+    }
 	});
 
 	zpl += '^XZ'
   return zpl;
 }
+
 },{"./components/barcode":3,"./components/ellipse":5,"./components/line":6,"./components/rect":7,"./components/text":8}]},{},[1]);

@@ -31,8 +31,10 @@ exports.revert = function(components) {
 				break;
 		}
 
-		zpl += obj.toZpl();
-		zpl += '\n';
+    if(obj) {
+      zpl += obj.toZpl();
+      zpl += '\n';
+    }
 	});
 
 	zpl += '^XZ'
