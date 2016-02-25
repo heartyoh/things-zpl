@@ -44,7 +44,8 @@ exports.convert = function(zpl) {
 		switch(command) {
 			case 'FS':
 				if (!obj.type) {
-	  			obj.type = 'fitted_text';
+	  			obj.type = 'text';
+	  			obj.toFit = true;
 	  		}
 
 	  		obj = specific(obj);
@@ -111,7 +112,7 @@ function specific(obj) {
 			delete obj.top
 			delete obj.width
 			delete obj.height
-			delete obj.roate
+			delete obj.rotate
 
 			break;
 		case 'ellipse':

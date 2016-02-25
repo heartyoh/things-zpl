@@ -8,13 +8,17 @@ function text(properties) {
     var left = this.model.left || '0';
 
 
-    var symbolMap = new Map([
-      ['FD',    ['^FO' + left, top + '^FD' + text + '^FS']]
-    ]);
+    var commands = [
+      ['^FO'+left, top],
+      ['^FD'+text],
+      ['^FS'],
+    ];
 
     var zpl = '';
-    var params = symbolMap.get('FD');
-    zpl += params.join(',');
+    
+    commands.forEach(c => {
+      zpl += c.join(',') + '\n'
+    });
 
     return zpl;
   }

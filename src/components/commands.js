@@ -388,7 +388,8 @@ exports.commands = new Map([
 		parameters: '',
 		handler: function(p) {	// ^GBw,h,t,c,r : t: border thickness, c: line color, r: degree of corner-rounding	
 			var obj = {};
-			obj.type = 'fitted_rect'
+			obj.type = 'rect'
+			obj.innerBor = true
 			obj.width = parseInt(p[0])
 			obj.height = parseInt(p[1])
 			obj.lineWidth = parseInt(p[2])

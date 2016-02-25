@@ -42,10 +42,16 @@ function barcode(properties) {
 		var zpl = '';
 		var params = symbolMap.get(symbol);
 
-		if(text == '')
-			zpl += '^FO' + left + ',' + top + params.join(',') + '^FS';
-		else
-			zpl += '^FO' + left + ',' + top + params.join(',') + '^FD' + text + '^FS';
+		if(text) {
+			zpl += '^FO' + left + ',' + top + '\n'
+			zpl += params.join(',')
+			zpl += '^FD' + text 
+			zpl += '^FS' + '\n';
+		} else {
+			zpl += '^FO' + left + ',' + top + '\n'
+			zpl += params.join(',') 
+			zpl += '^FS' + '\n';
+		}
 
 		return zpl;
 	}
