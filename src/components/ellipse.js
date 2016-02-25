@@ -8,7 +8,7 @@ function ellipse(properties) {
 		var cx = this.model.cx || 0;
 		var cy = this.model.cy || 0;
 		var lineWidth = this.model.lineWidth || '';
-		var fillStyle = this.model.fillStyle || '';
+		var fillStyle = this.model.fillStyle === 'White' ? 'W' : 'B';
 
 		var left = cx - rx || '0';
 		var top = cy - ry || '0';

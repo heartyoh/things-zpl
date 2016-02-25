@@ -4,7 +4,7 @@ function line(properties) {
   this.toZpl = function() {
 		var zpl = '';
 		var lineWidth = this.model.lineWidth || '';
-		var fillStyle = this.model.fillStyle || '';
+		var fillStyle = this.model.fillStyle === 'White' ? 'W' : 'B';
 		var x1 = this.model.x1 || 0;
 		var x2 = this.model.x2 || 0;
 		var y1 = this.model.y1 || 0;
