@@ -6,18 +6,20 @@ function barcode(properties) {
 		var rotate = this.model.rotate || '';
 		var showText = this.model.showText || '';
 		var textAbove = this.model.textAbove || ''
-		var text = this.model.text;
+		var text = this.model.text || '';
+		var symbol = this.model.symbol;
 
 		var symbolMap = new Map([
 			['code11', 					['^B1'+rotate, 'N', height, showText, textAbove]],
 			['interleaved2of5', ['^B2'+rotate, height, showText, textAbove, 'N']],
 			['code39', 					['^B3'+rotate, 'N', height, showText, textAbove]],
 			['code49', 					['^B4'+rotate, height, showText, 'A']],
-			['pdf417', 					['^B5'+rotate, height, showText, textAbove]],
-			['ean8', 						['^B7'+rotate, height, '0', '1:2', '1:2', 'N']],
-			['upce', 						['^B8'+rotate, height, showText, textAbove]],
-			['code93', 					['^B9'+rotate, height, showText, textAbove, 'N']],
-			['codablock', 			['^BA'+rotate, height, showText, textAbove, 'N']],
+			['planet', 					['^B5'+rotate, height, showText, textAbove]],
+			['pdf417', 					['^B7'+rotate, height, '0', '1:2', '1:2', 'N']],
+			['ean8', 						['^B8'+rotate, height, showText, textAbove]],
+			['upce', 						['^B9'+rotate, height, showText, textAbove, 'N']],
+			['code93', 					['^BA'+rotate, height, showText, textAbove, 'N']],
+			['codablock', 			['^BB', rotate, height, 'Y', '1:2', '1:2', 'F']],
 			['code128', 				['^BC'+rotate, height, showText, textAbove, 'N', 'N']],
 			['codemaxicode', 		['^BD'+rotate, 'N', height, showText, textAbove]],
 			['ean13', 					['^BE'+rotate, 'N', height, showText, textAbove]],
@@ -35,8 +37,8 @@ function barcode(properties) {
 		]);
 
 		var zpl = '';
-		var params = symbolMap.get[this.model.symbol];
-		zpl += params;
+		var params = symbolMap.get(symbol);
+		zpl += params.join(',');
 
 		// TODO text
 
