@@ -392,7 +392,7 @@ exports.commands = new Map([
 			obj.width = parseInt(p[0])
 			obj.height = parseInt(p[1])
 			obj.lineWidth = parseInt(p[2])
-			obj.strokeStyle = parseInt(p[3])
+			obj.strokeStyle = p[3]
 
 			return obj
 		}
@@ -434,8 +434,8 @@ exports.commands = new Map([
 			obj.type = 'ellipse'
 			obj.rx = parseInt(p[0])
 			obj.ry = parseInt(p[1])
-			obj.lineWidth = parseInt(p[1])
-			obj.fillStyle = p[2]
+			obj.lineWidth = parseInt(p[2])
+			obj.fillStyle = p[3]
 
 			return obj
 		}

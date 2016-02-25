@@ -1,5 +1,9 @@
 `^XA
 
+^FO40,40^GB300,250,50,B,R^FS
+
+^FO40,40^GE300,250,20,W^FS
+
 ^FX Top section with company logo, name and address.
 ^CF0,60
 ^FO50,50^GB100,100,100^FS

@@ -3,12 +3,14 @@ function ellipse(properties) {
 
   this.toZpl = function() {
 		var zpl = '';
-		var rx = this.model.rx || '';
-		var ry = this.model.ry || '';
+		var rx = this.model.rx || 0;
+		var ry = this.model.ry || 0;
+		var cx = this.model.cx || 0;
+		var cy = this.model.cy || 0;
 		var lineWidth = this.model.lineWidth || '';
-		var fillStyle = this.mode.fillStyle || '';
-		var top = this.model.top || '0';
-		var left = this.model.left || '0';
+		var fillStyle = this.model.fillStyle || '';
+		var left = cx - rx || '0';
+		var top = cy - ry || '0';
 		var symbol;
 
 		if(rx == ry)

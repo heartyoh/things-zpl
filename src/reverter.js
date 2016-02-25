@@ -1,7 +1,7 @@
 var Text = require('./components/text').Text
 var Barcode = require('./components/barcode').Barcode
 var Rect = require('./components/rect').Rect
-var ellipse = require('./components/ellipse').Ellipse
+var Ellipse = require('./components/ellipse').Ellipse
 
 exports.revert = function(components) {
 

@@ -227,7 +227,7 @@ exports.commands = new Map([
 		obj.width = new Number(p[0])
 		obj.height = new Number(p[1])
 		obj.lineWidth = new Number(p[2])
-		obj.strokeStyle = new Number(p[3])
+		obj.strokeStyle = p[3]
 
 		return obj
 	}],
@@ -260,8 +260,8 @@ exports.commands = new Map([
 		obj.type = 'ellipse'
 		obj.rx = new Number(p[0])
 		obj.ry = new Number(p[1])
-		obj.lineWidth = new Number(p[1])
-		obj.fillStyle = p[2]
+		obj.lineWidth = new Number(p[2])
+		obj.fillStyle = p[3]
 
 		return obj
 	}],

@@ -116,7 +116,7 @@ function specific(obj) {
 			break;
 		case 'ellipse':
 			obj.cx = obj.left + obj.rx;
-			obj.cy = obj.top + obj.yx;
+			obj.cy = obj.top + obj.ry;
 
 			delete obj.left
 			delete obj.top
