@@ -217,6 +217,15 @@ exports.commands = new Map([
 		return { left: new Number(p[0]), top: new Number(p[1]) }
 	}],
 	['FS', function(p) {
+
+		var obj = {};
+		obj.tmpWidth = new Number(p[0])
+		obj.lineLimited = new Number(p[1])
+		obj.portraitWidth = new Number(p[2])
+		obj.textAlign = p[3]
+		obj.hangingIndent = new Number(p[4])
+
+		return obj
 	}],
 	['FX', function(p) {
 	}],

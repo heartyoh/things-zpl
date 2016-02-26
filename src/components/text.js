@@ -9,10 +9,12 @@ function text(properties) {
     var w = this.model.width || 10;
     var h = this.model.height || 10;
     var rotate = this.model.rotation || 'N';
+    var textAlign = this.model.textAlign || 'L';
 
 
     var commands = [
       ['^FO'+left, top],
+      // ['^FB']
       ['^A' + 0, w, h],
       ['^FD'+text],
       ['^FS'],
