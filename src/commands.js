@@ -345,7 +345,15 @@ function ohfm(p) {	// ^B4o,h,f,m : m: starting mode
 	return obj;
 }
 
-// 바코드 생성 커맨드의 파라미터가 o,h,f,g 일때 호출
+
+/*
+	Description: 바코드 생성 커맨드의 파라미터가 o,h,f,g,e 일때 호출
+	o: orientation,
+	h: barcode height,
+	f: print interpretation line
+	g: print interpretation line above code
+	e: print check digit
+*/
 function ohfge(p) {
 		var obj = {};
 		obj.type = 'barcode';
