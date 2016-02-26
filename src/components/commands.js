@@ -422,7 +422,7 @@ exports.commands = new Map([
 			obj.height = parseInt(p[1])
 			obj.lineWidth = parseInt(p[2])
 			obj.fillStyle = p[3]
-			obj.rotate = p[4]
+			obj.rotation = p[4]
 
 			return obj
 		}

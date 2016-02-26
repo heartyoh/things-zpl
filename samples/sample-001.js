@@ -53,7 +53,7 @@ exports.sample001 = [{
   scale_h: 1,
   scale_w: 2,
   rot: "I",
-  rotation: .5
+  rotation: 1.5
 }, {
   type: 'text',
   left: 30,

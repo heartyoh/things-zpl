@@ -250,7 +250,7 @@ exports.commands = new Map([
 		obj.height = new Number(p[1])
 		obj.lineWidth = new Number(p[2])
 		obj.fillStyle = p[3]
-		obj.rotate = p[4]
+		obj.rotation = p[4]
 
 		return obj
 	}],

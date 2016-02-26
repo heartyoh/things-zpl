@@ -8,7 +8,7 @@ function text(properties) {
     var left = this.model.left || '0';
     var w = this.model.width || 10;
     var h = this.model.height || 10;
-    var rotate = this.model.rotate || 'N';
+    var rotate = this.model.rotation || 'N';
 
 
     var commands = [

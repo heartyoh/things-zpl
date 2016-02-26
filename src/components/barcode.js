@@ -3,7 +3,7 @@ function barcode(properties) {
 
 	this.toZpl = function() {
 		var height = this.model.height || '';
-		var rotate = this.model.rotate || '';
+		var rotate = this.model.rotation || '';
 		var showText = this.model.showText || '';
 		var textAbove = this.model.textAbove || ''
 		var text = this.model.text || '';
@@ -11,6 +11,21 @@ function barcode(properties) {
 		var top = this.model.top || 0;
 		var left = this.model.left || 0;
 
+
+		rotate = (rotate * 57.29577951308232) % 360;  	 // 라디안을 각도로 변환
+		rotate = rotate < 0 ? 360 + rotate : rotate;		// 음수 조정
+
+		if(rotate <= 45)
+			rotate = 'N'			// 0 degree
+		else if(rotate <= 135)
+			rotate = 'R'			// 90 degree
+		else if(rotate <= 225)
+			rotate = 'I'			// 180 degree
+		else if(rotate <= 315)
+			rotate = 'B'			// 270 degree
+		else
+			rotate = 'N'
+		
 
 		var symbolMap = new Map([
 			['code11', 			['^B1'+rotate, 'N', height, showText, textAbove]],
