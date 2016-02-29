@@ -39,7 +39,6 @@ exports.sample001 = [{
   text: "1234567890",
   // alttext: "8741493123493123",
   alttext : 'N',
-  rotation : 'R',
   scale_h: 1,
   scale_w: 2,
   rot: "N",
