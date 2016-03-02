@@ -10,7 +10,16 @@ function text(properties) {
     var h = this.model.height || 10;
     var rotate = this.model.rotation || 'N';
     var textAlign = this.model.textAlign || 'L';
+    var blockLine = this.model.blockLine || 0;
+    var portraitWidth = this.model.portraitWidth || 0;
 
+
+    if(textAlign){
+      console.log(text.length, h , blockLine, portraitWidth);
+
+      text = text.substr(0, text.length / Math.ceil(h / blockLine));
+    
+    }
 
     var commands = [
       ['^FO'+left, top],

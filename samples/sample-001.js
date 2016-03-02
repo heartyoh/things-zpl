@@ -62,4 +62,15 @@ exports.sample001 = [{
   width: 200,
   height: 200,
   text: 'TEST FITTED TEXT'
-}]
+}, {
+    "left": 25,
+    "top": 50,
+    "blockLine": 350,
+    "lineLimited": 4,
+    "portraitWidth": 30,
+    "textAlign": "L",
+    "hangingIndent": null,
+    "text": "\"FD\" statement that IS preceded by an \"FB\" command.",
+    "type": "text",
+    "toFit": true
+  }]

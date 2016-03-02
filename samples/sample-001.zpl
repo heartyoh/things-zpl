@@ -1,66 +1,7 @@
 `^XA
 
-^FO50,100^ADN,46,40^FDZEBRA^FS
-
-^FO40,40^GB300,250,10,B,R^FS
-
-^FO40,40^GE300,250,20,W^FS
-
-^FX Top section with company logo, name and address.
-^CF0,60
-^FO50,50^GB100,100,100^FS
-^FO75,75^FR^GB100,100,100^FS
-^FO88,88^GB50,50,50^FS
-
-^FO220,50^FD   International Shipping, Inc.^FS
-^CF0,40
-^FO220,100^FD1000 Shipping Lane^FS
-^FO220,135^FDShelbyville TN 38102^FS
-^FO220,170^FDUnited States (USA)^FS
-^FO50,250^GB700,1,3^FS
-
-^FX Second section with recipient address and permit information.
-^CFA,30^FO50,300^FDJohn Doe^FS
-
-^FO50,340^FD100 Main Street^FS
-^FO50,380^FDSpringfield TN 39021^FS
-^FO50,420^FDUnited States (USA)^FS
-^CFA,15
-^FO600,300^GB150,150,3^FS
-^FO638,340^FDPermit^FS
-^FO638,390^FD123456^FS
-^FO50,500^GB700,1,3^FS
-
-^FX Third section with barcode.
-^BY5,2,270
-^FO175,550^BC^FD1234567890^FS
-
-^FX Fourth section (the two boxes on the bottom).
-^FO50,900^GB700,250,3^FS
-^FO400,900^GB1,250,3^FS
-^CF0,40
-^FO100,960^FDShipping Ctr. X34B-1^FS
-^FO100,1010^FDREF1 F00B47^FS
-^FO100,1060^FDREF2 BL4H8^FS
-^CF0,190
-^FO485,965^FDCA^FS
-
-
-^FO200,1200
-^B1N,N,50,Y,N
-^FD123456^FS
-
-^FO200,1300
-^B3N,N,50,Y
-^FDTEST^FS
-
-^FO10,1400
-^B4N,20,A,A
-^FD123456ABCDE^FS
-
-^FO10,1500
-^GB350,200,10^FS
-^FO10,1500
-^GD350,200,10,,L^FS
+^CF0,30,30^FO25,50
+^FB350,4,30,L
+^FD"FD" statement that IS preceded by an "FB" command.^FS
 
 ^XZ`
