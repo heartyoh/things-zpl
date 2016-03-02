@@ -2,7 +2,7 @@
 var converter = require('./src/converter')
 
 var fs = require('fs');
-fs.readFile(__dirname + '/samples/sample-my.zpl', function (err, data) {
+fs.readFile(__dirname + '/samples/sample-001.zpl', function (err, data) {
   if (err) {
     throw err;
   }
@@ -14,7 +14,7 @@ fs.readFile(__dirname + '/samples/sample-my.zpl', function (err, data) {
 
 // model -> zpl
 var reverter = require('./src/reverter')
-var sample = require('./samples/sample-my');
+var sample = require('./samples/sample-001');
 
 var components = sample.sample001;
 var command = reverter.revert(components)
