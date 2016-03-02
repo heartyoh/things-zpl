@@ -2,7 +2,7 @@
 var converter = require('./src/converter')
 
 var fs = require('fs');
-fs.readFile(__dirname + '/samples/sample-001.zpl', function (err, data) {
+fs.readFile(__dirname + '/samples/sample-003.zpl', function (err, data) {
   if (err) {
     throw err;
   }

@@ -10,7 +10,7 @@ exports.commands = new Map([
 			if (sign === '0') {
 				var p = params.split(',');
 
-				obj.width = parseInt(p[1]);
+				obj.width = parseInt(p[1]);		// FIXME
 				obj.height = parseInt(p[2]);
 
 				switch(p[0]) {
@@ -23,7 +23,7 @@ exports.commands = new Map([
 				return obj;
 			} else if(sign === '@') {	// ^A@o,h,w,d:o.x	// o: rotation(n,r,i,b), d: drive location of font, o: font name, x: extension
 				var p = params.split(',');
-				obj.width = parseInt(p[1]);
+				obj.width = parseInt(p[1]);		// FIXME
 				obj.height = parseInt(p[2]);
 
 				if(p.length === 4) {
@@ -365,7 +365,7 @@ exports.commands = new Map([
 			// }
 
 
-			return { text: p[0] }
+			return { text: p }
 		}
 	}],
 	['FO', {
@@ -398,7 +398,7 @@ exports.commands = new Map([
 		handler: function(p) {	// ^GBw,h,t,c,r : t: border thickness, c: line color, r: degree of corner-rounding	
 			var obj = {};
 			obj.type = 'rect'
-			obj.innerBor = true
+			obj.innerBorder = true
 			obj.width = parseInt(p[0])
 			obj.height = parseInt(p[1])
 			obj.lineWidth = parseInt(p[2])

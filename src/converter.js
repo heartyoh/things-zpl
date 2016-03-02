@@ -36,16 +36,23 @@ exports.convert = function(zpl) {
 			return;
 		}
 
-		var params = c.substr(2).split(',').map(function(value) {
-			return value.trim();
-		});
+		var params;
+		if (command === 'FD') {
+			params = c.substr(2);
+		} else {
+			params = c.substr(2).split(',').map(function(value) {
+				return value.trim();
+			});
+		}
+
 		var properties = commandHandler.handler(params);
 
 		switch(command) {
 			case 'FS':
 				if (!obj.type) {
 	  			obj.type = 'text';
-	  			obj.toFit = true;
+	  			obj.textAlign = 'left';
+	  			obj.textType = 'S';
 	  		}
 
 	  		obj = specific(obj);
@@ -94,7 +101,7 @@ function dashParser(zpl) {
  	return zpl;
 }
 
-
+const ratio = 7.5 / 10; // pt : px
 function specific(obj) {
 	switch(obj.type) {
 		case 'line':
@@ -123,9 +130,10 @@ function specific(obj) {
 			delete obj.top
 
 			break;
-		case 'fitted_text':
+		case 'text':
 			if (fontBuf) {
-				Object.assign(obj, fontBuf);
+				obj.height = fontBuf.height * ratio
+				obj.width = fontBuf.width * obj.text.length * ratio * 4/9
 			}
 			break;
 

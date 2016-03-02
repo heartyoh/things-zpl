@@ -10,13 +10,9 @@ function text(properties) {
     var h = this.model.height || 10;
     var rotate = this.model.rotation || 'N';
     var textAlign = this.model.textAlign || 'L';
-    var blockWidth = this.model.blockWidth;
-    var portraitHeight = this.model.portraitHeight || 0;
+    var lineMargin = this.model.lineMargin || 0;
 
-    // console.log(typeof blockWidth === 'number');
-    if(typeof blockWidth === 'number'){
-      text = text.substr(0, text.length / Math.ceil(w / blockWidth));
-    }
+    // TODO
 
     var commands = [
       ['^FO'+left, top],
