@@ -338,11 +338,11 @@ exports.commands = new Map([
 		desc: '',
 		parameters: '',
 		handler: function(p) {	// ^FBa,b,c,d,e: Field Block(automatic word-wrap): 	// TODO
-			console.log(p);
+
 			var obj = {};
-			obj.blockLine = parseInt(p[0])			// 행의 너비
+			obj.blockWidth = parseInt(p[0])			// 행의 너비
 			obj.lineLimited = parseInt(p[1])		// 몇줄 까지 나눌껀지
-			obj.portraitWidth = parseInt(p[2])		// 줄 간격
+			obj.portraitHeight = parseInt(p[2])		// 줄 간격
 			obj.textAlign = p[3]					// 텍스트 정렬
 			obj.hangingIndent = parseInt(p[4])		// 내어쓰기
 

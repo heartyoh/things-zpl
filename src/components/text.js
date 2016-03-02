@@ -10,20 +10,16 @@ function text(properties) {
     var h = this.model.height || 10;
     var rotate = this.model.rotation || 'N';
     var textAlign = this.model.textAlign || 'L';
-    var blockLine = this.model.blockLine || 0;
-    var portraitWidth = this.model.portraitWidth || 0;
+    var blockWidth = this.model.blockWidth;
+    var portraitHeight = this.model.portraitHeight || 0;
 
-
-    if(textAlign){
-      console.log(text.length, h , blockLine, portraitWidth);
-
-      text = text.substr(0, text.length / Math.ceil(h / blockLine));
-    
+    // console.log(typeof blockWidth === 'number');
+    if(typeof blockWidth === 'number'){
+      text = text.substr(0, text.length / Math.ceil(w / blockWidth));
     }
 
     var commands = [
       ['^FO'+left, top],
-      // ['^FB']
       ['^A' + 0, w, h],
       ['^FD'+text],
       ['^FS'],
