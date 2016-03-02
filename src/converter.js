@@ -52,7 +52,7 @@ exports.convert = function(zpl) {
 				if (!obj.type) {
 	  			obj.type = 'text';
 	  			obj.textAlign = 'left';
-	  			obj.textType = 'S';
+	  			obj.textType = 'F';
 	  		}
 
 	  		obj = specific(obj);
