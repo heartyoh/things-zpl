@@ -4,7 +4,7 @@ function barcode(properties) {
 	this.toZpl = function() {
 		var height = this.model.height || '';
 		var rotate = this.model.rot || 'N';
-		var showText = this.model.alttext || 'Y';
+		var showText = this.model.showText || 'Y';
 		var textAbove = this.model.textAbove || 'N'
 		var text = this.model.text || '';
 		var symbol = this.model.symbol;
