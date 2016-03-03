@@ -14,27 +14,30 @@ exports.convert = function(zpl) {
 	imageBuf = new Map();
 
 	var models = [];
-	var obj;
+	var obj = {};
 
 	var commands = zpl.split('^');
 	commands.forEach((c, i) => {
 		if (c.trim().length === 0) return;
 
-		c = c.replace('\n','')
+		c = c.replace('\n', '')
 		var command = c.substr(0, 2);
-		var commandHandler = commandsMap.get(command);
 
-		if(!commandHandler) return;
-
-
-		if (command.substr(0, 1) === 'A') {
+		if (command.charAt(0) === 'A') {
   		var params = c.substr(1);
   		
+  		var commandHandler = commandsMap.get('A');
+			if(!commandHandler) return;
+
   		var properties = commandHandler.handler(params);
 			obj = Object.assign(obj || {}, properties);
 
 			return;
 		}
+
+		var commandHandler = commandsMap.get(command);
+		if(!commandHandler) return;
+
 
 		var params;
 		if (command === 'FD') {
@@ -52,10 +55,11 @@ exports.convert = function(zpl) {
 				if (!obj.type) {
 	  			obj.type = 'text';
 	  			obj.textAlign = 'left';
-	  			obj.textType = 'F';
+	  			obj.textType = obj.textType || 'F';
 	  		}
 
 	  		obj = specific(obj);
+				obj.centerRotate = false
 	  		models.push(obj);
 	  		
 	  		obj = null;
@@ -101,7 +105,6 @@ function dashParser(zpl) {
  	return zpl;
 }
 
-const ratio = 7.5 / 10; // pt : px
 function specific(obj) {
 	switch(obj.type) {
 		case 'line':
@@ -131,9 +134,11 @@ function specific(obj) {
 
 			break;
 		case 'text':
-			if (fontBuf) {
-				obj.height = fontBuf.height * ratio
-				obj.width = fontBuf.width * obj.text.length * ratio * 4/9
+			if (fontBuf.charHeight || fontBuf.charWidth) {
+				Object.assign(obj, fontBuf);
+
+				// obj.width = (obj.width || fontBuf.charWidth * obj.text.length)
+				// obj.height = obj.height || fontBuf.charHeight
 			}
 			break;
 

@@ -7,24 +7,10 @@ exports.commands = new Map([
 			var sign = params.substr(0, 1);
 			params = params.substr(1);
 
-			if (sign === '0') {
+			if(sign === '@') {	// ^A@o,h,w,d:o.x	// o: rotation(n,r,i,b), d: drive location of font, o: font name, x: extension
 				var p = params.split(',');
-
-				obj.width = parseInt(p[1]);		// FIXME
-				obj.height = parseInt(p[2]);
-
-				switch(p[0]) {
-					// TODO font family
-					case '0':
-						obj.fontFamily = 'serif'	// FIXME
-						break;
-				}
-
-				return obj;
-			} else if(sign === '@') {	// ^A@o,h,w,d:o.x	// o: rotation(n,r,i,b), d: drive location of font, o: font name, x: extension
-				var p = params.split(',');
-				obj.width = parseInt(p[1]);		// FIXME
-				obj.height = parseInt(p[2]);
+				obj.charHeight = parseInt(p[1]);		// FIXME
+				obj.charWidth = parseInt(p[2]);
 
 				if(p.length === 4) {
 					var fonts = p[3];
@@ -38,15 +24,11 @@ exports.commands = new Map([
 						case 'A':
 							break;
 					}
+
 					fonts = fonts.substr(2);
 					var i = fonts.indexOf('.');
 					fonts = fonts.substr(0, i);
-					switch(fonts) {
-						// TODO font family
-						case 'CYRI_UB':
-							obj.fontFamily = fonts.toLowerCase();
-							break;
-					}
+					obj.fontFamily = fonts;
 				} else if (p.length === 3) {
 
 				} else {
@@ -56,6 +38,20 @@ exports.commands = new Map([
 
 				obj.rotation = getRotation(p[0]);
 				
+				return obj;
+			} else {
+				var p = params.split(',');
+
+				obj.charHeight = parseInt(p[1]);		// FIXME
+				obj.charWidth = parseInt(p[2]);
+
+				switch(p[0]) {
+					// TODO font family
+					case '0':
+						obj.fontFamily = 'serif'	// FIXME
+						break;
+				}
+
 				return obj;
 			}
 		}
@@ -298,12 +294,12 @@ exports.commands = new Map([
 		}
 	}],
 	['CF', {
-		desc: '',
-		parameters: '',
+		desc: 'The ^CF command sets the default font used in your printer.',
+		parameters: '^CFf,h,w',
 		handler: function(p) {	// ^CFf,h,w : f: font
 			var obj = {};
-			obj.height = parseInt(p[1]);
-			obj.width = parseInt(p[2]);
+			obj.charHeight = parseInt(p[1]);
+			obj.charWidth = parseInt(p[2]);
 			switch(p[0]) {
 				case 0:
 					obj.fontFamily = 'serif';
@@ -340,12 +336,27 @@ exports.commands = new Map([
 		handler: function(p) {	// ^FBa,b,c,d,e: Field Block(automatic word-wrap): 	// TODO
 
 			var obj = {};
-			obj.blockWidth = parseInt(p[0])			// 행의 너비
-			obj.lineLimited = parseInt(p[1])		// 몇줄 까지 나눌껀지
-			obj.portraitHeight = parseInt(p[2])		// 줄 간격
-			obj.textAlign = p[3]					// 텍스트 정렬
-			obj.hangingIndent = parseInt(p[4])		// 내어쓰기
+			obj.textType = 'W';
+			obj.width = parseInt(p[0])			// 행의 너비
+			obj.maxLines = parseInt(p[1])		// 몇줄 까지 나눌껀지
+			obj.lineMargin = parseInt(p[2])		// 줄 간격
+			
+			switch(p[3]) {
+				case 'L':
+					obj.textAlign = 'left'
+					break;
+				case 'C':
+					obj.textAlign = 'center'
+					break;
+				case 'R':
+					obj.textAlign = 'right'
+					break;
+				case 'J':
+					obj.textAlign = 'justified'
+					break;
+			}
 
+			obj.hangingIndent = parseInt(p[4])		// 두번째 줄 띄어쓰기
 			return obj
 		}
 	}],
@@ -442,10 +453,10 @@ exports.commands = new Map([
 		handler: function(p) {	// ^GEw,h,t,c
 			var obj = {};
 			obj.type = 'ellipse'
-			obj.rx = parseInt(p[0])
-			obj.ry = parseInt(p[1])
+			obj.rx = parseInt(p[0]) / 2
+			obj.ry = parseInt(p[1]) / 2
 			obj.lineWidth = parseInt(p[2])
-			obj.fillStyle = p[3]
+			obj.strokeStyle = p[3] === 'W' ? 'white' : 'black'
 
 			return obj
 		}
@@ -773,13 +784,13 @@ function getRotation(r) {
 			return Math.PI / 180 * 0;
 			break;
 		case 'R':
-			return Math.PI / 180 * 0.5;
+			return Math.PI / 180 * 90;
 			break;
 		case 'I':
-			return Math.PI / 180 * 1;
+			return Math.PI;
 			break;
 		case 'B':
-			return Math.PI / 180 * 1.5;
+			return Math.PI / 180 * 270;
 			break;
 	}
 }
