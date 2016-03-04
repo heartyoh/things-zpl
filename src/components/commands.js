@@ -204,7 +204,7 @@ exports.commands = new Map([
 		desc: '',
 		parameters: '',
 		handler: function(params) {
-			var obj = oehfgki(params);
+			var obj = oehfgkl(params);
 			obj.symbol = 'ansicodabar'
 			return obj;
 		}
@@ -375,7 +375,7 @@ exports.commands = new Map([
 			// if () {	// check DATE
 			// }
 
-
+			
 			return { text: p }
 		}
 	}],
@@ -655,8 +655,7 @@ function ohfgem(p) {
 		return obj;
 }
 
-function ohfg(params) {
-		var p = params.split(',');
+function ohfg(p) {
 		
 		var obj = {};
 		obj.type = 'barcode';
@@ -704,7 +703,7 @@ function ohm(p) {
 		return obj;
 }
 
-function oehfgki(p) {
+function oehfgkl(p) {
 		var obj = {};
 		obj.type = 'barcode';
 		obj.rot = p[0];
@@ -766,9 +765,7 @@ function ohscrfg(p) {
 		return obj;
 }
 
-function mpt(params) {
-		var p = params.split(',');
-		
+function mpt(p) {
 		var obj = {};
 		obj.type = 'barcode';
 		obj.mode = p[0];

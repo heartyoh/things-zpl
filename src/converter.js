@@ -51,6 +51,10 @@ exports.convert = function(zpl) {
 		var properties = commandHandler.handler(params);
 
 		switch(command) {
+			case 'XZ': 			// 마지막 바코드는 FS를 생략하고 XZ로 끝나도 가능 
+			if(obj == null)		// XZ가 null인 경우는 마지막 바코드도 FS로 끝나는 경 
+				break;
+
 			case 'FS':
 				if (!obj.type) {
 	  			obj.type = 'text';

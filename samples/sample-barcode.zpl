@@ -1,14 +1,99 @@
 ^XA
 
-^FO100,110^BY3
+^FO100,110^BY3,2,50
 ^B1N,N,150,Y,N
-^FD123456^FS
+^FD this is barcode B1 ^FS
 
-^FO110,120^BY3
-^B1N,N,150,Y,N
-^FD123456^FS
+^FO110,120^BY2
+^B2N,150,Y,N,N
+^FD B2 is ohfgc ^FS
 
+^FO110,130^BY3
+^B3N,N,100,Y,N
+^FD B3 is oehfg ^FS
+
+^FO110,140^BY4
+^B4R,20,A,A
+^FD B4 is ohfm ^FS
+
+^FO110,170^BY7
+^B7W,,5,C,83,N
+^FD B7 is ohscrt ^FS
+
+^FO110,180^BY8
+^B8N,100,Y,N
+^FD B8 is ohfg ^FS
+
+^FO110,190^BY9
+^B9N,100,Y,N,Y
+^FD B9 is ohfge ^FS
+
+^FO110,200^BY1
+^BAN,100,Y,N,N
+^FD BA is ohfge ^FS
+
+^FO110,210^BY2
+^BBN,30,,30,44,E
+^FD BB is ohscrm ^FS
+
+^FO110,220^BY3
+^BCN,100,Y,N,N,N
+^FD BC is ohfgem ^FS
+
+^FO110,230^BY4
+^BD2,5,3
+^FD BD is mnt ^FS
+
+^FO110,240^BY5
+^BEN,100,Y,N
+^FD BE is ohfg ^FS
+
+^FO110,250^BY6
+^BFN,8,3
+^FD BF is ohm ^FS
+
+^FO110,260^BY7
+^BIN,150,Y,N
+^FD BI is ohfg ^FS
+
+^FO110,270^BY8
+^BJN,150,Y,N
+^FD BJ is ohfg ^FS
+
+^FO110,280^BY9
+^BKN,N,150,Y,N,A,A
+^FD BK is oehfgkl ^FS
+
+^FO110,290^BY10
+^BLN,100,N
+^FD BL is ohg ^FS
+
+^FO110,300^BY1
+^BMN,B,100,Y,N,N
+^FD BM is oehfg2 ^FS
+
+^FO110,310^BY2
+^BPN,N,100,Y,N
+^FD BP is oehfg ^FS
+
+^FO110,320^BY3
+^BQN,2,10
+^FD BQ is abc ^FS
+
+^FO110,330^BY4
+^BSN,100,Y,N
+^FD BS is ohfg ^FS
+
+^FO110,340^BY5
+^BUN,100,Y,N,Y
+^FD BU is ohfge ^FS
+
+^FO110,350^BY6
+^BXN,10,200,c,r,f,g
+^FD BX is ohscrfg ^FS
+
+^FO110,360^BY7
+^BZN,40,Y,N
+^FD BZ is ohfg ^FS
 
 ^XZ
-
-
