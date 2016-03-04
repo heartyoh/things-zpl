@@ -76,6 +76,8 @@ exports.convert = function(zpl) {
 	  	default:
 		  	obj = Object.assign(obj || {}, properties);
 		}
+
+
 	})
 
   return models;
@@ -146,7 +148,17 @@ function specific(obj) {
 			break;
 
 		case 'image_view':
-			
+			break;
+
+		case 'barcode':
+			if (!obj.height) {
+				obj.height = barcodeBuf.height;
+			}
+
+			if (!obj.scale_w) {
+				obj.scale_w = barcodeBuf.scale_w;
+			}
+
 			break;
 	}
 

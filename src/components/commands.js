@@ -277,9 +277,9 @@ exports.commands = new Map([
 		parameters: '',
 		handler: function(params) {	// barcode field default
 			var obj = {};
-			obj.width = params[0]
-			obj.rot = params[1]
-			obj.width = params[2]
+			obj.scale_w = params[0]
+			// params[1]
+			obj.height = params[2]
 
 			return obj;
 		}
