@@ -12,7 +12,6 @@ exports.revert = function(components) {
 	components.forEach((c, i) => {
 		switch(c.type) {
 			case 'text':
-			case 'fitted_text':
 				var obj = new Text(c);
 				break;
 			case 'barcode':

@@ -7,8 +7,8 @@ function rect(properties) {
 		var height = this.model.height || '';
 		var lineWidth = this.model.lineWidth || '';
 		var strokeStyle = this.model.strokeStyle === 'White' ? 'W' : 'B';
-		var top = this.model.top || '0';
-		var left = this.model.left || '0';
+		var top = this.model.top || '';
+		var left = this.model.left || '';
 
 
 	  var commands = [

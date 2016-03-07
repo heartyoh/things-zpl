@@ -3,10 +3,10 @@ function ellipse(properties) {
 
   this.toZpl = function() {
 		var zpl = '';
-		var rx = this.model.rx || 0;
-		var ry = this.model.ry || 0;
-		var cx = this.model.cx || 0;
-		var cy = this.model.cy || 0;
+		var rx = this.model.rx || '';
+		var ry = this.model.ry || '';
+		var cx = this.model.cx || '';
+		var cy = this.model.cy || '';
 		var lineWidth = this.model.lineWidth || '';
 		var fillStyle = this.model.fillStyle === 'White' ? 'W' : 'B';
 

@@ -1,66 +1,72 @@
-var scale_wBuf;
+var scaleBuf = {};
 
 function barcode(properties) {
 	this.model = properties;
 
 	this.toZpl = function() {
 		var height = this.model.height || '';
-		var rotate = this.model.rot || 'N';
-		var showText = this.model.showText || 'Y';
-		var textAbove = this.model.textAbove || 'N'
+		var rotate = this.model.rot || '';
+		var showText = this.model.showText || '';
+		var textAbove = this.model.textAbove || ''
 		var text = this.model.text || '';
 		var symbol = this.model.symbol;
-		var top = this.model.top || 0;
-		var left = this.model.left || 0;
-		var scale_w = this.model.scale_w || 2;
+		var top = this.model.top || '';
+		var left = this.model.left || '';
+		var scale_w = this.model.scale_w || '';
+		var scale_h = this.model.scale_h || '';
 
-		if(scale_wBuf != scale_w){
-			scale_wBuf = scale_w;
-			scale_w = '^BY' + scale_w
-		} else
+
+		var scale = '';
+		var lines = [];
+		if(scaleBuf.w != scale_w || scalebuf.h != scale_h) {
+			scaleBuf.w = scale_w;
+			scaleBuf.h = scale_h;
+			scale = ['^BY'+scale_w, scale_h]
+
+			lines.push(scale)
+		} else {
 			scale_w = '';
+		}
 
 
 		var symbolMap = new Map([
-			['code11', 				['^B1'+rotate, 'N', height, showText, textAbove]],
-			['interleaved2of5', 	['^B2'+rotate, height, showText, textAbove, 'N']],
-			['code39', 				['^B3'+rotate, 'N', height, showText, textAbove]],
-			['code49', 				['^B4'+rotate, height, showText, 'A']],
+			['code11', 				['^B1'+rotate, , height, showText, textAbove]],
+			['interleaved2of5', 	['^B2'+rotate, height, showText, textAbove, ]],
+			['code39', 				['^B3'+rotate, , height, showText, textAbove]],
+			['code49', 				['^B4'+rotate, height, showText,]],
 			['planet', 				['^B5'+rotate, height, showText, textAbove]],
-			['pdf417', 				['^B7'+rotate, height, '0', '1:2', '1:2', 'N']],
+			['pdf417', 				['^B7'+rotate, height, , , , ]],
 			['ean8', 				['^B8'+rotate, height, showText, textAbove]],
-			['upce', 				['^B9'+rotate, height, showText, textAbove, 'N']],
-			['code93', 				['^BA'+rotate, height, showText, textAbove, 'N']],
-			['codablock', 			['^BB'+rotate, height, 'Y', '1:2', '1:2', 'F']],
-			['code128', 			['^BC'+rotate, height, showText, textAbove, 'N', 'N']],
-			['codemaxicode', 		['^BD'+rotate, 'N', height, showText, textAbove]],
-			['ean13', 				['^BE'+rotate, 'N', height, showText, textAbove]],
-			['micropdf417', 		['^BF'+'2', '1', '1']],
+			['upce', 				['^B9'+rotate, height, showText, textAbove, ]],
+			['code93', 				['^BA'+rotate, height, showText, textAbove, ]],
+			['codablock', 			['^BB'+rotate, height, , , , ]],
+			['code128', 			['^BC'+rotate, height, showText, textAbove, , ]],
+			['maxicode', 			['^BD'+rotate, , height, showText, textAbove]],
+			['ean13', 				['^BE'+rotate, , height, showText, textAbove]],
+			['micropdf417', 		['^BF'+'2', , ]],
 			['industrial2of5',		['^BI'+rotate, height, showText, textAbove]],
 			['standard2of5', 		['^BJ'+rotate, height, showText, textAbove]],
-			['ansicodabar', 		['^BK'+rotate, 'N', height, showText, textAbove, 'A', 'A']],
+			['ansicodabar', 		['^BK'+rotate, , height, showText, textAbove, , ]],
 			['logmars', 			['^BL'+rotate, height, textAbove]],
-			['msi', 				['^BM'+rotate, 'B', height, showText, textAbove, 'N']],
-			['plessey', 			['^BP'+rotate, 'N',  height, showText, textAbove]],
+			['msi', 				['^BM'+rotate, , height, showText, textAbove, ]],
+			['plessey', 			['^BP'+rotate, ,  height, showText, textAbove]],
 			['qrcode', 				['^BQ'+'']],	// TODO
-			['upca', 				['^BU'+rotate, height, showText, textAbove, 'Y']],
+			['upca', 				['^BU'+rotate, height, showText, textAbove, ]],
 			['datamatrix', 			['^BX'+'']],	// TODO
-			['postnet', 			['^BZ'+rotate, height, showText, textAbove]]
+			['postal', 				['^BZ'+rotate, height, showText, textAbove]]
 		]);
 
-		var zpl = '';
+		
 		var params = symbolMap.get(symbol);
 
-		if(text) {
-			zpl += '^FO' + left + ',' + top + scale_w + '\n'
-			zpl += params.join(',')
-			zpl += '\n^FD' + text
-			zpl += '^FS' + '\n'
-		} else {
-			zpl += '^FO' + left + ',' + top + scale_w + '\n'
-			zpl += params.join(',')
-			zpl += '^FS' + '\n'
-		}
+
+		
+		lines.push('^FO' + left + ',' + top)
+		lines.push(params.join(','))
+		lines.push('^FD' + text)
+		lines.push('^FS')
+
+		var zpl = lines.join('\n') + '\n'
 
 		return zpl;
 	}

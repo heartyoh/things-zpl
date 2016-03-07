@@ -5,10 +5,10 @@ function line(properties) {
 		var zpl = '';
 		var lineWidth = this.model.lineWidth || '';
 		var fillStyle = this.model.fillStyle === 'White' ? 'W' : 'B';
-		var x1 = this.model.x1 || 0;
-		var x2 = this.model.x2 || 0;
-		var y1 = this.model.y1 || 0;
-		var y2 = this.model.y2 || 0;
+		var x1 = this.model.x1 || '';
+		var x2 = this.model.x2 || '';
+		var y1 = this.model.y1 || '';
+		var y2 = this.model.y2 || '';
 
 		var left;
 		var top;

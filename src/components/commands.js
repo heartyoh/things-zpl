@@ -338,7 +338,7 @@ exports.commands = new Map([
 			var obj = {};
 			obj.textType = 'W';
 			obj.width = parseInt(p[0])			// 행의 너비
-			obj.maxLines = parseInt(p[1])		// 몇줄 까지 나눌껀지
+			obj.maxLines = parseInt(p[1])		// 최대행수
 			obj.lineMargin = parseInt(p[2])		// 줄 간격
 			
 			switch(p[3]) {
@@ -354,6 +354,8 @@ exports.commands = new Map([
 				case 'J':
 					obj.textAlign = 'justified'
 					break;
+				default:
+					obj.textAlign = textAlign;
 			}
 
 			obj.hangingIndent = parseInt(p[4])		// 두번째 줄 띄어쓰기
