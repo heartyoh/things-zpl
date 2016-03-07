@@ -374,8 +374,8 @@ exports.commands = new Map([
 			
 			// if () {	// check DATE
 			// }
+			p = p.trim();	// 바코드 양 끝의 공백은 출력되지 않으므로 trim 적용
 
-			
 			return { text: p }
 		}
 	}],
