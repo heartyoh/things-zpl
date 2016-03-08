@@ -8,60 +8,75 @@ if(window)
 exports.convert = require('./converter').convert
 exports.revert = require('./reverter').revert
 },{"./converter":9,"./reverter":10}],3:[function(require,module,exports){
+var scaleBuf = {};
+
 function barcode(properties) {
 	this.model = properties;
 
 	this.toZpl = function() {
 		var height = this.model.height || '';
-		var rotate = this.model.rotate || '';
+		var rotate = this.model.rot || '';
 		var showText = this.model.showText || '';
 		var textAbove = this.model.textAbove || ''
 		var text = this.model.text || '';
 		var symbol = this.model.symbol;
-		var top = this.model.top || 0;
-		var left = this.model.left || 0;
+		var top = this.model.top || '';
+		var left = this.model.left || '';
+		var scale_w = this.model.scale_w || '';
+		var scale_h = this.model.scale_h || '';
+
+
+		var scale = '';
+		var lines = [];
+		if(scaleBuf.w != scale_w || scaleBuf.h != scale_h) {
+			scaleBuf.w = scale_w;
+			scaleBuf.h = scale_h;
+			scale = ['^BY'+scale_w, scale_h]
+
+			lines.push(scale)
+		} else {
+			scale_w = '';
+		}
 
 
 		var symbolMap = new Map([
-			['code11', 			['^B1'+rotate, 'N', height, showText, textAbove]],
-			['interleaved2of5', 	['^B2'+rotate, height, showText, textAbove, 'N']],
-			['code39', 			['^B3'+rotate, 'N', height, showText, textAbove]],
-			['code49', 			['^B4'+rotate, height, showText, 'A']],
-			['planet', 			['^B5'+rotate, height, showText, textAbove]],
-			['pdf417', 			['^B7'+rotate, height, '0', '1:2', '1:2', 'N']],
+			['code11', 				['^B1'+rotate, , height, showText, textAbove]],
+			['interleaved2of5', 	['^B2'+rotate, height, showText, textAbove, ]],
+			['code39', 				['^B3'+rotate, , height, showText, textAbove]],
+			['code49', 				['^B4'+rotate, height, showText,]],
+			['planet', 				['^B5'+rotate, height, showText, textAbove]],
+			['pdf417', 				['^B7'+rotate, height, , , , ]],
 			['ean8', 				['^B8'+rotate, height, showText, textAbove]],
-			['upce', 				['^B9'+rotate, height, showText, textAbove, 'N']],
-			['code93', 			['^BA'+rotate, height, showText, textAbove, 'N']],
-			['codablock', 		['^BB'+rotate, height, 'Y', '1:2', '1:2', 'F']],
-			['code128', 			['^BC'+rotate, height, showText, textAbove, 'N', 'N']],
-			['codemaxicode', 		['^BD'+rotate, 'N', height, showText, textAbove]],
-			['ean13', 			['^BE'+rotate, 'N', height, showText, textAbove]],
-			['micropdf417', 		['^BF'+'2', '1', '1']],
-			['industrial2of5', 	['^BI'+rotate, height, showText, textAbove]],
+			['upce', 				['^B9'+rotate, height, showText, textAbove, ]],
+			['code93', 				['^BA'+rotate, height, showText, textAbove, ]],
+			['codablock', 			['^BB'+rotate, height, , , , ]],
+			['code128', 			['^BC'+rotate, height, showText, textAbove, , ]],
+			['maxicode', 			['^BD'+rotate, , height, showText, textAbove]],
+			['ean13', 				['^BE'+rotate, , height, showText, textAbove]],
+			['micropdf417', 		['^BF'+'2', , ]],
+			['industrial2of5',		['^BI'+rotate, height, showText, textAbove]],
 			['standard2of5', 		['^BJ'+rotate, height, showText, textAbove]],
-			['ansicodabar', 		['^BK'+rotate, 'N', height, showText, textAbove, 'A', 'A']],
+			['ansicodabar', 		['^BK'+rotate, , height, showText, textAbove, , ]],
 			['logmars', 			['^BL'+rotate, height, textAbove]],
-			['msi', 				['^BM'+rotate, 'B', height, showText, textAbove, 'N']],
-			['plessey', 			['^BP'+rotate, 'N',  height, showText, textAbove]],
-			['qrcode', 			['^BQ'+'']],
-			['upca', 				['^BU'+rotate, height, showText, textAbove, 'Y']],
-			['datamatrix', 		['^BX'+'']],
-			['postnet', 			['^BZ'+rotate, height, showText, textAbove]]
+			['msi', 				['^BM'+rotate, , height, showText, textAbove, ]],
+			['plessey', 			['^BP'+rotate, ,  height, showText, textAbove]],
+			['qrcode', 				['^BQ'+'']],	// TODO
+			['upca', 				['^BU'+rotate, height, showText, textAbove, ]],
+			['datamatrix', 			['^BX'+'']],	// TODO
+			['postal', 				['^BZ'+rotate, height, showText, textAbove]]
 		]);
 
-		var zpl = '';
+		
 		var params = symbolMap.get(symbol);
 
-		if(text) {
-			zpl += '^FO' + left + ',' + top + '\n'
-			zpl += params.join(',')
-			zpl += '^FD' + text 
-			zpl += '^FS' + '\n';
-		} else {
-			zpl += '^FO' + left + ',' + top + '\n'
-			zpl += params.join(',') 
-			zpl += '^FS' + '\n';
-		}
+
+		
+		lines.push('^FO' + left + ',' + top)
+		lines.push(params.join(','))
+		lines.push('^FD' + text)
+		lines.push('^FS')
+
+		var zpl = lines.join('\n') + '\n'
 
 		return zpl;
 	}
@@ -78,24 +93,10 @@ exports.commands = new Map([
 			var sign = params.substr(0, 1);
 			params = params.substr(1);
 
-			if (sign === '0') {
+			if(sign === '@') {	// ^A@o,h,w,d:o.x	// o: rotation(n,r,i,b), d: drive location of font, o: font name, x: extension
 				var p = params.split(',');
-
-				obj.width = parseInt(p[1]);
-				obj.height = parseInt(p[2]);
-
-				switch(p[0]) {
-					// TODO font family
-					case '0':
-						obj.fontFamily = 'serif'	// FIXME
-						break;
-				}
-
-				return obj;
-			} else if(sign === '@') {	// ^A@o,h,w,d:o.x	// o: rotation(n,r,i,b), d: drive location of font, o: font name, x: extension
-				var p = params.split(',');
-				obj.width = parseInt(p[1]);
-				obj.height = parseInt(p[2]);
+				obj.charHeight = parseInt(p[1]);		// FIXME
+				obj.charWidth = parseInt(p[2]);
 
 				if(p.length === 4) {
 					var fonts = p[3];
@@ -109,15 +110,11 @@ exports.commands = new Map([
 						case 'A':
 							break;
 					}
+
 					fonts = fonts.substr(2);
 					var i = fonts.indexOf('.');
 					fonts = fonts.substr(0, i);
-					switch(fonts) {
-						// TODO font family
-						case 'CYRI_UB':
-							obj.fontFamily = fonts.toLowerCase();
-							break;
-					}
+					obj.fontFamily = fonts;
 				} else if (p.length === 3) {
 
 				} else {
@@ -127,6 +124,20 @@ exports.commands = new Map([
 
 				obj.rotation = getRotation(p[0]);
 				
+				return obj;
+			} else {
+				var p = params.split(',');
+
+				obj.charHeight = parseInt(p[1]);		// FIXME
+				obj.charWidth = parseInt(p[2]);
+
+				switch(p[0]) {
+					// TODO font family
+					case '0':
+						obj.fontFamily = 'serif'	// FIXME
+						break;
+				}
+
 				return obj;
 			}
 		}
@@ -279,7 +290,7 @@ exports.commands = new Map([
 		desc: '',
 		parameters: '',
 		handler: function(params) {
-			var obj = oehfgki(params);
+			var obj = oehfgkl(params);
 			obj.symbol = 'ansicodabar'
 			return obj;
 		}
@@ -352,9 +363,9 @@ exports.commands = new Map([
 		parameters: '',
 		handler: function(params) {	// barcode field default
 			var obj = {};
-			obj.width = params[0]
-			obj.rot = params[1]
-			obj.width = params[2]
+			obj.scale_w = params[0]
+			// params[1]
+			obj.height = params[2]
 
 			return obj;
 		}
@@ -369,12 +380,12 @@ exports.commands = new Map([
 		}
 	}],
 	['CF', {
-		desc: '',
-		parameters: '',
+		desc: 'The ^CF command sets the default font used in your printer.',
+		parameters: '^CFf,h,w',
 		handler: function(p) {	// ^CFf,h,w : f: font
 			var obj = {};
-			obj.height = parseInt(p[1]);
-			obj.width = parseInt(p[2]);
+			obj.charHeight = parseInt(p[1]);
+			obj.charWidth = parseInt(p[2]);
 			switch(p[0]) {
 				case 0:
 					obj.fontFamily = 'serif';
@@ -409,6 +420,32 @@ exports.commands = new Map([
 		desc: '',
 		parameters: '',
 		handler: function(p) {	// ^FBa,b,c,d,e: Field Block(automatic word-wrap): 	// TODO
+
+			var obj = {};
+			obj.textType = 'W';
+			obj.width = parseInt(p[0])			// 행의 너비
+			obj.maxLines = parseInt(p[1])		// 최대행수
+			obj.lineMargin = parseInt(p[2])		// 줄 간격
+			
+			switch(p[3]) {
+				case 'L':
+					obj.textAlign = 'left'
+					break;
+				case 'C':
+					obj.textAlign = 'center'
+					break;
+				case 'R':
+					obj.textAlign = 'right'
+					break;
+				case 'J':
+					obj.textAlign = 'justified'
+					break;
+				default:
+					obj.textAlign = textAlign;
+			}
+
+			obj.hangingIndent = parseInt(p[4])		// 두번째 줄 띄어쓰기
+			return obj
 		}
 	}],
 	['FC', {
@@ -425,9 +462,9 @@ exports.commands = new Map([
 			
 			// if () {	// check DATE
 			// }
+			p = p.trim();	// 바코드 양 끝의 공백은 출력되지 않으므로 trim 적용
 
-
-			return { text: p[0] }
+			return { text: p }
 		}
 	}],
 	['FO', {
@@ -460,7 +497,7 @@ exports.commands = new Map([
 		handler: function(p) {	// ^GBw,h,t,c,r : t: border thickness, c: line color, r: degree of corner-rounding	
 			var obj = {};
 			obj.type = 'rect'
-			obj.innerBor = true
+			obj.innerBorder = true
 			obj.width = parseInt(p[0])
 			obj.height = parseInt(p[1])
 			obj.lineWidth = parseInt(p[2])
@@ -493,7 +530,7 @@ exports.commands = new Map([
 			obj.height = parseInt(p[1])
 			obj.lineWidth = parseInt(p[2])
 			obj.fillStyle = p[3]
-			obj.rotate = p[4]
+			obj.rotation = p[4]
 
 			return obj
 		}
@@ -504,10 +541,10 @@ exports.commands = new Map([
 		handler: function(p) {	// ^GEw,h,t,c
 			var obj = {};
 			obj.type = 'ellipse'
-			obj.rx = parseInt(p[0])
-			obj.ry = parseInt(p[1])
+			obj.rx = parseInt(p[0]) / 2
+			obj.ry = parseInt(p[1]) / 2
 			obj.lineWidth = parseInt(p[2])
-			obj.fillStyle = p[3]
+			obj.strokeStyle = p[3] === 'W' ? 'white' : 'black'
 
 			return obj
 		}
@@ -706,8 +743,7 @@ function ohfgem(p) {
 		return obj;
 }
 
-function ohfg(params) {
-		var p = params.split(',');
+function ohfg(p) {
 		
 		var obj = {};
 		obj.type = 'barcode';
@@ -755,7 +791,7 @@ function ohm(p) {
 		return obj;
 }
 
-function oehfgki(p) {
+function oehfgkl(p) {
 		var obj = {};
 		obj.type = 'barcode';
 		obj.rot = p[0];
@@ -817,9 +853,7 @@ function ohscrfg(p) {
 		return obj;
 }
 
-function mpt(params) {
-		var p = params.split(',');
-		
+function mpt(p) {
 		var obj = {};
 		obj.type = 'barcode';
 		obj.mode = p[0];
@@ -835,13 +869,13 @@ function getRotation(r) {
 			return Math.PI / 180 * 0;
 			break;
 		case 'R':
-			return Math.PI / 180 * 0.5;
+			return Math.PI / 180 * 90;
 			break;
 		case 'I':
-			return Math.PI / 180 * 1;
+			return Math.PI;
 			break;
 		case 'B':
-			return Math.PI / 180 * 1.5;
+			return Math.PI / 180 * 270;
 			break;
 	}
 }
@@ -852,18 +886,18 @@ function ellipse(properties) {
 
   this.toZpl = function() {
 		var zpl = '';
-		var rx = this.model.rx || 0;
-		var ry = this.model.ry || 0;
-		var cx = this.model.cx || 0;
-		var cy = this.model.cy || 0;
+		var rx = this.model.rx || '';
+		var ry = this.model.ry || '';
+		var cx = this.model.cx || '';
+		var cy = this.model.cy || '';
 		var lineWidth = this.model.lineWidth || '';
-		var fillStyle = this.model.fillStyle === 'White' ? 'W' : 'B';
+		var fillStyle = this.model.fillStyle === 'white' ? 'W' : 'B';
 
 		var left = cx - rx || '0';
 		var top = cy - ry || '0';
 		
 		var command;
-		if(rx == ry)
+		if(rx === ry)
 			command = 'GC'
 		else
 			command = 'GE'
@@ -874,12 +908,14 @@ function ellipse(properties) {
 			['GE', 		['^GE' + rx, ry, lineWidth, fillStyle]],
 		]);
 
-		var zpl = '';
+		var zpl = [];
 		var params = symbolMap.get(command);
-		zpl += '^FO' + left + ',' + top + '\n';
-		zpl += params.join(',')
-		zpl += '^FS' + '\n';
+		zpl.push('^FO' + left + ',' + top);
+		zpl.push(params.join(','));
+		zpl.push('^FS');
 
+		zpl = zpl.join('\n');
+		zpl += '\n'
 
 		return zpl;
   }
@@ -894,10 +930,10 @@ function line(properties) {
 		var zpl = '';
 		var lineWidth = this.model.lineWidth || '';
 		var fillStyle = this.model.fillStyle === 'White' ? 'W' : 'B';
-		var x1 = this.model.x1 || 0;
-		var x2 = this.model.x2 || 0;
-		var y1 = this.model.y1 || 0;
-		var y2 = this.model.y2 || 0;
+		var x1 = this.model.x1 || '';
+		var x2 = this.model.x2 || '';
+		var y1 = this.model.y1 || '';
+		var y2 = this.model.y2 || '';
 
 		var left;
 		var top;
@@ -957,9 +993,9 @@ function rect(properties) {
 		var width = this.model.width || '';
 		var height = this.model.height || '';
 		var lineWidth = this.model.lineWidth || '';
-		var strokeStyle = this.model.strokeStyle === 'White' ? 'W' : 'B';
-		var top = this.model.top || '0';
-		var left = this.model.left || '0';
+		var strokeStyle = this.model.strokeStyle === 'white' ? 'W' : 'B';
+		var top = this.model.top || '';
+		var left = this.model.left || '';
 
 
 	  var commands = [
@@ -985,18 +1021,72 @@ function text(properties) {
   this.toZpl = function() {
     var zpl = '';
     var text = this.model.text || '';
-    var top = this.model.top || '0';
-    var left = this.model.left || '0';
-    var fontSize = this.model.fontSize || 5;
-    var rotate = this.model.rotate || 'N';
+    var top = this.model.top || '';
+    var left = this.model.left || '';
+    var width = this.model.width || '';
+    var height = this.model.height || '';
+
+    var textType = this.model.textType || '';
+    var charWidth = this.model.charWidth || width / text.length;
+    if (textType === 'F') {
+      var charHeight = this.model.charHeight || height;
+    } else if (textType === 'W') {
+      var charHeight = this.model.charHeight;
+    } else {
+      var charHeight = this.model.charHeight || this.model.charWidth;
+    }
+
+    var rotate = this.model.rotation || '';
+    var textAlign = this.model.textAlign || '';
+
+    if (Math.PI * -0.25 < rotate && rotate <= Math.PI * 0.25) {
+      rotate = 'N'
+    } else if (Math.PI * 0.25 < rotate && rotate <= Math.PI * 0.75) {
+      rotate = 'R'
+    } else if (Math.PI * 0.75 < rotate && rotate <= Math.PI * 1.25) {
+      rotate = 'I'
+    } else if (Math.PI < rotate * 1.25 && rotate <= Math.PI * 1.75) {
+      rotate = 'B'
+    }
 
 
-    var commands = [
-      ['^FO'+left, top],
-      ['^A0', fontSize, fontSize],
-      ['^FD'+text],
-      ['^FS'],
-    ];
+    if (textType === 'W' || textType === 'w') {
+      switch(textAlign) {
+        case 'left':
+          textAlign = 'L';
+          break;
+        case 'right':
+          textAlign = 'R';
+          break;
+        case 'center':
+          textAlign = 'C';
+          break;
+        case 'justified':
+          textAlign = 'J';
+          break;
+        default:
+          break;
+      }
+
+      var lineMargin = this.model.lineMargin || '';
+      var maxLines = this.model.maxLines || '';
+      var hangingIndent = this.model.hangingIndent || '';
+
+      var commands = [
+        ['^FO'+left, top],
+        ['^A@'+rotate, charHeight, charWidth],
+        ['^FB'+width, maxLines, lineMargin, textAlign, hangingIndent],
+        ['^FD'+text],
+        ['^FS']
+      ];
+    } else {
+      var commands = [
+        ['^FO'+left, top],
+        ['^A@' + rotate, charHeight, charWidth],
+        ['^FD'+text],
+        ['^FS']
+      ];
+    }
 
     var zpl = '';
     
@@ -1026,41 +1116,56 @@ exports.convert = function(zpl) {
 	imageBuf = new Map();
 
 	var models = [];
-	var obj;
+	var obj = {};
 
 	var commands = zpl.split('^');
 	commands.forEach((c, i) => {
 		if (c.trim().length === 0) return;
 
-		c = c.replace('\n','')
+		c = c.replace('\n', '')
 		var command = c.substr(0, 2);
-		var commandHandler = commandsMap.get(command);
 
-		if(!commandHandler) return;
-
-
-		if (command.substr(0, 1) === 'A') {
+		if (command.charAt(0) === 'A') {
   		var params = c.substr(1);
   		
+  		var commandHandler = commandsMap.get('A');
+			if(!commandHandler) return;
+
   		var properties = commandHandler.handler(params);
 			obj = Object.assign(obj || {}, properties);
 
 			return;
 		}
 
-		var params = c.substr(2).split(',').map(function(value) {
-			return value.trim();
-		});
+		var commandHandler = commandsMap.get(command);
+		if(!commandHandler) return;
+
+
+		var params;
+		if (command === 'FD') {
+			params = c.substr(2);
+		} else {
+			params = c.substr(2).split(',').map(function(value) {
+				return value.trim();
+			});
+		}
+
 		var properties = commandHandler.handler(params);
 
 		switch(command) {
+			case 'XZ': 			// 마지막 바코드는 FS를 생략하고 XZ로 끝나도 가능 
+				if(obj == null)		// XZ가 null인 경우는 마지막 바코드도 FS로 끝나는 경우 
+				break;
+
 			case 'FS':
 				if (!obj.type) {
 	  			obj.type = 'text';
-	  			obj.toFit = true;
+	  			obj.textAlign = 'left';
+	  			obj.textType = obj.textType || 'F';
 	  		}
 
 	  		obj = specific(obj);
+				obj.centerRotate = false
 	  		models.push(obj);
 	  		
 	  		obj = null;
@@ -1077,6 +1182,8 @@ exports.convert = function(zpl) {
 	  	default:
 		  	obj = Object.assign(obj || {}, properties);
 		}
+
+
 	})
 
   return models;
@@ -1106,7 +1213,6 @@ function dashParser(zpl) {
  	return zpl;
 }
 
-
 function specific(obj) {
 	switch(obj.type) {
 		case 'line':
@@ -1135,9 +1241,12 @@ function specific(obj) {
 			delete obj.top
 
 			break;
-		case 'fitted_text':
-			if (fontBuf) {
+		case 'text':
+			if (fontBuf.charHeight || fontBuf.charWidth) {
 				Object.assign(obj, fontBuf);
+
+				// obj.width = (obj.width || fontBuf.charWidth * obj.text.length)
+				// obj.height = obj.height || fontBuf.charHeight
 			}
 			break;
 
@@ -1145,7 +1254,17 @@ function specific(obj) {
 			break;
 
 		case 'image_view':
-			
+			break;
+
+		case 'barcode':
+			if (!obj.height) {
+				obj.height = barcodeBuf.height;
+			}
+
+			if (!obj.scale_w) {
+				obj.scale_w = barcodeBuf.scale_w;
+			}
+
 			break;
 	}
 
@@ -1170,7 +1289,6 @@ exports.revert = function(components) {
 	components.forEach((c, i) => {
 		switch(c.type) {
 			case 'text':
-			case 'fitted_text':
 				var obj = new Text(c);
 				break;
 			case 'barcode':

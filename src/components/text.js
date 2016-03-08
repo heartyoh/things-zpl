@@ -19,12 +19,8 @@ function text(properties) {
       var charHeight = this.model.charHeight || this.model.charWidth;
     }
 
-    var rotate = this.model.rotation || 'N';
-    var textAlign = this.model.textAlign || 'L';
-    var lineMargin = this.model.lineMargin || 0;
-    var maxLines = this.model.maxLines || 1;
-    var hangingIndent = this.model.hangingIndent || 0;
-
+    var rotate = this.model.rotation || '';
+    var textAlign = this.model.textAlign || '';
 
     if (Math.PI * -0.25 < rotate && rotate <= Math.PI * 0.25) {
       rotate = 'N'
@@ -54,6 +50,10 @@ function text(properties) {
         default:
           break;
       }
+
+      var lineMargin = this.model.lineMargin || '';
+      var maxLines = this.model.maxLines || '';
+      var hangingIndent = this.model.hangingIndent || '';
 
       var commands = [
         ['^FO'+left, top],

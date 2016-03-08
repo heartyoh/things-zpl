@@ -8,13 +8,13 @@ function ellipse(properties) {
 		var cx = this.model.cx || '';
 		var cy = this.model.cy || '';
 		var lineWidth = this.model.lineWidth || '';
-		var fillStyle = this.model.fillStyle === 'White' ? 'W' : 'B';
+		var fillStyle = this.model.fillStyle === 'white' ? 'W' : 'B';
 
 		var left = cx - rx || '0';
 		var top = cy - ry || '0';
 		
 		var command;
-		if(rx == ry)
+		if(rx === ry)
 			command = 'GC'
 		else
 			command = 'GE'
@@ -25,12 +25,14 @@ function ellipse(properties) {
 			['GE', 		['^GE' + rx, ry, lineWidth, fillStyle]],
 		]);
 
-		var zpl = '';
+		var zpl = [];
 		var params = symbolMap.get(command);
-		zpl += '^FO' + left + ',' + top + '\n';
-		zpl += params.join(',')
-		zpl += '^FS' + '\n';
+		zpl.push('^FO' + left + ',' + top);
+		zpl.push(params.join(','));
+		zpl.push('^FS');
 
+		zpl = zpl.join('\n');
+		zpl += '\n'
 
 		return zpl;
   }

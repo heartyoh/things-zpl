@@ -18,7 +18,7 @@ function barcode(properties) {
 
 		var scale = '';
 		var lines = [];
-		if(scaleBuf.w != scale_w || scalebuf.h != scale_h) {
+		if(scaleBuf.w != scale_w || scaleBuf.h != scale_h) {
 			scaleBuf.w = scale_w;
 			scaleBuf.h = scale_h;
 			scale = ['^BY'+scale_w, scale_h]
