@@ -65,4 +65,15 @@ exports.sample001 = [{
   "charWidth": 25,
   "fontFamily": "serif",
   "centerRotate": false
+},{
+    'type':'text',
+    'left':600,
+    'top':540,
+    'width':311,
+    'height':80,
+    'text':'esticker',
+    'fillStyle':'#fff',
+    'strokeStyle':'#000',
+    'textType':'F',
+    'rotation':0
 }];

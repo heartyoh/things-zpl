@@ -25,7 +25,6 @@ function barcode(properties) {
 		var scale_w = this.model.scale_w || '';
 		var scale_h = this.model.scale_h || '';
 
-
 		var scale = '';
 		var lines = [];
 		if(scaleBuf.w != scale_w || scaleBuf.h != scale_h) {
@@ -37,7 +36,6 @@ function barcode(properties) {
 		} else {
 			scale_w = '';
 		}
-
 
 		var symbolMap = new Map([
 			['code11', 				['^B1'+rotate, , height, showText, textAbove]],
@@ -52,14 +50,14 @@ function barcode(properties) {
 			['codablock', 			['^BB'+rotate, height, , , , ]],
 			['code128', 			['^BC'+rotate, height, showText, textAbove, , ]],
 			['maxicode', 			['^BD'+rotate, , height, showText, textAbove]],
-			['ean13', 				['^BE'+rotate, , height, showText, textAbove]],
+			['ean13', 				['^BE'+rotate, height, showText, textAbove]],
 			['micropdf417', 		['^BF'+'2', , ]],
 			['industrial2of5',		['^BI'+rotate, height, showText, textAbove]],
 			['standard2of5', 		['^BJ'+rotate, height, showText, textAbove]],
 			['ansicodabar', 		['^BK'+rotate, , height, showText, textAbove, , ]],
 			['logmars', 			['^BL'+rotate, height, textAbove]],
 			['msi', 				['^BM'+rotate, , height, showText, textAbove, ]],
-			['plessey', 			['^BP'+rotate, ,  height, showText, textAbove]],
+			['plessey', 			['^BP'+rotate, , height, showText, textAbove]],
 			['qrcode', 				['^BQ'+'']],	// TODO
 			['upca', 				['^BU'+rotate, height, showText, textAbove, ]],
 			['datamatrix', 			['^BX'+'']],	// TODO
@@ -68,7 +66,6 @@ function barcode(properties) {
 
 		
 		var params = symbolMap.get(symbol);
-
 
 		
 		lines.push('^FO' + left + ',' + top)
@@ -967,12 +964,20 @@ function line(properties) {
 			rotate = 'L'
 		}
 		
-
-	  var commands = [
-	  	['^FO'+left, top],
-			['^GD' + width, height ,lineWidth, fillStyle, rotate],
-			['^FS']
-		];
+		// height가 0일 때는 (가로선 일 경우) 두께가 width의 길이가 됨.
+		if(height == 0){
+			var commands = [
+		  		['^FO'+left, top],
+				['^GD' + height, lineWidth ,width, fillStyle, rotate],
+				['^FS']
+			];
+		} else {
+			var commands = [
+			  	['^FO'+left, top],
+				['^GD' + width, height ,lineWidth, fillStyle, rotate],
+				['^FS']
+			];
+		}		
 
 	  var zpl = '';
 	  commands.forEach(c => {
