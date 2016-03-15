@@ -33,7 +33,7 @@ function barcode(properties) {
 			['code39', 				['^B3'+rotate, , height, showText, textAbove]],
 			['code49', 				['^B4'+rotate, height, showText,]],
 			['planet', 				['^B5'+rotate, height, showText, textAbove]],
-			['pdf417', 			x	['^B7'+rotate, height, , , , ]],
+			['pdf417', 				['^B7'+rotate, height, , , , ]],
 			['ean8', 				['^B8'+rotate, height, showText, textAbove]],
 			['upce', 				['^B9'+rotate, height, showText, textAbove, ]],
 			['code93', 				['^BA'+rotate, height, showText, textAbove, ]],
