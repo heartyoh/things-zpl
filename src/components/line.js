@@ -42,12 +42,20 @@ function line(properties) {
 			rotate = 'L'
 		}
 		
-
-	  var commands = [
-	  	['^FO'+left, top],
-			['^GD' + width, height ,lineWidth, fillStyle, rotate],
-			['^FS']
-		];
+		// height가 0일 때는 (가로선 일 경우) 두께가 width의 길이가 됨.
+		if(height == 0){
+			var commands = [
+		  		['^FO'+left, top],
+				['^GD' + height, lineWidth ,width, fillStyle, rotate],
+				['^FS']
+			];
+		} else {
+			var commands = [
+			  	['^FO'+left, top],
+				['^GD' + width, height ,lineWidth, fillStyle, rotate],
+				['^FS']
+			];
+		}		
 
 	  var zpl = '';
 	  commands.forEach(c => {
