@@ -415,7 +415,7 @@ exports.commands = new Map([
 			obj.width = parseInt(p[0])
 			obj.height = parseInt(p[1])
 			obj.lineWidth = parseInt(p[2])
-			obj.strokeStyle = p[3]
+			obj.strokeStyle = p[3] === 'W' ? 'white' : 'black'
 
 			return obj
 		}
@@ -443,8 +443,8 @@ exports.commands = new Map([
 			obj.width = parseInt(p[0])
 			obj.height = parseInt(p[1])
 			obj.lineWidth = parseInt(p[2])
-			obj.fillStyle = p[3]
-			obj.rotation = p[4]
+			obj.strokeStyle = p[3] === 'W' ? 'white' : 'black'
+			obj.rotate = p[4]
 
 			return obj
 		}

@@ -42,11 +42,14 @@ function line(properties) {
 			rotate = 'L'
 		}
 		
-		// height가 0일 때는 (가로선 일 경우) 두께가 width의 길이가 됨.
-		if(height == 0){
+		/* 
+		 * height가 0일 때(가로선 일 경우)는 두께가 width의 길이가 됨.
+		 * 하지만 일직선이라도 정확히 0이 나오지 않는 경우가 있어 대략 1이하 정도는 0으로 판단
+		 */
+		if(height <= 1){
 			var commands = [
 		  		['^FO'+left, top],
-				['^GD' + height, lineWidth ,width, fillStyle, rotate],
+				['^GD' + 0, lineWidth ,width, fillStyle, rotate],
 				['^FS']
 			];
 		} else {

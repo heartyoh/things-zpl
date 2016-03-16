@@ -116,6 +116,13 @@ function specific(obj) {
 		case 'line':
 			obj.x1 = obj.left
 			obj.x2 = obj.left + obj.width;
+
+			// x1과 x2가 같은으면서 테두리가 100이상 정도 굵은 경우에는 ZPL의 가로선을 표현 할 때에 해당됨. (100이란 수치는 대략임)
+			if(obj.x1 == obj.x2 && obj.lineWidth >= 100){
+				obj.x1 += obj.lineWidth / 2
+				obj.x2 += obj.lineWidth / 2
+			}
+
 			if (obj.rotate === 'L') {
 				obj.y1 = obj.top
 				obj.y2 = obj.top + obj.height;
