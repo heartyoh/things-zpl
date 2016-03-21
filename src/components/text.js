@@ -1,11 +1,14 @@
 function text(properties) {
   this.model = properties;
 
-  this.toZpl = function() {
+  this.toZpl = function(group) {
     var zpl = '';
     var text = this.model.text || '';
     var top = this.model.top || '';
+    top += group ? group.top || 0 : 0;
     var left = this.model.left || '';
+    left += group ? group.left || 0 : 0;
+
     var width = this.model.width || '';
     var height = this.model.height || '';
 
@@ -20,6 +23,8 @@ function text(properties) {
     }
 
     var rotate = this.model.rotation || '';
+    rotate += group ? group.rotation || 0 : 0;
+
     var textAlign = this.model.textAlign || '';
 
     if (Math.PI * -0.25 < rotate && rotate <= Math.PI * 0.25) {

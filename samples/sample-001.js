@@ -1,4 +1,5 @@
-exports.sample001 = [{
+// text, line, ellipse, rect, barcode
+exports.sample = [{
   type: 'text',
   top: 30,
   left: 30,

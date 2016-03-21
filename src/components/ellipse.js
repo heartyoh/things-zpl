@@ -1,7 +1,7 @@
 function ellipse(properties) {
 	this.model = properties;
 
-  this.toZpl = function() {
+  this.toZpl = function(group) {
 		var zpl = '';
 		var rx = this.model.rx || '';
 		var ry = this.model.ry || '';
@@ -11,7 +11,9 @@ function ellipse(properties) {
 		var fillStyle = this.model.fillStyle === 'white' ? 'W' : 'B';
 
 		var left = cx - rx || '0';
+		left += group ? group.left || 0 : 0
 		var top = cy - ry || '0';
+		top += group ? group.top || 0 : 0
 		
 		var command;
 		if(rx === ry)
