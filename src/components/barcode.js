@@ -30,7 +30,7 @@ function barcode(properties) {
 		}
 
 		if (showText) {
-			height /= 1.2;	// barcode 높이는 문자 뺀 다음의 높이임.
+			height /= 1.221;	// barcode 높이는 문자 뺀 다음의 높이임.
 		}
 
 		var dpi = 200;
