@@ -1,20 +1,23 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var zpl = require("./src/api");
 
-if(window)
+if (typeof window !== 'undefined')
   window.zpl = zpl
 
+if (typeof exports !== 'undefined') {
+	exports.zpl = zpl;
+}
 },{"./src/api":2}],2:[function(require,module,exports){
 exports.convert = require('./converter').convert
 exports.revert = require('./reverter').revert
-},{"./converter":9,"./reverter":10}],3:[function(require,module,exports){
+},{"./converter":10,"./reverter":11}],3:[function(require,module,exports){
 var scaleBuf = {};
 
 function barcode(properties) {
 	this.model = properties;
 
 	this.toZpl = function() {
-		var height = this.model.height || '';
+		var height = this.model.height / 1.22 || '';	// TODO
 		var rotate = this.model.rot || '';
 		var showText = this.model.showText || '';
 		var textAbove = this.model.textAbove || ''
@@ -498,7 +501,7 @@ exports.commands = new Map([
 			obj.width = parseInt(p[0])
 			obj.height = parseInt(p[1])
 			obj.lineWidth = parseInt(p[2])
-			obj.strokeStyle = p[3]
+			obj.strokeStyle = p[3] === 'W' ? 'white' : 'black'
 
 			return obj
 		}
@@ -526,8 +529,8 @@ exports.commands = new Map([
 			obj.width = parseInt(p[0])
 			obj.height = parseInt(p[1])
 			obj.lineWidth = parseInt(p[2])
-			obj.fillStyle = p[3]
-			obj.rotation = p[4]
+			obj.strokeStyle = p[3] === 'W' ? 'white' : 'black'
+			obj.rotate = p[4]
 
 			return obj
 		}
@@ -881,7 +884,7 @@ function getRotation(r) {
 function ellipse(properties) {
 	this.model = properties;
 
-  this.toZpl = function() {
+  this.toZpl = function(group) {
 		var zpl = '';
 		var rx = this.model.rx || '';
 		var ry = this.model.ry || '';
@@ -891,7 +894,9 @@ function ellipse(properties) {
 		var fillStyle = this.model.fillStyle === 'white' ? 'W' : 'B';
 
 		var left = cx - rx || '0';
+		left += group ? group.left || 0 : 0
 		var top = cy - ry || '0';
+		top += group ? group.top || 0 : 0
 		
 		var command;
 		if(rx === ry)
@@ -920,10 +925,18 @@ function ellipse(properties) {
 
 exports.Ellipse = ellipse;
 },{}],6:[function(require,module,exports){
+function group(properties) {
+	this.model = properties;
+
+	return this.model;
+}
+
+exports.Group = group;
+},{}],7:[function(require,module,exports){
 function line(properties) {
   this.model = properties;
 
-  this.toZpl = function() {
+  this.toZpl = function(group) {
 		var zpl = '';
 		var lineWidth = this.model.lineWidth || '';
 		var fillStyle = this.model.fillStyle === 'White' ? 'W' : 'B';
@@ -938,43 +951,38 @@ function line(properties) {
 		var height;
 		var rotate;
 
+		left = Math.min(x1, x2);
+		top = Math.min(y1, y2);
+		width = Math.abs(x2 - x1)
+		height = Math.abs(y2 - y1)
+
 		if(x1 <= x2 && y1 <= y2){
-			left = x1
-			top = y1
-			width = x2 - x1
-			height = y2 - y1
 			rotate = 'L'
-		} else if(x1 >= x2 && y1 <= y2){
-			left = x2
-			top = y1
-			width = x1 - x2
-			height = y2 - y1
-			rotate = 'R'
-		} else if(x1 <= x2 && y1 >= y2){
-			left = x1
-			top = y2
-			width = x2 - x1
-			height = y1 - y2
-			rotate = 'R'
-		} else if(x1 >= x2 && y1 >= y2){
-			left = x2
-			top  = y2
-			width = x1 - x2
-			height = y1 - y2
+		} else if(x1 >= x2 && y1 >= y2) {
 			rotate = 'L'
+		} else if(x1 >= x2 && y1 <= y2) {
+			rotate = 'R'
+		} else if(x1 <= x2 && y1 >= y2) {
+			rotate = 'R'
 		}
 		
-		// height가 0일 때는 (가로선 일 경우) 두께가 width의 길이가 됨.
-		if(height == 0){
+		left += group ? group.left || 0 : 0;
+		top += group ? group.top || 0 : 0;
+
+		/* 
+		 * height가 0일 때(가로선 일 경우)는 두께가 width의 길이가 됨.
+		 * 하지만 일직선이라도 정확히 0이 나오지 않는 경우가 있어 대략 1이하 정도는 0으로 판단
+		 */
+		if(height <= 1) {
 			var commands = [
-		  		['^FO'+left, top],
-				['^GD' + height, lineWidth ,width, fillStyle, rotate],
+				['^FO'+left, top],
+				['^GD' + 0, lineWidth, width, fillStyle, rotate],
 				['^FS']
 			];
 		} else {
 			var commands = [
-			  	['^FO'+left, top],
-				['^GD' + width, height ,lineWidth, fillStyle, rotate],
+				['^FO'+left, top],
+				['^GD' + width, height, lineWidth, fillStyle, rotate],
 				['^FS']
 			];
 		}		
@@ -989,20 +997,23 @@ function line(properties) {
 }
 
 exports.Line = line;
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 function rect(properties) {
   this.model = properties;
 
-  this.toZpl = function() {
+  this.toZpl = function(group) {
 		var zpl = '';
 		var width = this.model.width || '';
 		var height = this.model.height || '';
 		var lineWidth = this.model.lineWidth || '';
 		var strokeStyle = this.model.strokeStyle === 'white' ? 'W' : 'B';
-		var top = this.model.top || '';
+		
 		var left = this.model.left || '';
+		left += group ? group.left || 0 : 0;
 
-
+		var top = this.model.top || '';
+		top += group ? group.top || 0 : 0;
+		
 	  var commands = [
 	  	['^FO'+left, top],
 			['^GB'+width, height ,lineWidth, strokeStyle],
@@ -1019,15 +1030,18 @@ function rect(properties) {
 }
 
 exports.Rect = rect;
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 function text(properties) {
   this.model = properties;
 
-  this.toZpl = function() {
+  this.toZpl = function(group) {
     var zpl = '';
     var text = this.model.text || '';
     var top = this.model.top || '';
+    top += group ? group.top || 0 : 0;
     var left = this.model.left || '';
+    left += group ? group.left || 0 : 0;
+
     var width = this.model.width || '';
     var height = this.model.height || '';
 
@@ -1042,6 +1056,8 @@ function text(properties) {
     }
 
     var rotate = this.model.rotation || '';
+    rotate += group ? group.rotation || 0 : 0;
+
     var textAlign = this.model.textAlign || '';
 
     if (Math.PI * -0.25 < rotate && rotate <= Math.PI * 0.25) {
@@ -1079,7 +1095,8 @@ function text(properties) {
 
       var commands = [
         ['^FO'+left, top],
-        ['^A@'+rotate, charHeight, charWidth],
+        // ['^A@'+rotate, charHeight, charWidth * 0.75],
+        ['^A6'+rotate, charHeight, charWidth * 0.75], // FIXME
         ['^FB'+width, maxLines, lineMargin, textAlign, hangingIndent],
         ['^FD'+text],
         ['^FS']
@@ -1087,7 +1104,8 @@ function text(properties) {
     } else {
       var commands = [
         ['^FO'+left, top],
-        ['^A@' + rotate, charHeight, charWidth],
+        // ['^A@' + rotate, charHeight, charWidth * 0.75],
+        ['^A0'+rotate, charHeight, charWidth * 0.75],
         ['^FD'+text],
         ['^FS']
       ];
@@ -1104,7 +1122,7 @@ function text(properties) {
 }
 
 exports.Text = text;
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 var commands = require('./components/commands')
 var commandsMap = commands.commands
 
@@ -1223,6 +1241,13 @@ function specific(obj) {
 		case 'line':
 			obj.x1 = obj.left
 			obj.x2 = obj.left + obj.width;
+
+			// x1과 x2가 같은으면서 테두리가 100이상 정도 굵은 경우에는 ZPL의 가로선을 표현 할 때에 해당됨. (100이란 수치는 대략임)
+			if(obj.x1 == obj.x2 && obj.lineWidth >= 100){
+				obj.x1 += obj.lineWidth / 2
+				obj.x2 += obj.lineWidth / 2
+			}
+
 			if (obj.rotate === 'L') {
 				obj.y1 = obj.top
 				obj.y2 = obj.top + obj.height;
@@ -1279,20 +1304,40 @@ function specific(obj) {
 function error_log(c) {
 	console.log('Command: '+ c + ' parameter error');
 }
-},{"./components/commands":4}],10:[function(require,module,exports){
+},{"./components/commands":4}],11:[function(require,module,exports){
 var Text = require('./components/text').Text
 var Barcode = require('./components/barcode').Barcode
 var Rect = require('./components/rect').Rect
 var Ellipse = require('./components/ellipse').Ellipse
 var Line = require('./components/line').Line
+var Group = require('./components/group').Group
 
 exports.revert = function(components) {
-
 	if (!components) return;
 
 	var zpl = '^XA\n';
+	zpl = makeZpl(components, zpl)
+	zpl += '^XZ'
+
+	return zpl
+}
+
+
+var groups = [];
+function makeZpl(components, zpl) {
+	if (!components) return;
+
+	if (groups.length > 0) {
+		var group = groups.pop();
+	}
+
 	components.forEach((c, i) => {
 		switch(c.type) {
+			case 'group':
+				groups.push(Group(c));
+				zpl += makeZpl(c.components, '')
+
+				break;
 			case 'text':
 				var obj = new Text(c);
 				break;
@@ -1308,18 +1353,17 @@ exports.revert = function(components) {
 			case 'image':
 				break;
 			case 'line':
-				var obj = new  Line(c);
+				var obj = new Line(c);
 				break;
 		}
 
     if(obj) {
-      zpl += obj.toZpl();
+      zpl += obj.toZpl(group);
       zpl += '\n';
     }
 	});
 
-	zpl += '^XZ'
   return zpl;
 }
 
-},{"./components/barcode":3,"./components/ellipse":5,"./components/line":6,"./components/rect":7,"./components/text":8}]},{},[1]);
+},{"./components/barcode":3,"./components/ellipse":5,"./components/group":6,"./components/line":7,"./components/rect":8,"./components/text":9}]},{},[1]);
