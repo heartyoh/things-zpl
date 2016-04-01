@@ -62,7 +62,8 @@ function text(properties) {
 
       var commands = [
         ['^FO'+left, top],
-        ['^A@'+rotate, charHeight, charWidth * 0.75],
+        // ['^A@'+rotate, charHeight, charWidth * 0.75],
+        ['^A6'+rotate, charHeight, charWidth * 0.75], // FIXME
         ['^FB'+width, maxLines, lineMargin, textAlign, hangingIndent],
         ['^FD'+text],
         ['^FS']
@@ -70,7 +71,8 @@ function text(properties) {
     } else {
       var commands = [
         ['^FO'+left, top],
-        ['^A@' + rotate, charHeight, charWidth * 0.75],
+        // ['^A@' + rotate, charHeight, charWidth * 0.75],
+        ['^A0'+rotate, charHeight, charWidth * 0.75],
         ['^FD'+text],
         ['^FS']
       ];
