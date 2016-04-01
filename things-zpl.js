@@ -21,7 +21,7 @@ function barcode(properties) {
 
 		var height = model.height || '';
 		var rotate = model.rot || '';
-		var showText = model.showText || '';
+		var showText = model.showText || 'Y';
 		var textAbove = model.textAbove || ''
 		var text = model.text || '';
 		var symbol = model.symbol;
@@ -43,7 +43,7 @@ function barcode(properties) {
 		}
 
 		if (showText) {
-			height /= 1.221;	// barcode 높이는 문자 뺀 다음의 높이임.
+			height = height / 1.2;	// barcode 높이는 문자 뺀 다음의 높이임.
 		}
 
 		var dpi = 200;
