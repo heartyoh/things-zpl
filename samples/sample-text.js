@@ -1,4 +1,4 @@
-exports.sample001 = [{
+exports.sample = [{
   "left": 150,
   "top": 100,
   "charHeight": 50,
@@ -76,4 +76,18 @@ exports.sample001 = [{
     'strokeStyle':'#000',
     'textType':'F',
     'rotation':0
+},{
+  "type":"text",
+  "left":49,
+  "top":149,
+  "width":124,
+  "height":30,
+  "text":"Material :",
+  "fillStyle":"#fff",
+  "strokeStyle":"#000",
+  "textType":"F",
+  "rotation":0,
+  "charWidth":28.162135195809427,
+  "charHeight":30.2314453125,
+  "fontColor":"#333333"
 }];

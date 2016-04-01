@@ -62,7 +62,7 @@ function text(properties) {
 
       var commands = [
         ['^FO'+left, top],
-        ['^A@'+rotate, charHeight, charWidth],
+        ['^A@'+rotate, charHeight, charWidth * 0.75],
         ['^FB'+width, maxLines, lineMargin, textAlign, hangingIndent],
         ['^FD'+text],
         ['^FS']
@@ -70,7 +70,7 @@ function text(properties) {
     } else {
       var commands = [
         ['^FO'+left, top],
-        ['^A@' + rotate, charHeight, charWidth],
+        ['^A@' + rotate, charHeight, charWidth * 0.75],
         ['^FD'+text],
         ['^FS']
       ];
