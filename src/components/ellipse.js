@@ -9,7 +9,14 @@ function ellipse(properties) {
 		var cx = model.cx || '';
 		var cy = model.cy || '';
 		var lineWidth = model.lineWidth || '';
-		var fillStyle = model.fillStyle === 'white' ? 'W' : 'B';
+		var fillStyle = model.fillStyle;
+
+		if (fillStyle === 'white' || fillStyle === '#fff'
+			|| (fillStyle === '#fff')) {
+			fillStyle = 'W';
+		} else {
+			fillStyle = 'B'
+		}
 
 		var left = cx - rx || '0';
 		left += group ? group.left || 0 : 0

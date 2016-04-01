@@ -10,7 +10,7 @@ function rect(properties) {
 
 		var strokeStyle;
 		if (model.strokeStyle === 'white' || model.strokeStyle === '#fff'
-			|| (model.strokeStyle === '#fff')) {
+			|| (model.strokeStyle === '#ffffff')) {
 			strokeStyle = 'W';
 		} else {
 			strokeStyle = 'B'
