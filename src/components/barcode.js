@@ -4,16 +4,18 @@ function barcode(properties) {
 	this.model = properties;
 
 	this.toZpl = function() {
-		var height = this.model.height / 1.22 || '';	// TODO
-		var rotate = this.model.rot || '';
-		var showText = this.model.showText || '';
-		var textAbove = this.model.textAbove || ''
-		var text = this.model.text || '';
-		var symbol = this.model.symbol;
-		var top = this.model.top || '';
-		var left = this.model.left || '';
-		var scale_w = this.model.scale_w || '';
-		var scale_h = this.model.scale_h || '';
+		var model = this.model;
+
+		var height = model.height / 1.22 || '';	// TODO
+		var rotate = model.rot || '';
+		var showText = model.showText || '';
+		var textAbove = model.textAbove || ''
+		var text = model.text || '';
+		var symbol = model.symbol;
+		var top = model.top || '';
+		var left = model.left || '';
+		var scale_w = model.scale_w || '';
+		var scale_h = model.scale_h || '';
 
 		var scale = '';
 		var lines = [];

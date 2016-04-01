@@ -1,15 +1,13 @@
-exports.sample001 =
-[{ 
-  'type':'rect',
-  'left':24,
-  'top':13,
-  'width':1394,
-  'height':415,
-  'round':8.321377331420372,
-  'fillStyle':'#fff',
-  'strokeStyle':'#000',
-  'alpha':1,
-  'hidden':false,
-  'rotation':0,
-  'lineWidth':'9'
+exports.sample =
+[{
+  type: 'line',
+  x1 : 100, y1: 100, x2: 100, y2: 300, rotation: 0
+},
+{
+  type: 'line',
+  x1 : 100, y1: 100, x2: 300, y2: 300, rotation: 0.5
+},
+{
+  type: 'line',
+  x1 : 100, y1: 100, x2: 200, y2: 200, rotation: 0.3
 }]

@@ -1,4 +1,4 @@
-exports.sample001 =
+exports.sample =
 [
   {
     left: 100,

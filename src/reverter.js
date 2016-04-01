@@ -47,6 +47,7 @@ function makeZpl(components, zpl) {
 				break;
 			case 'line':
 				var obj = new Line(c);
+
 				break;
 		}
 

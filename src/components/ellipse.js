@@ -2,13 +2,14 @@ function ellipse(properties) {
 	this.model = properties;
 
   this.toZpl = function(group) {
-		var zpl = '';
-		var rx = this.model.rx || '';
-		var ry = this.model.ry || '';
-		var cx = this.model.cx || '';
-		var cy = this.model.cy || '';
-		var lineWidth = this.model.lineWidth || '';
-		var fillStyle = this.model.fillStyle === 'white' ? 'W' : 'B';
+		var model = this.model;
+
+		var rx = model.rx || '';
+		var ry = model.ry || '';
+		var cx = model.cx || '';
+		var cy = model.cy || '';
+		var lineWidth = model.lineWidth || '';
+		var fillStyle = model.fillStyle === 'white' ? 'W' : 'B';
 
 		var left = cx - rx || '0';
 		left += group ? group.left || 0 : 0

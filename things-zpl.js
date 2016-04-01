@@ -17,16 +17,18 @@ function barcode(properties) {
 	this.model = properties;
 
 	this.toZpl = function() {
-		var height = this.model.height / 1.22 || '';	// TODO
-		var rotate = this.model.rot || '';
-		var showText = this.model.showText || '';
-		var textAbove = this.model.textAbove || ''
-		var text = this.model.text || '';
-		var symbol = this.model.symbol;
-		var top = this.model.top || '';
-		var left = this.model.left || '';
-		var scale_w = this.model.scale_w || '';
-		var scale_h = this.model.scale_h || '';
+		var model = this.model;
+
+		var height = model.height / 1.22 || '';	// TODO
+		var rotate = model.rot || '';
+		var showText = model.showText || '';
+		var textAbove = model.textAbove || ''
+		var text = model.text || '';
+		var symbol = model.symbol;
+		var top = model.top || '';
+		var left = model.left || '';
+		var scale_w = model.scale_w || '';
+		var scale_h = model.scale_h || '';
 
 		var scale = '';
 		var lines = [];
@@ -885,13 +887,14 @@ function ellipse(properties) {
 	this.model = properties;
 
   this.toZpl = function(group) {
-		var zpl = '';
-		var rx = this.model.rx || '';
-		var ry = this.model.ry || '';
-		var cx = this.model.cx || '';
-		var cy = this.model.cy || '';
-		var lineWidth = this.model.lineWidth || '';
-		var fillStyle = this.model.fillStyle === 'white' ? 'W' : 'B';
+		var model = this.model;
+
+		var rx = model.rx || '';
+		var ry = model.ry || '';
+		var cx = model.cx || '';
+		var cy = model.cy || '';
+		var lineWidth = model.lineWidth || '';
+		var fillStyle = model.fillStyle === 'white' ? 'W' : 'B';
 
 		var left = cx - rx || '0';
 		left += group ? group.left || 0 : 0
@@ -933,30 +936,83 @@ function group(properties) {
 
 exports.Group = group;
 },{}],7:[function(require,module,exports){
+var Rect = require('./rect').Rect
+
 function line(properties) {
   this.model = properties;
 
   this.toZpl = function(group) {
-		var zpl = '';
-		var lineWidth = this.model.lineWidth || '';
-		var fillStyle = this.model.fillStyle === 'White' ? 'W' : 'B';
-		var x1 = this.model.x1 || '';
-		var x2 = this.model.x2 || '';
-		var y1 = this.model.y1 || '';
-		var y2 = this.model.y2 || '';
+		var model = this.model;
+		var x1 = model.x1 || '';
+		var x2 = model.x2 || '';
+		var y1 = model.y1 || '';
+		var y2 = model.y2 || '';
 
-		var left;
-		var top;
-		var width;
-		var height;
-		var rotate;
+		var lineWidth = model.lineWidth || '';
+		var fillStyle = model.fillStyle === 'White' ? 'W' : 'B';
 
-		left = Math.min(x1, x2);
-		top = Math.min(y1, y2);
-		width = Math.abs(x2 - x1)
-		height = Math.abs(y2 - y1)
+		var zpl = '';		
+		if (x1 === x2 || y1 === y2) {
+			zpl = this.gbLine(group);
+			return zpl;
+		} else {
+			var commands = this.gdLine(group);
+		}
 
-		if(x1 <= x2 && y1 <= y2){
+	  commands.forEach(c => {
+	  	zpl += (c.join(',') + '\n')
+	  });
+
+		return zpl;
+  }
+
+	this.gbLine = function(group) {
+		var model = this.model;
+		var x1 = model.x1 || '';
+		var x2 = model.x2 || '';
+		var y1 = model.y1 || '';
+		var y2 = model.y2 || '';
+		var lineWidth = model.lineWidth || '';
+
+		var strokeStyle = this.model.strokeStyle;
+
+		var left = Math.min(x1, x2);
+		var top = Math.min(y1, y2);
+
+		var tx = Math.abs(x2 - x1);
+		var ty = Math.abs(y2 - y1);
+		var width = tx === 0 ? lineWidth : tx;
+		var height = ty === 0 ? lineWidth : ty;
+
+		left += group ? group.left || 0 : 0;
+		top += group ? group.top || 0 : 0;
+
+		var properties = {
+			left: left,
+			top: top,
+			width: width,
+			height: height,
+			lineWidth: lineWidth,
+			strokeStyle: strokeStyle
+		}
+
+		var rect = new Rect(properties);
+		return rect.toZpl(group);
+  }
+
+  this.gdLine = function(group) {
+  	var model = this.model;
+		var x1 = model.x1 || '';
+		var x2 = model.x2 || '';
+		var y1 = model.y1 || '';
+		var y2 = model.y2 || '';
+
+		var left = Math.min(x1, x2);
+		var top = Math.min(y1, y2);
+		var width = Math.abs(x2 - x1);
+		var height = Math.abs(y2 - y1);
+
+		if(x1 <= x2 && y1 <= y2) {
 			rotate = 'L'
 		} else if(x1 >= x2 && y1 >= y2) {
 			rotate = 'L'
@@ -969,54 +1025,57 @@ function line(properties) {
 		left += group ? group.left || 0 : 0;
 		top += group ? group.top || 0 : 0;
 
-		/* 
-		 * height가 0일 때(가로선 일 경우)는 두께가 width의 길이가 됨.
-		 * 하지만 일직선이라도 정확히 0이 나오지 않는 경우가 있어 대략 1이하 정도는 0으로 판단
-		 */
-		if(height <= 1) {
-			var commands = [
-				['^FO'+left, top],
-				['^GD' + 0, lineWidth, width, fillStyle, rotate],
-				['^FS']
-			];
-		} else {
-			var commands = [
-				['^FO'+left, top],
-				['^GD' + width, height, lineWidth, fillStyle, rotate],
-				['^FS']
-			];
-		}		
+		var commands = [
+			['^FO'+left, top],
+			['^GD' + width, height, this.lineWidth, this.fillStyle, rotate],
+			['^FS']
+		];
 
-	  var zpl = '';
-	  commands.forEach(c => {
-	  	zpl += (c.join(',') + '\n')
-	  });
-
-		return zpl;
+		return commands;
   }
 }
 
 exports.Line = line;
-},{}],8:[function(require,module,exports){
+},{"./rect":8}],8:[function(require,module,exports){
 function rect(properties) {
   this.model = properties;
 
   this.toZpl = function(group) {
-		var zpl = '';
-		var width = this.model.width || '';
-		var height = this.model.height || '';
-		var lineWidth = this.model.lineWidth || '';
-		var strokeStyle = this.model.strokeStyle === 'white' ? 'W' : 'B';
-		
-		var left = this.model.left || '';
+  	var model = this.model;
+		var width = model.width || '';
+		var height = model.height || '';
+		var lineWidth = model.lineWidth || '' ;
+		var fillStyle = model.fillStyle || '';
+
+		var strokeStyle;
+		if (model.strokeStyle === 'white' || model.strokeStyle === '#fff'
+			|| (model.strokeStyle === '#fff')) {
+			strokeStyle = 'W';
+		} else {
+			strokeStyle = 'B'
+		}
+
+		if (fillStyle) {
+			if (fillStyle === 'white' || fillStyle === '#fff'
+				|| (fillStyle === '#fff')) {
+				fillStyle = 'W';
+			} else {
+				fillStyle = 'B'
+			}
+
+			lineWidth = height;
+			strokeStyle = fillStyle;
+		}
+
+		var left = model.left || '';
 		left += group ? group.left || 0 : 0;
 
-		var top = this.model.top || '';
+		var top = model.top || '';
 		top += group ? group.top || 0 : 0;
 		
 	  var commands = [
 	  	['^FO'+left, top],
-			['^GB'+width, height ,lineWidth, strokeStyle],
+			['^GB'+width, height, lineWidth, strokeStyle],
 			['^FS']
 		];
 
@@ -1354,6 +1413,7 @@ function makeZpl(components, zpl) {
 				break;
 			case 'line':
 				var obj = new Line(c);
+
 				break;
 		}
 
