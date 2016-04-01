@@ -14,7 +14,7 @@ function line(properties) {
 		var fillStyle = model.fillStyle;
 
 		if (fillStyle === 'white' || fillStyle === '#fff'
-			|| (fillStyle === '#fff')) {
+			|| (fillStyle === '#ffffff')) {
 			fillStyle = 'W';
 		} else {
 			fillStyle = 'B'

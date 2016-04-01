@@ -18,7 +18,7 @@ function rect(properties) {
 
 		if (fillStyle) {
 			if (fillStyle === 'white' || fillStyle === '#fff'
-				|| (fillStyle === '#fff')) {
+				|| (fillStyle === '#ffffff')) {
 				fillStyle = 'W';
 			} else {
 				fillStyle = 'B'
