@@ -24,8 +24,8 @@ function ellipse(properties) {
 
 
 		var symbolMap = new Map([
-			['GC', 		['^GC' + rx, lineWidth, fillStyle]],
-			['GE', 		['^GE' + rx, ry, lineWidth, fillStyle]],
+			['GC', 		['^GC' + rx*2, lineWidth, fillStyle]],
+			['GE', 		['^GE' + rx*2, ry*2, lineWidth, fillStyle]],
 		]);
 
 		var zpl = [];

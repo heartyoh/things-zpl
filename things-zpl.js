@@ -19,7 +19,7 @@ function barcode(properties) {
 	this.toZpl = function() {
 		var model = this.model;
 
-		var height = model.height / 1.22 || '';	// TODO
+		var height = model.height || '';
 		var rotate = model.rot || '';
 		var showText = model.showText || '';
 		var textAbove = model.textAbove || ''
@@ -42,6 +42,11 @@ function barcode(properties) {
 			scale_w = '';
 		}
 
+		if (showText) {
+			height /= 1.2;	// barcode 높이는 문자 뺀 다음의 높이임.
+		}
+
+		var dpi = 200;
 		var symbolMap = new Map([
 			['code11', 				['^B1'+rotate, , height, showText, textAbove]],
 			['interleaved2of5', 	['^B2'+rotate, height, showText, textAbove, ]],
@@ -63,7 +68,7 @@ function barcode(properties) {
 			['logmars', 			['^BL'+rotate, height, textAbove]],
 			['msi', 				['^BM'+rotate, , height, showText, textAbove, ]],
 			['plessey', 			['^BP'+rotate, , height, showText, textAbove]],
-			['qrcode', 				['^BQ'+'']],	// TODO
+			['qrcode', 				['^BQ'+rotate, , 6]],	// TODO
 			['upca', 				['^BU'+rotate, height, showText, textAbove, ]],
 			['datamatrix', 			['^BX'+'']],	// TODO
 			['postal', 				['^BZ'+rotate, height, showText, textAbove]]
@@ -909,8 +914,8 @@ function ellipse(properties) {
 
 
 		var symbolMap = new Map([
-			['GC', 		['^GC' + rx, lineWidth, fillStyle]],
-			['GE', 		['^GE' + rx, ry, lineWidth, fillStyle]],
+			['GC', 		['^GC' + rx*2, lineWidth, fillStyle]],
+			['GE', 		['^GE' + rx*2, ry*2, lineWidth, fillStyle]],
 		]);
 
 		var zpl = [];
