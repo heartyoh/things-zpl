@@ -4,6 +4,7 @@ var Rect = require('./components/rect').Rect
 var Ellipse = require('./components/ellipse').Ellipse
 var Line = require('./components/line').Line
 var Group = require('./components/group').Group
+var Image = require('./components/image').Image
 
 exports.revert = function(components) {
 	if (!components) return;
@@ -44,6 +45,8 @@ function makeZpl(components, zpl) {
 				var obj = new Ellipse(c);
 				break;
 			case 'image':
+			case 'image-view':
+				var obj = new Image(c);
 				break;
 			case 'line':
 				var obj = new Line(c);

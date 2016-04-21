@@ -18,9 +18,9 @@ function ellipse(properties) {
 			fillStyle = 'B'
 		}
 
-		var left = cx - rx || '0';
+		var left = cx - rx || 0;
 		left += group ? group.left || 0 : 0
-		var top = cy - ry || '0';
+		var top = cy - ry || 0;
 		top += group ? group.top || 0 : 0
 		
 		var command;
