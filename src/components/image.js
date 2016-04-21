@@ -1,5 +1,5 @@
-var sizeOf = require('image-size');
-const exec = require('child_process').exec;
+// var sizeOf = require('image-size');
+// const exec = require('child_process').exec;
 
 // function toGrf(inputFile, outputFile) {
 // 	var dimensions = sizeOf('images/funny-cats.png');
