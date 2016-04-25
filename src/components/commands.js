@@ -381,16 +381,23 @@ exports.commands = new Map([
 			return { text: p }
 		}
 	}],
+	['FH', {
+		desc: 'Field Hexadecimal Indicator',
+		parameters: '0: hexadecimal indicator',
+		handler: function(p) {
+			// TODO
+		}
+	}],
 	['FO', {
-		desc: '',
-		parameters: '',
-		handler: function(p) {	// ^FOx,y
-			if (p.length != 2) {
+		desc: 'Field Origin',
+		parameters: 'x, y, justification(0: left, 1: right, 2: auto)',
+		handler: function(p) {
+			if (p.length < 2) {
 				error_log('FO');
 				return;
 			}
 
-			return { left: parseInt(p[0]), top: parseInt(p[1]) }
+			return { left: parseInt(p[0]), top: parseInt(p[1]), justification: parseInt(p[2])}
 		}
 	}],
 	['FS', {
@@ -399,10 +406,23 @@ exports.commands = new Map([
 		handler: function(p) {
 		}
 	}],
+	['FT', {
+		desc: 'Field Typeset',
+		parameters: 'x, y, justification',
+		handler: function(p) {
+			if (p.length < 2) {
+				error_log('FO');
+				return;
+			}
+
+			return { left: parseInt(p[0]), top: parseInt(p[1]), justification: parseInt(p[2])}
+		}
+	}],
 	['FX', {
-		desc: '',
+		desc: 'comment',
 		parameters: '',
 		handler: function(p) {
+			// var obj = {};
 		}
 	}],
 	['GB', {
