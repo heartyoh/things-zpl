@@ -10,7 +10,6 @@ function line(properties) {
 		var y1 = model.y1 || '';
 		var y2 = model.y2 || '';
 
-		var lineWidth = model.lineWidth || '';
 		var fillStyle = model.fillStyle;
 
 		if (fillStyle === 'white' || fillStyle === '#fff'

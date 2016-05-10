@@ -76,12 +76,3 @@ function getGuid() {
   }
   return s4() + s4() + s4() + s4() + s4() + s4() + s4() + s4();
 }
-
-function parse(str) {
-  var args = [].slice.call(arguments, 1);
-  var i = 0;
-
-  return str.replace(/%s/g, function() {
-      return args[i++];
-  });
-}

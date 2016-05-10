@@ -366,7 +366,7 @@ exports.commands = new Map([
 		desc: '',
 		parameters: '',
 		handler: function(p) {	// ^FCa,b,c: Field Clock	// TODO
-			var obj = {};
+			// var obj = {};
 		}
 	}],
 	['FD', {
@@ -801,15 +801,11 @@ function getRotation(r) {
 	switch(r) {
 		case 'N':
 			return Math.PI / 180 * 0;
-			break;
 		case 'R':
 			return Math.PI / 180 * 90;
-			break;
 		case 'I':
 			return Math.PI;
-			break;
 		case 'B':
 			return Math.PI / 180 * 270;
-			break;
 	}
 }

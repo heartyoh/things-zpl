@@ -17,7 +17,7 @@ exports.convert = function(zpl) {
 	var obj = {};
 
 	var commands = zpl.split('^');
-	commands.forEach((c, i) => {
+	commands.forEach((c) => {
 		if (c.trim().length === 0) return;
 
 		c = c.replace('\n', '')
@@ -87,29 +87,28 @@ exports.convert = function(zpl) {
   return models;
 }
 
-function dashParser(zpl) {
-  var startIdx = zpl.indexOf('~');
-  var tmp = zpl.substr(startIdx + 1);
-  var endIdx = Math.min(command.indexOf('~'), command.indexOf('^'));
+// function dashParser(zpl) {
+//   var startIdx = zpl.indexOf('~');
+//   var endIdx = Math.min(command.indexOf('~'), command.indexOf('^'));
 
-  var dashCommand = zpl.substr(startIdx, endIdx);
-  var command = dashCommand.substr(0, 2);
-  switch(command) {
-  	case 'DG':
-  		var commandHandler = commandsMap.get(command);
-  		var properties = commandHandler.handler(params);
-  		imageBuf.set(properties.id, properties.data);
+//   var dashCommand = zpl.substr(startIdx, endIdx);
+//   var command = dashCommand.substr(0, 2);
+//   switch(command) {
+//   	case 'DG':
+//   		var commandHandler = commandsMap.get(command);
+//   		var properties = commandHandler.handler(params);
+//   		imageBuf.set(properties.id, properties.data);
 
-  		break;
-  	case '':
-  		break;
-  }
+//   		break;
+//   	case '':
+//   		break;
+//   }
 
-  zpl.replace(dashCommand, '');
-  dashParser(zpl);
+//   zpl.replace(dashCommand, '');
+//   dashParser(zpl);
 
- 	return zpl;
-}
+//  	return zpl;
+// }
 
 function specific(obj) {
 	switch(obj.type) {

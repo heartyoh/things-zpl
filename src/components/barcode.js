@@ -33,7 +33,6 @@ function barcode(properties) {
 			height = height / 1.2;	// barcode 높이는 문자 뺀 다음의 높이임.
 		}
 
-		var dpi = 200;
 		var symbolMap = new Map([
 			['code11', 				['^B1'+rotate, , height, showText, textAbove]],
 			['interleaved2of5', 	['^B2'+rotate, height, showText, textAbove, ]],

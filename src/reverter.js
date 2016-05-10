@@ -25,7 +25,7 @@ function makeZpl(components, zpl) {
 		var group = groups.pop();
 	}
 
-	components.forEach((c, i) => {
+	components.forEach((c) => {
 		switch(c.type) {
 			case 'group':
 				groups.push(Group(c));
