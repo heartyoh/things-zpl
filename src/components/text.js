@@ -1,4 +1,4 @@
-var config = require('../../config')
+var config = require('../../config').config
 
 function text(properties) {
   this.model = properties;
@@ -39,7 +39,7 @@ function text(properties) {
       rotate = 'B'
     }
 
-
+    var fontNo = config.fontNo || 0;
     if (textType === 'W' || textType === 'w') {
       switch(textAlign) {
         case 'left':
@@ -65,7 +65,7 @@ function text(properties) {
       var commands = [
         ['^FO'+left, top],
         // ['^A@'+rotate, charHeight, charWidth * 0.75],
-        ['^A'+config.fontNo+rotate, charHeight, charWidth], // FIXME
+        ['^A'+fontNo+rotate, charHeight, charWidth], // FIXME
         ['^FB'+width, maxLines, lineMargin, textAlign, hangingIndent],
         ['^FD'+text],
         ['^FS']
@@ -74,7 +74,7 @@ function text(properties) {
       var commands = [
         ['^FO'+left, top],
         // ['^A@' + rotate, charHeight, charWidth * 0.75],
-        ['^A'+config.fontNo+rotate, charHeight, charWidth],
+        ['^A'+fontNo+rotate, charHeight, charWidth],
         ['^FD'+text],
         ['^FS']
       ];

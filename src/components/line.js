@@ -80,6 +80,7 @@ function line(properties) {
 		var width = Math.abs(x2 - x1);
 		var height = Math.abs(y2 - y1);
 
+		var rotate;
 		if(x1 <= x2 && y1 <= y2) {
 			rotate = 'L'
 		} else if(x1 >= x2 && y1 >= y2) {

@@ -1056,6 +1056,7 @@ function line(properties) {
 		var width = Math.abs(x2 - x1);
 		var height = Math.abs(y2 - y1);
 
+		var rotate;
 		if (x1 <= x2 && y1 <= y2) {
 			rotate = 'L';
 		} else if (x1 >= x2 && y1 >= y2) {
@@ -1128,7 +1129,7 @@ exports.Rect = rect;
 },{}],11:[function(require,module,exports){
 'use strict';
 
-var config = require('../../config');
+var config = require('../../config').config;
 
 function text(properties) {
   this.model = properties;
@@ -1169,6 +1170,7 @@ function text(properties) {
       rotate = 'B';
     }
 
+    var fontNo = config.fontNo || 0;
     if (textType === 'W' || textType === 'w') {
       switch (textAlign) {
         case 'left':
@@ -1193,12 +1195,12 @@ function text(properties) {
 
       var commands = [['^FO' + left, top],
       // ['^A@'+rotate, charHeight, charWidth * 0.75],
-      ['^A' + config.fontNo + rotate, charHeight, charWidth], // FIXME
+      ['^A' + fontNo + rotate, charHeight, charWidth], // FIXME
       ['^FB' + width, maxLines, lineMargin, textAlign, hangingIndent], ['^FD' + text], ['^FS']];
     } else {
       var commands = [['^FO' + left, top],
       // ['^A@' + rotate, charHeight, charWidth * 0.75],
-      ['^A' + config.fontNo + rotate, charHeight, charWidth], ['^FD' + text], ['^FS']];
+      ['^A' + fontNo + rotate, charHeight, charWidth], ['^FD' + text], ['^FS']];
     }
 
     var zpl = '';
