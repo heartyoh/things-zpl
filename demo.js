@@ -3,7 +3,7 @@
 var converter = require('./src/converter')
 
 var fs = require('fs');
-fs.readFile(__dirname + '/samples/barcode.zpl', function (err, data) {
+fs.readFile(__dirname + '/samples/sample-004.zpl', function (err, data) {
   if (err) {
     throw err;
   }
@@ -18,9 +18,9 @@ fs.readFile(__dirname + '/samples/barcode.zpl', function (err, data) {
 // model -> zpl
 // var reverter = require('./lib/reverter')
 var reverter = require('./src/reverter')
-var sample = require('./samples/sample-label');
+// var sample = require('./samples/sample-label');
 // var sample = require('./samples/text-001');
-// var sample = require('./samples/sample-group');
+var sample = require('./samples/sample-group');
 
 var components = sample.sample;
 var command = reverter.revert(components)

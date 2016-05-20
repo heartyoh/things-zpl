@@ -1,5 +1,5 @@
-var commands = require('./components/commands')
-var commandsMap = commands.commands
+var Utils = require('./commands/utils')
+var commandsMap = require('./commands/index').commands
 
 var fontBuf;
 var barcodeBuf;
@@ -25,8 +25,8 @@ exports.convert = function(zpl) {
 
 		if (command.charAt(0) === 'A') {
   		var params = c.substr(1);
-  		
-  		var commandHandler = commandsMap.get('A');
+
+  		var commandHandler = Utils.get(commandsMap, 'A');
 			if(!commandHandler) return;
 
   		var properties = commandHandler.handler(params);
@@ -35,7 +35,7 @@ exports.convert = function(zpl) {
 			return;
 		}
 
-		var commandHandler = commandsMap.get(command);
+		var commandHandler = Utils.get(commandsMap, command);
 		if(!commandHandler) return;
 
 
@@ -62,6 +62,7 @@ exports.convert = function(zpl) {
 	  			obj.textType = obj.textType || 'F';
 	  		}
 
+	  		// obj = Utils.specific(obj);
 	  		obj = specific(obj);
 				obj.centerRotate = false
 	  		models.push(obj);
@@ -110,7 +111,7 @@ exports.convert = function(zpl) {
 //  	return zpl;
 // }
 
-function specific(obj) {
+specific = function(obj) {
 	switch(obj.type) {
 		case 'line':
 			obj.x1 = obj.left
