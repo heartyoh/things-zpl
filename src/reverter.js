@@ -28,7 +28,7 @@ function makeZpl(components, zpl) {
 	components.forEach((c) => {
 		switch(c.type) {
 			case 'group':
-				groups.push(Group(c));
+				groups.push(new Group(c));
 				zpl += makeZpl(c.components, '')
 
 				break;
