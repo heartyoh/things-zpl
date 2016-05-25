@@ -6,7 +6,7 @@ var Line = require('./components/line').Line
 var Group = require('./components/group').Group
 var Image = require('./components/image').Image
 
-exports.revert = function(components) {
+exports.revert = function(components, option) {
 	if (!components) return;
 
 	var zpl = '^XA\n';
@@ -18,7 +18,7 @@ exports.revert = function(components) {
 
 
 var groups = [];
-function makeZpl(components, zpl) {
+function makeZpl(components, zpl, option) {
 	if (!components) return;
 
 	if (groups.length > 0) {

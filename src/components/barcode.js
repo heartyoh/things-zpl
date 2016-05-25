@@ -1,21 +1,23 @@
+var config = require('../../config').config
+
 var scaleBuf = {};
 
 function barcode(properties) {
 	this.model = properties;
 
 	this.toZpl = function() {
-		var model = this.model;
-
-		var height = model.height || '';
-		var rotate = model.rot || '';
-		var showText = model.showText || 'Y';
-		var textAbove = model.textAbove || ''
-		var text = model.text || '';
-		var symbol = model.symbol;
-		var top = model.top || '';
-		var left = model.left || '';
-		var scale_w = model.scale_w || '';
-		var scale_h = model.scale_h || '';
+		var {
+			height = '',
+			rotate = '',
+			showText = 'Y',
+			textAbove = '',
+			text = '',
+			symbol,
+			top = '',
+			left = '',
+			scale_w = '',
+			scale_h = ''
+		} = this.model;
 
 		var scale = '';
 		var lines = [];
@@ -32,6 +34,8 @@ function barcode(properties) {
 		if (showText) {
 			height = height / 1.2;	// barcode 높이는 문자 뺀 다음의 높이임.
 		}
+
+		var dpi = config.dpi;	// FIXME
 
 		var symbolMap = new Map([
 			['code11', 				['^B1'+rotate, , height, showText, textAbove]],
@@ -54,7 +58,7 @@ function barcode(properties) {
 			['logmars', 			['^BL'+rotate, height, textAbove]],
 			['msi', 				['^BM'+rotate, , height, showText, textAbove, ]],
 			['plessey', 			['^BP'+rotate, , height, showText, textAbove]],
-			['qrcode', 				['^BQ'+rotate, , 6]],	// TODO
+			['qrcode', 				['^BQ'+rotate, 2, Math.floor(height / dpi)]],	// TODO
 			['upca', 				['^BU'+rotate, height, showText, textAbove, ]],
 			['datamatrix', 			['^BX'+'']],	// TODO
 			['postal', 				['^BZ'+rotate, height, showText, textAbove]]

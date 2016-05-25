@@ -1,30 +1,38 @@
 var config = require('../../config').config
+var Line = require('./line').Line
+
 
 function text(properties) {
   this.model = properties;
 
   this.toZpl = function(group) {
-    var zpl = '';
-    var text = this.model.text || '';
-    var top = this.model.top || '';
-    top += group ? group.top || 0 : 0;
-    var left = this.model.left || '';
-    left += group ? group.left || 0 : 0;
+    var {
+      text = '',
+      left = 0,
+      top = 0,
+      width = '',
+      height = '',
+      textType = '',
+      charWidth,
+      charHeight,
+      rotation = 0,
+      underLine,
+      strike
+    } = this.model
 
-    var width = this.model.width || '';
-    var height = this.model.height || '';
+    left += group ? group.left || 0 : 0;
+    top += group ? group.top || 0 : 0;
 
     var textType = this.model.textType || '';
     var charWidth = this.model.charWidth || width / text.length;
-    if (textType === 'F') {
-      var charHeight = this.model.charHeight || height;
-    } else if (textType === 'W') {
+    
+    if (textType === 'W') {
       var charHeight = this.model.charHeight;
     } else {
       var charHeight = this.model.charHeight || this.model.charWidth;
     }
 
-    var rotate = this.model.rotation || '';
+    var rotate = rotation || '';
     rotate += group ? group.rotation || 0 : 0;
 
     var textAlign = this.model.textAlign || '';
@@ -49,12 +57,11 @@ function text(properties) {
           textAlign = 'R';
           break;
         case 'center':
+        default:
           textAlign = 'C';
           break;
         case 'justified':
           textAlign = 'J';
-          break;
-        default:
           break;
       }
 
@@ -80,13 +87,52 @@ function text(properties) {
       ];
     }
 
+    lineZpl.call(this, group);
+
     var zpl = '';
-    
     commands.forEach(c => {
       zpl += c.join(',') + '\n'
     });
 
     return zpl;
+  }
+
+  function lineZpl(group) {
+    var {
+      left,
+      top,
+      width,
+      height,
+      underLine,
+      strike,
+      charHeight,
+      lineCount
+    } = this.model;
+
+    var x1 = left;
+    var x2 = left + width;
+    var y1 = top;
+    var y2 = top;
+
+    
+    if (underLine) {
+      for (let i = 0; i < lineCount; i++) {
+        y2 += charHeight
+        let properties = { x1, x2, y1, y2 };
+        let line = new Line(properties);
+        zpl += line.toZpl(group);
+      }
+    }
+
+    y2 = top + charHeight/2;
+    if (strike) {
+      for (let i = 0; i < lineCount; i++) {
+        y2 += charHeight
+        let properties = { x1, x2, y1, y2 };
+        let line = new Line(properties);
+        zpl += line.toZpl(group);
+      }
+    }
   }
 }
 

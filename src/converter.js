@@ -81,8 +81,6 @@ exports.convert = function(zpl) {
 	  	default:
 		  	obj = Object.assign(obj || {}, properties);
 		}
-
-
 	})
 
   return models;
@@ -111,7 +109,7 @@ exports.convert = function(zpl) {
 //  	return zpl;
 // }
 
-specific = function(obj) {
+var specific = function(obj) {
 	switch(obj.type) {
 		case 'line':
 			obj.x1 = obj.left

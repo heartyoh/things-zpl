@@ -4,13 +4,13 @@ function line(properties) {
   this.model = properties;
 
   this.toZpl = function(group) {
-		var model = this.model;
-		var x1 = model.x1 || '';
-		var x2 = model.x2 || '';
-		var y1 = model.y1 || '';
-		var y2 = model.y2 || '';
-
-		var fillStyle = model.fillStyle;
+		var {
+			x1 = '',
+			x2 = '',
+			y1 = '',
+			y2 = '',
+			fillStyle,
+ 		} = this.model;
 
 		if (fillStyle === 'white' || fillStyle === '#fff'
 			|| (fillStyle === '#ffffff')) {
@@ -34,15 +34,15 @@ function line(properties) {
 		return zpl;
   }
 
-	this.gbLine = function(group) {
-		var model = this.model;
-		var x1 = model.x1 || '';
-		var x2 = model.x2 || '';
-		var y1 = model.y1 || '';
-		var y2 = model.y2 || '';
-		var lineWidth = model.lineWidth || '';
-
-		var strokeStyle = this.model.strokeStyle;
+	this.gbLine = function(group) {	// graphic box
+		var {
+			x1 = '',
+			x2 = '',
+			y1 = '',
+			y2 = '',
+			lineWidth,
+			strokeStyle
+ 		} = this.model;
 
 		var left = Math.min(x1, x2);
 		var top = Math.min(y1, y2);
@@ -55,25 +55,18 @@ function line(properties) {
 		left += group ? group.left || 0 : 0;
 		top += group ? group.top || 0 : 0;
 
-		var properties = {
-			left: left,
-			top: top,
-			width: width,
-			height: height,
-			lineWidth: lineWidth,
-			strokeStyle: strokeStyle
-		}
-
+		var properties = { left, top, width, height, lineWidth, strokeStyle };
 		var rect = new Rect(properties);
 		return rect.toZpl(group);
   }
 
   this.gdLine = function(group) {
-  	var model = this.model;
-		var x1 = model.x1 || '';
-		var x2 = model.x2 || '';
-		var y1 = model.y1 || '';
-		var y2 = model.y2 || '';
+  	var {
+			x1 = '',
+			x2 = '',
+			y1 = '',
+			y2 = ''
+ 		} = this.model;
 
 		var left = Math.min(x1, x2);
 		var top = Math.min(y1, y2);

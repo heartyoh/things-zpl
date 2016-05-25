@@ -64,7 +64,7 @@ var fonts = {
 		handler: function(p) {	// ^CFf,h,w : f: font
 			var obj = {};
 			obj.charHeight = parseInt(p[1]);
-			obj.charWidth = parseInt(p[2]);
+			obj.charWidth = parseInt(p[2] || 0);
 			switch(p[0]) {
 				case 0:
 					obj.fontFamily = 'serif';
@@ -75,6 +75,13 @@ var fonts = {
 			}
 
 			return obj;
+		}
+	},
+	'CI': {
+		desc: 'Change International Font/Encoding',
+		parameters: '',
+		handler: function(p) {
+
 		}
 	},
 	'CW': {	// 폰트 설정. 폰트를 숫자로 설정함.

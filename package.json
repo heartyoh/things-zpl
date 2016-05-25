@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "babel src -d lib",
     "watchify": "watchify --extension=js -o things-zpl.js index.js",
-    "build": "uglifyjs things-zpl.js -c -o things-zpl-min.js"
+    "build": "uglifyjs things-zpl.js -c -o things-zpl-min.js",
+    "start": "npm run compile && node demo.js"
   },
   "repository": {
     "type": "git",
