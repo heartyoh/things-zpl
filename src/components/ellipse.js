@@ -1,15 +1,21 @@
+var Text = require('./text').Text
+
 function ellipse(properties) {
 	this.model = properties;
 
-  this.toZpl = function(group) {
-		var model = this.model;
+	this.toZpl = function(group) {
+		var {
+			rx = '',
+			ry = '',
+			cx = '',
+			cy = '',
+			lineWidth = '',
+			fillStyle,
+			left,
+			top,
 
-		var rx = model.rx || '';
-		var ry = model.ry || '';
-		var cx = model.cx || '';
-		var cy = model.cy || '';
-		var lineWidth = model.lineWidth || '';
-		var fillStyle = model.fillStyle;
+			text
+		} = this.model;
 
 		if (fillStyle === 'white' || fillStyle === '#fff'
 			|| (fillStyle === '#ffffff')) {
@@ -18,9 +24,7 @@ function ellipse(properties) {
 			fillStyle = 'B'
 		}
 
-		var left = cx - rx || 0;
 		left += group ? group.left || 0 : 0
-		var top = cy - ry || 0;
 		top += group ? group.top || 0 : 0
 		
 		var command;
@@ -44,8 +48,14 @@ function ellipse(properties) {
 		zpl = zpl.join('\n');
 		zpl += '\n'
 
+		// make text command
+		if (text) {
+			var texts = new Text(this.model);
+			zpl += texts.toZpl(group);
+		}
+
 		return zpl;
-  }
+	}
 }
 
 exports.Ellipse = ellipse;

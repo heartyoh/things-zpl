@@ -20,7 +20,7 @@ if (typeof exports !== 'undefined') {
 
 exports.convert = require('./converter').convert;
 exports.revert = require('./reverter').revert;
-},{"./converter":18,"./reverter":19}],4:[function(require,module,exports){
+},{"./converter":19,"./reverter":20}],4:[function(require,module,exports){
 'use strict';
 
 var barcodes = {
@@ -1291,6 +1291,7 @@ exports.Rect = rect;
 
 var config = require('../../config').config;
 var Line = require('./line').Line;
+var transcoord = require('./transcoord').transcoord;
 
 function text(properties) {
   this.model = properties;
@@ -1316,6 +1317,19 @@ function text(properties) {
     var underLine = _model.underLine;
     var strike = _model.strike;
 
+
+    if (!width) {
+      this.model.width = charWidth * text.length;
+    }
+
+    if (!height || height === '') {
+      this.model.height = charHeight;
+    }
+
+    var startPoint = transcoord(this.model);
+
+    left = startPoint.x;
+    top = startPoint.y;
 
     left += group ? group.left || 0 : 0;
     top += group ? group.top || 0 : 0;
@@ -1425,7 +1439,104 @@ function text(properties) {
 }
 
 exports.Text = text;
-},{"../../config":1,"./line":15}],18:[function(require,module,exports){
+},{"../../config":1,"./line":15,"./transcoord":18}],18:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.transcoordS2P = transcoordS2P;
+exports.transcoord = transcoord;
+/*
+ * 좌표 변환 API.
+ */
+
+function calcCenter(left, top, width, height) {
+  return {
+    x: left + width / 2,
+    y: top + height / 2
+  };
+}
+
+/*
+ * transcoordRR은 자신의 회전각을 감안하여 부모의 원점을 이동시킨 상태의 좌표값을 (반대로 회전시켜서)
+ * 부모 원점 기준의 좌표로 변환하는 기능.
+ * (기존의 reverseTranscoord와 동일함 - RR은 Reverse Rotation을 의미함.)
+ */
+function transcoordRR(x, y) {
+  var rotatePoint = arguments.length <= 2 || arguments[2] === undefined ? { x: 0, y: 0 } : arguments[2];
+  var rotation = arguments.length <= 3 || arguments[3] === undefined ? 0 : arguments[3];
+  var scale = arguments.length <= 4 || arguments[4] === undefined ? { x: 1, y: 1 } : arguments[4];
+
+  x -= rotatePoint.x;
+  y -= rotatePoint.y;
+
+  return {
+    x: (x * Math.cos(rotation) - y * Math.sin(rotation) + rotatePoint.x) * scale.x,
+    y: (x * Math.sin(rotation) + y * Math.cos(rotation) + rotatePoint.y) * scale.y
+  };
+}
+
+/*
+ * transcoordS2P는 현재 컴포넌트(Self) 기준의 논리좌표를 부모(Parent) 컨테이너 기준의 논리좌표로 변환한다.
+ */
+function transcoordS2P(x, y, model) {
+  var left = model.left;
+  var top = model.top;
+  var width = model.width;
+  var height = model.height;
+  var _model$rotation = model.rotation;
+  var rotation = _model$rotation === undefined ? 0 : _model$rotation;
+  var text = model.text;
+  var _model$scale = model.scale;
+  var scale = _model$scale === undefined ? { x: 1, y: 1 } : _model$scale;
+
+
+  console.log(width);
+  console.log(height);
+  var rotatePoint = calcCenter(left, top, width, height);
+  console.log(rotatePoint);
+  var point = transcoordRR(x, y, rotatePoint, rotation, scale);
+  console.log(point);
+
+  return {
+    x: point.x - (rotatePoint.x - rotatePoint.x / scale.x),
+    y: point.y - (rotatePoint.y - rotatePoint.y / scale.y)
+  };
+}
+
+function transcoord(model) {
+  var left = model.left;
+  var top = model.top;
+  var width = model.width;
+  var height = model.height;
+  var paddingLeft = model.paddingLeft;
+  var paddingTop = model.paddingTop;
+  var paddingRight = model.paddingRight;
+  var paddingBottom = model.paddingBottom;
+  var textAlign = model.textAlign;
+
+  // 회전
+
+  var start = transcoordS2P(left, top, model);
+  var end = transcoordS2P(left + width, top + height, model);
+
+  var x = Math.min(start.x, end.x);
+  var y = Math.min(start.y, end.y);
+
+  // TODO Padding
+  switch (textAlign) {
+    case 'left':
+      break;
+    case 'right':
+      break;
+    case 'center':
+    default:
+  }
+
+  return { x: x, y: y };
+}
+},{}],19:[function(require,module,exports){
 'use strict';
 
 var Utils = require('./commands/utils');
@@ -1608,7 +1719,7 @@ var specific = function specific(obj) {
 function error_log(c) {
 	console.log('Command: ' + c + ' parameter error');
 }
-},{"./commands/index":8,"./commands/utils":10}],19:[function(require,module,exports){
+},{"./commands/index":8,"./commands/utils":10}],20:[function(require,module,exports){
 'use strict';
 
 var Text = require('./components/text').Text;

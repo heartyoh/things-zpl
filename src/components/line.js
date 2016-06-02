@@ -21,10 +21,10 @@ function line(properties) {
 
 		var zpl = '';		
 		if (x1 === x2 || y1 === y2) {
-			zpl = this.gbLine(group);
+			zpl = gbLine.call(this, group);
 			return zpl;
 		} else {
-			var commands = this.gdLine(group);
+			var commands = gdLine(group);
 		}
 
 	  commands.forEach(c => {
@@ -33,68 +33,71 @@ function line(properties) {
 
 		return zpl;
   }
+}
 
-	this.gbLine = function(group) {	// graphic box
-		var {
-			x1 = '',
-			x2 = '',
-			y1 = '',
-			y2 = '',
-			lineWidth,
-			strokeStyle
- 		} = this.model;
+function gbLine(group) {	// graphic box
+	var {
+		x1 = '',
+		x2 = '',
+		y1 = '',
+		y2 = '',
+		lineWidth,
+		strokeStyle,
+		rotation = 0
+	} = this.model;
 
-		var left = Math.min(x1, x2);
-		var top = Math.min(y1, y2);
+	var left = Math.min(x1, x2);
+	var top = Math.min(y1, y2);
 
-		var tx = Math.abs(x2 - x1);
-		var ty = Math.abs(y2 - y1);
-		var width = tx === 0 ? lineWidth : tx;
-		var height = ty === 0 ? lineWidth : ty;
+	var tx = Math.abs(x2 - x1);
+	var ty = Math.abs(y2 - y1);
+	var width = tx === 0 ? lineWidth : tx;
+	var height = ty === 0 ? lineWidth : ty;
 
-		left += group ? group.left || 0 : 0;
-		top += group ? group.top || 0 : 0;
+	left += group ? group.left || 0 : 0;
+	top += group ? group.top || 0 : 0;
 
-		var properties = { left, top, width, height, lineWidth, strokeStyle };
-		var rect = new Rect(properties);
-		return rect.toZpl(group);
-  }
+	var properties = { left, top, width, height, lineWidth, strokeStyle };
+	var rect = new Rect(properties);
+	return rect.toZpl(group);
+}
 
-  this.gdLine = function(group) {
-  	var {
-			x1 = '',
-			x2 = '',
-			y1 = '',
-			y2 = ''
- 		} = this.model;
+function gdLine(group) {
+	var {
+		x1 = '',
+		x2 = '',
+		y1 = '',
+		y2 = '',
+		lineWidth,
+		strokeStyle
+	} = this.model;
 
-		var left = Math.min(x1, x2);
-		var top = Math.min(y1, y2);
-		var width = Math.abs(x2 - x1);
-		var height = Math.abs(y2 - y1);
+	var left = Math.min(x1, x2);
+	var top = Math.min(y1, y2);
+	var width = Math.abs(x2 - x1);
+	var height = Math.abs(y2 - y1);
 
-		var rotate;
-		if(x1 <= x2 && y1 <= y2) {
-			rotate = 'L'
-		} else if(x1 >= x2 && y1 >= y2) {
-			rotate = 'L'
-		} else if(x1 >= x2 && y1 <= y2) {
-			rotate = 'R'
-		} else if(x1 <= x2 && y1 >= y2) {
-			rotate = 'R'
-		}
-		
-		left += group ? group.left || 0 : 0;
-		top += group ? group.top || 0 : 0;
+	var rotate;
+	if(x1 <= x2 && y1 <= y2) {
+		rotate = 'L'
+	} else if(x1 >= x2 && y1 >= y2) {
+		rotate = 'L'
+	} else if(x1 >= x2 && y1 <= y2) {
+		rotate = 'R'
+	} else if(x1 <= x2 && y1 >= y2) {
+		rotate = 'R'
+	}
+	
+	left += group ? group.left || 0 : 0;
+	top += group ? group.top || 0 : 0;
 
-		var commands = [
-			['^FO'+left, top],
-			['^GD' + width, height, this.lineWidth, this.fillStyle, rotate],
-			['^FS']
-		];
+	var commands = [
+		['^FO'+left, top],
+		['^GD' + width, height, lineWidth, strokeStyle, rotate],
+		['^FS']
+	];
 
-		return commands;
-  }
+	return commands;
 }
 
 exports.Line = line;

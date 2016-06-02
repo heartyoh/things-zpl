@@ -38,36 +38,35 @@ function barcode(properties) {
 		var dpi = config.dpi;	// FIXME
 
 		var symbolMap = new Map([
-			['code11', 				['^B1'+rotate, , height, showText, textAbove]],
-			['interleaved2of5', 	['^B2'+rotate, height, showText, textAbove, ]],
-			['code39', 				['^B3'+rotate, , height, showText, textAbove]],
-			['code49', 				['^B4'+rotate, height, showText,]],
-			['planet', 				['^B5'+rotate, height, showText, textAbove]],
-			['pdf417', 				['^B7'+rotate, height, , , , ]],
-			['ean8', 				['^B8'+rotate, height, showText, textAbove]],
-			['upce', 				['^B9'+rotate, height, showText, textAbove, ]],
-			['code93', 				['^BA'+rotate, height, showText, textAbove, ]],
+			['code11', 					['^B1'+rotate, , height, showText, textAbove]],
+			['interleaved2of5', ['^B2'+rotate, height, showText, textAbove, ]],
+			['code39', 					['^B3'+rotate, , height, showText, textAbove]],
+			['code49', 					['^B4'+rotate, height, showText,]],
+			['planet', 					['^B5'+rotate, height, showText, textAbove]],
+			['pdf417', 					['^B7'+rotate, height, , , , ]],
+			['ean8', 						['^B8'+rotate, height, showText, textAbove]],
+			['upce', 						['^B9'+rotate, height, showText, textAbove, ]],
+			['code93', 					['^BA'+rotate, height, showText, textAbove, ]],
 			['codablock', 			['^BB'+rotate, height, , , , ]],
-			['code128', 			['^BC'+rotate, height, showText, textAbove, , ]],
-			['maxicode', 			['^BD'+rotate, , height, showText, textAbove]],
-			['ean13', 				['^BE'+rotate, height, showText, textAbove]],
+			['code128', 				['^BC'+rotate, height, showText, textAbove, , ]],
+			['maxicode', 				['^BD'+rotate, , height, showText, textAbove]],
+			['ean13', 					['^BE'+rotate, height, showText, textAbove]],
 			['micropdf417', 		['^BF'+'2', , ]],
-			['industrial2of5',		['^BI'+rotate, height, showText, textAbove]],
+			['industrial2of5',	['^BI'+rotate, height, showText, textAbove]],
 			['standard2of5', 		['^BJ'+rotate, height, showText, textAbove]],
 			['ansicodabar', 		['^BK'+rotate, , height, showText, textAbove, , ]],
-			['logmars', 			['^BL'+rotate, height, textAbove]],
-			['msi', 				['^BM'+rotate, , height, showText, textAbove, ]],
-			['plessey', 			['^BP'+rotate, , height, showText, textAbove]],
-			['qrcode', 				['^BQ'+rotate, 2, Math.floor(height / dpi)]],	// TODO
-			['upca', 				['^BU'+rotate, height, showText, textAbove, ]],
+			['logmars', 				['^BL'+rotate, height, textAbove]],
+			['msi', 						['^BM'+rotate, , height, showText, textAbove, ]],
+			['plessey', 				['^BP'+rotate, , height, showText, textAbove]],
+			['qrcode', 					['^BQ'+rotate, 2, Math.floor(height / dpi)]],	// TODO
+			['upca', 						['^BU'+rotate, height, showText, textAbove, ]],
 			['datamatrix', 			['^BX'+'']],	// TODO
-			['postal', 				['^BZ'+rotate, height, showText, textAbove]]
+			['postal', 					['^BZ'+rotate, height, showText, textAbove]]
 		]);
 
 		
 		var params = symbolMap.get(symbol);
 
-		
 		lines.push('^FO' + left + ',' + top)
 		lines.push(params.join(','))
 		lines.push('^FD' + text)

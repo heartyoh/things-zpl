@@ -1,6 +1,6 @@
 var config = require('../../config').config
 var Line = require('./line').Line
-
+var transcoord = require('./transcoord').transcoord
 
 function text(properties) {
   this.model = properties;
@@ -15,22 +15,30 @@ function text(properties) {
       textType = '',
       charWidth,
       charHeight,
+      lineCount,
       rotation = 0,
       underLine,
-      strike
+      strike,
+
+      maxLines = 100,
+      hangingIndent,
+      lineMargin
     } = this.model
+
+    if (!width) {
+      this.model.width = charWidth * text.length;
+    }
+
+    if (!height || height === '') {
+      this.model.height = charHeight;
+    }
+
+    var startPoint = transcoord(this.model)
+    left = startPoint.x;
+    top = startPoint.y;
 
     left += group ? group.left || 0 : 0;
     top += group ? group.top || 0 : 0;
-
-    var textType = this.model.textType || '';
-    var charWidth = this.model.charWidth || width / text.length;
-    
-    if (textType === 'W') {
-      var charHeight = this.model.charHeight;
-    } else {
-      var charHeight = this.model.charHeight || this.model.charWidth;
-    }
 
     var rotate = rotation || '';
     rotate += group ? group.rotation || 0 : 0;
@@ -65,10 +73,6 @@ function text(properties) {
           break;
       }
 
-      var lineMargin = this.model.lineMargin || '';
-      var maxLines = this.model.maxLines || '';
-      var hangingIndent = this.model.hangingIndent || '';
-
       var commands = [
         ['^FO'+left, top],
         // ['^A@'+rotate, charHeight, charWidth * 0.75],
@@ -87,53 +91,55 @@ function text(properties) {
       ];
     }
 
-    lineZpl.call(this, group);
-
     var zpl = '';
+    zpl += lineZpl.call(this, group);
     commands.forEach(c => {
       zpl += c.join(',') + '\n'
     });
 
     return zpl;
   }
+}
 
-  function lineZpl(group) {
-    var {
-      left,
-      top,
-      width,
-      height,
-      underLine,
-      strike,
-      charHeight,
-      lineCount
-    } = this.model;
+function lineZpl(group) {
+  var {
+    left,
+    top,
+    width,
+    textWidth,
+    underLine,
+    strike,
+    charHeight,
+    lineCount = 1
+  } = this.model;
 
-    var x1 = left;
-    var x2 = left + width;
-    var y1 = top;
-    var y2 = top;
+  textWidth = textWidth || width;
 
-    
-    if (underLine) {
-      for (let i = 0; i < lineCount; i++) {
-        y2 += charHeight
-        let properties = { x1, x2, y1, y2 };
-        let line = new Line(properties);
-        zpl += line.toZpl(group);
-      }
-    }
+  var x1 = left;
+  var x2 = left + textWidth;
 
-    y2 = top + charHeight/2;
-    if (strike) {
-      for (let i = 0; i < lineCount; i++) {
-        y2 += charHeight
-        let properties = { x1, x2, y1, y2 };
-        let line = new Line(properties);
-        zpl += line.toZpl(group);
-      }
+  var zpl = '';
+  if (underLine) {
+    let y = top;
+    for (let i = 0; i < lineCount; i++) {
+      y += charHeight
+      let properties = { x1, x2, y1: y, y2: y };
+      let line = new Line(properties);
+      zpl += line.toZpl(group);
     }
   }
+
+  if (strike) {
+    let y = top + charHeight/2;
+    for (let i = 0; i < lineCount; i++) {
+      y += charHeight
+      let properties = { x1, x2, y1: y, y2: y };
+      let line = new Line(properties);
+      zpl += line.toZpl(group);
+    }
+  }
+
+  return zpl;
 }
 
 exports.Text = text;
