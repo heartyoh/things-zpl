@@ -1000,18 +1000,28 @@ exports.Barcode = barcode;
 },{"../../config":1}],12:[function(require,module,exports){
 'use strict';
 
+var Text = require('./text').Text;
+
 function ellipse(properties) {
 	this.model = properties;
 
 	this.toZpl = function (group) {
-		var model = this.model;
+		var _model = this.model;
+		var _model$rx = _model.rx;
+		var rx = _model$rx === undefined ? '' : _model$rx;
+		var _model$ry = _model.ry;
+		var ry = _model$ry === undefined ? '' : _model$ry;
+		var _model$cx = _model.cx;
+		var cx = _model$cx === undefined ? '' : _model$cx;
+		var _model$cy = _model.cy;
+		var cy = _model$cy === undefined ? '' : _model$cy;
+		var _model$lineWidth = _model.lineWidth;
+		var lineWidth = _model$lineWidth === undefined ? '' : _model$lineWidth;
+		var fillStyle = _model.fillStyle;
+		var left = _model.left;
+		var top = _model.top;
+		var text = _model.text;
 
-		var rx = model.rx || '';
-		var ry = model.ry || '';
-		var cx = model.cx || '';
-		var cy = model.cy || '';
-		var lineWidth = model.lineWidth || '';
-		var fillStyle = model.fillStyle;
 
 		if (fillStyle === 'white' || fillStyle === '#fff' || fillStyle === '#ffffff') {
 			fillStyle = 'W';
@@ -1019,9 +1029,7 @@ function ellipse(properties) {
 			fillStyle = 'B';
 		}
 
-		var left = cx - rx || 0;
 		left += group ? group.left || 0 : 0;
-		var top = cy - ry || 0;
 		top += group ? group.top || 0 : 0;
 
 		var command;
@@ -1038,12 +1046,18 @@ function ellipse(properties) {
 		zpl = zpl.join('\n');
 		zpl += '\n';
 
+		// make text command
+		if (text) {
+			var texts = new Text(this.model);
+			zpl += texts.toZpl(group);
+		}
+
 		return zpl;
 	};
 }
 
 exports.Ellipse = ellipse;
-},{}],13:[function(require,module,exports){
+},{"./text":17}],13:[function(require,module,exports){
 "use strict";
 
 function group(properties) {
@@ -1155,10 +1169,10 @@ function line(properties) {
 
 		var zpl = '';
 		if (x1 === x2 || y1 === y2) {
-			zpl = this.gbLine(group);
+			zpl = gbLine.call(this, group);
 			return zpl;
 		} else {
-			var commands = this.gdLine(group);
+			var commands = gdLine(group);
 		}
 
 		commands.forEach(function (c) {
@@ -1167,91 +1181,105 @@ function line(properties) {
 
 		return zpl;
 	};
+}
 
-	this.gbLine = function (group) {
-		// graphic box
-		var _model2 = this.model;
-		var _model2$x = _model2.x1;
-		var x1 = _model2$x === undefined ? '' : _model2$x;
-		var _model2$x2 = _model2.x2;
-		var x2 = _model2$x2 === undefined ? '' : _model2$x2;
-		var _model2$y = _model2.y1;
-		var y1 = _model2$y === undefined ? '' : _model2$y;
-		var _model2$y2 = _model2.y2;
-		var y2 = _model2$y2 === undefined ? '' : _model2$y2;
-		var lineWidth = _model2.lineWidth;
-		var strokeStyle = _model2.strokeStyle;
-
-
-		var left = Math.min(x1, x2);
-		var top = Math.min(y1, y2);
-
-		var tx = Math.abs(x2 - x1);
-		var ty = Math.abs(y2 - y1);
-		var width = tx === 0 ? lineWidth : tx;
-		var height = ty === 0 ? lineWidth : ty;
-
-		left += group ? group.left || 0 : 0;
-		top += group ? group.top || 0 : 0;
-
-		var properties = { left: left, top: top, width: width, height: height, lineWidth: lineWidth, strokeStyle: strokeStyle };
-		var rect = new Rect(properties);
-		return rect.toZpl(group);
-	};
-
-	this.gdLine = function (group) {
-		var _model3 = this.model;
-		var _model3$x = _model3.x1;
-		var x1 = _model3$x === undefined ? '' : _model3$x;
-		var _model3$x2 = _model3.x2;
-		var x2 = _model3$x2 === undefined ? '' : _model3$x2;
-		var _model3$y = _model3.y1;
-		var y1 = _model3$y === undefined ? '' : _model3$y;
-		var _model3$y2 = _model3.y2;
-		var y2 = _model3$y2 === undefined ? '' : _model3$y2;
+function gbLine(group) {
+	// graphic box
+	var _model2 = this.model;
+	var _model2$x = _model2.x1;
+	var x1 = _model2$x === undefined ? '' : _model2$x;
+	var _model2$x2 = _model2.x2;
+	var x2 = _model2$x2 === undefined ? '' : _model2$x2;
+	var _model2$y = _model2.y1;
+	var y1 = _model2$y === undefined ? '' : _model2$y;
+	var _model2$y2 = _model2.y2;
+	var y2 = _model2$y2 === undefined ? '' : _model2$y2;
+	var lineWidth = _model2.lineWidth;
+	var strokeStyle = _model2.strokeStyle;
+	var _model2$rotation = _model2.rotation;
+	var rotation = _model2$rotation === undefined ? 0 : _model2$rotation;
 
 
-		var left = Math.min(x1, x2);
-		var top = Math.min(y1, y2);
-		var width = Math.abs(x2 - x1);
-		var height = Math.abs(y2 - y1);
+	var left = Math.min(x1, x2);
+	var top = Math.min(y1, y2);
 
-		var rotate;
-		if (x1 <= x2 && y1 <= y2) {
-			rotate = 'L';
-		} else if (x1 >= x2 && y1 >= y2) {
-			rotate = 'L';
-		} else if (x1 >= x2 && y1 <= y2) {
-			rotate = 'R';
-		} else if (x1 <= x2 && y1 >= y2) {
-			rotate = 'R';
-		}
+	var tx = Math.abs(x2 - x1);
+	var ty = Math.abs(y2 - y1);
+	var width = tx === 0 ? lineWidth : tx;
+	var height = ty === 0 ? lineWidth : ty;
 
-		left += group ? group.left || 0 : 0;
-		top += group ? group.top || 0 : 0;
+	left += group ? group.left || 0 : 0;
+	top += group ? group.top || 0 : 0;
 
-		var commands = [['^FO' + left, top], ['^GD' + width, height, this.lineWidth, this.fillStyle, rotate], ['^FS']];
+	var properties = { left: left, top: top, width: width, height: height, lineWidth: lineWidth, strokeStyle: strokeStyle };
+	var rect = new Rect(properties);
+	return rect.toZpl(group);
+}
 
-		return commands;
-	};
+function gdLine(group) {
+	var _model3 = this.model;
+	var _model3$x = _model3.x1;
+	var x1 = _model3$x === undefined ? '' : _model3$x;
+	var _model3$x2 = _model3.x2;
+	var x2 = _model3$x2 === undefined ? '' : _model3$x2;
+	var _model3$y = _model3.y1;
+	var y1 = _model3$y === undefined ? '' : _model3$y;
+	var _model3$y2 = _model3.y2;
+	var y2 = _model3$y2 === undefined ? '' : _model3$y2;
+	var lineWidth = _model3.lineWidth;
+	var strokeStyle = _model3.strokeStyle;
+
+
+	var left = Math.min(x1, x2);
+	var top = Math.min(y1, y2);
+	var width = Math.abs(x2 - x1);
+	var height = Math.abs(y2 - y1);
+
+	var rotate;
+	if (x1 <= x2 && y1 <= y2) {
+		rotate = 'L';
+	} else if (x1 >= x2 && y1 >= y2) {
+		rotate = 'L';
+	} else if (x1 >= x2 && y1 <= y2) {
+		rotate = 'R';
+	} else if (x1 <= x2 && y1 >= y2) {
+		rotate = 'R';
+	}
+
+	left += group ? group.left || 0 : 0;
+	top += group ? group.top || 0 : 0;
+
+	var commands = [['^FO' + left, top], ['^GD' + width, height, lineWidth, strokeStyle, rotate], ['^FS']];
+
+	return commands;
 }
 
 exports.Line = line;
 },{"./rect":16}],16:[function(require,module,exports){
 'use strict';
 
+var T = require('./text').Text;
+
 function rect(properties) {
 	this.model = properties;
 
 	this.toZpl = function (group) {
-		var model = this.model;
-		var width = model.width || '';
-		var height = model.height || '';
-		var lineWidth = model.lineWidth || '';
-		var fillStyle = model.fillStyle || '';
+		var _model = this.model;
+		var _model$width = _model.width;
+		var width = _model$width === undefined ? '' : _model$width;
+		var _model$height = _model.height;
+		var height = _model$height === undefined ? '' : _model$height;
+		var _model$lineWidth = _model.lineWidth;
+		var lineWidth = _model$lineWidth === undefined ? '' : _model$lineWidth;
+		var _model$fillStyle = _model.fillStyle;
+		var fillStyle = _model$fillStyle === undefined ? '' : _model$fillStyle;
+		var strokeStyle = _model.strokeStyle;
+		var left = _model.left;
+		var top = _model.top;
+		var text = _model.text;
 
-		var strokeStyle;
-		if (model.strokeStyle === 'white' || model.strokeStyle === '#fff' || model.strokeStyle === '#ffffff') {
+
+		if (strokeStyle === 'white' || strokeStyle === '#fff' || strokeStyle === '#ffffff') {
 			strokeStyle = 'W';
 		} else {
 			strokeStyle = 'B';
@@ -1268,10 +1296,7 @@ function rect(properties) {
 			strokeStyle = fillStyle;
 		}
 
-		var left = model.left || '';
 		left += group ? group.left || 0 : 0;
-
-		var top = model.top || '';
 		top += group ? group.top || 0 : 0;
 
 		var commands = [['^FO' + left, top], ['^GB' + width, height, lineWidth, strokeStyle], ['^FS']];
@@ -1280,13 +1305,21 @@ function rect(properties) {
 		commands.forEach(function (c) {
 			zpl += c.join(',') + '\n';
 		});
+		zpl += '\n';
+
+		// make text command
+		if (text) {
+			console.log(T);
+			var texts = new T.Text(this.model);
+			zpl += texts.toZpl(group);
+		}
 
 		return zpl;
 	};
 }
 
 exports.Rect = rect;
-},{}],17:[function(require,module,exports){
+},{"./text":17}],17:[function(require,module,exports){
 'use strict';
 
 var config = require('../../config').config;
@@ -1312,10 +1345,15 @@ function text(properties) {
     var textType = _model$textType === undefined ? '' : _model$textType;
     var charWidth = _model.charWidth;
     var charHeight = _model.charHeight;
+    var lineCount = _model.lineCount;
     var _model$rotation = _model.rotation;
     var rotation = _model$rotation === undefined ? 0 : _model$rotation;
     var underLine = _model.underLine;
     var strike = _model.strike;
+    var _model$maxLines = _model.maxLines;
+    var maxLines = _model$maxLines === undefined ? 100 : _model$maxLines;
+    var hangingIndent = _model.hangingIndent;
+    var lineMargin = _model.lineMargin;
 
 
     if (!width) {
@@ -1327,21 +1365,11 @@ function text(properties) {
     }
 
     var startPoint = transcoord(this.model);
-
     left = startPoint.x;
     top = startPoint.y;
 
     left += group ? group.left || 0 : 0;
     top += group ? group.top || 0 : 0;
-
-    var textType = this.model.textType || '';
-    var charWidth = this.model.charWidth || width / text.length;
-
-    if (textType === 'W') {
-      var charHeight = this.model.charHeight;
-    } else {
-      var charHeight = this.model.charHeight || this.model.charWidth;
-    }
 
     var rotate = rotation || '';
     rotate += group ? group.rotation || 0 : 0;
@@ -1376,10 +1404,6 @@ function text(properties) {
           break;
       }
 
-      var lineMargin = this.model.lineMargin || '';
-      var maxLines = this.model.maxLines || '';
-      var hangingIndent = this.model.hangingIndent || '';
-
       var commands = [['^FO' + left, top],
       // ['^A@'+rotate, charHeight, charWidth * 0.75],
       ['^A' + fontNo + rotate, charHeight, charWidth], // FIXME
@@ -1390,52 +1414,56 @@ function text(properties) {
       ['^A' + fontNo + rotate, charHeight, charWidth], ['^FD' + text], ['^FS']];
     }
 
-    lineZpl.call(this, group);
-
     var zpl = '';
+    zpl += lineZpl.call(this, group);
     commands.forEach(function (c) {
       zpl += c.join(',') + '\n';
     });
 
     return zpl;
   };
+}
 
-  function lineZpl(group) {
-    var _model2 = this.model;
-    var left = _model2.left;
-    var top = _model2.top;
-    var width = _model2.width;
-    var height = _model2.height;
-    var underLine = _model2.underLine;
-    var strike = _model2.strike;
-    var charHeight = _model2.charHeight;
-    var lineCount = _model2.lineCount;
+function lineZpl(group) {
+  var _model2 = this.model;
+  var left = _model2.left;
+  var top = _model2.top;
+  var width = _model2.width;
+  var textWidth = _model2.textWidth;
+  var underLine = _model2.underLine;
+  var strike = _model2.strike;
+  var charHeight = _model2.charHeight;
+  var _model2$lineCount = _model2.lineCount;
+  var lineCount = _model2$lineCount === undefined ? 1 : _model2$lineCount;
 
 
-    var x1 = left;
-    var x2 = left + width;
-    var y1 = top;
-    var y2 = top;
+  textWidth = textWidth || width;
 
-    if (underLine) {
-      for (var i = 0; i < lineCount; i++) {
-        y2 += charHeight;
-        var _properties = { x1: x1, x2: x2, y1: y1, y2: y2 };
-        var line = new Line(_properties);
-        zpl += line.toZpl(group);
-      }
-    }
+  var x1 = left;
+  var x2 = left + textWidth;
 
-    y2 = top + charHeight / 2;
-    if (strike) {
-      for (var _i = 0; _i < lineCount; _i++) {
-        y2 += charHeight;
-        var _properties2 = { x1: x1, x2: x2, y1: y1, y2: y2 };
-        var _line = new Line(_properties2);
-        zpl += _line.toZpl(group);
-      }
+  var zpl = '';
+  if (underLine) {
+    var y = top;
+    for (var i = 0; i < lineCount; i++) {
+      y += charHeight;
+      var properties = { x1: x1, x2: x2, y1: y, y2: y };
+      var line = new Line(properties);
+      zpl += line.toZpl(group);
     }
   }
+
+  if (strike) {
+    var _y = top + charHeight / 2;
+    for (var _i = 0; _i < lineCount; _i++) {
+      _y += charHeight;
+      var _properties = { x1: x1, x2: x2, y1: _y, y2: _y };
+      var _line = new Line(_properties);
+      zpl += _line.toZpl(group);
+    }
+  }
+
+  return zpl;
 }
 
 exports.Text = text;
@@ -1492,12 +1520,8 @@ function transcoordS2P(x, y, model) {
   var scale = _model$scale === undefined ? { x: 1, y: 1 } : _model$scale;
 
 
-  console.log(width);
-  console.log(height);
   var rotatePoint = calcCenter(left, top, width, height);
-  console.log(rotatePoint);
   var point = transcoordRR(x, y, rotatePoint, rotation, scale);
-  console.log(point);
 
   return {
     x: point.x - (rotatePoint.x - rotatePoint.x / scale.x),
@@ -1510,11 +1534,6 @@ function transcoord(model) {
   var top = model.top;
   var width = model.width;
   var height = model.height;
-  var paddingLeft = model.paddingLeft;
-  var paddingTop = model.paddingTop;
-  var paddingRight = model.paddingRight;
-  var paddingBottom = model.paddingBottom;
-  var textAlign = model.textAlign;
 
   // 회전
 
@@ -1524,17 +1543,82 @@ function transcoord(model) {
   var x = Math.min(start.x, end.x);
   var y = Math.min(start.y, end.y);
 
-  // TODO Padding
+  var transValue = calcTextPosition(model);
+  x += transValue.tx;
+  y += transValue.ty;
+
+  return { x: x, y: y };
+}
+
+function calcTextPosition(model) {
+  var _model$textAlign = model.textAlign;
+  var textAlign = _model$textAlign === undefined ? 'center' : _model$textAlign;
+  var _model$textBaseline = model.textBaseline;
+  var textBaseline = _model$textBaseline === undefined ? 'middle' : _model$textBaseline;
+  var width = model.width;
+  var height = model.height;
+  var charHeight = model.charHeight;
+  var textWidth = model.textWidth;
+  var _model$lineMargin = model.lineMargin;
+  var lineMargin = _model$lineMargin === undefined ? 0 : _model$lineMargin;
+  var _model$lineCount = model.lineCount;
+  var lineCount = _model$lineCount === undefined ? 1 : _model$lineCount;
+  var _model$paddingLeft = model.paddingLeft;
+  var paddingLeft = _model$paddingLeft === undefined ? 0 : _model$paddingLeft;
+  var _model$paddingRight = model.paddingRight;
+  var paddingRight = _model$paddingRight === undefined ? 0 : _model$paddingRight;
+  var _model$paddingTop = model.paddingTop;
+  var paddingTop = _model$paddingTop === undefined ? 0 : _model$paddingTop;
+  var _model$paddingBottom = model.paddingBottom;
+  var paddingBottom = _model$paddingBottom === undefined ? 0 : _model$paddingBottom;
+
+
+  textWidth = textWidth || width;
+
+  var tx = 0;
   switch (textAlign) {
     case 'left':
+    case 'justify':
+      tx = paddingLeft;
       break;
     case 'right':
+      tx = width - textWidth - paddingRight;
       break;
     case 'center':
     default:
+      width = width - paddingLeft - paddingRight;
+      tx = (width - textWidth) / 2 + paddingLeft;
+      break;
   }
 
-  return { x: x, y: y };
+  var textsHeight = (charHeight + lineMargin) * lineCount;
+  var ty = 0;
+  switch (textBaseline) {
+    case 'top':
+    case 'hanging':
+      // height = height < textsHeight ? textsHeight : height;
+      ty = paddingTop + charHeight / 2;
+      break;
+    case 'bottom':
+    case 'alphabetic':
+      ty = height - textsHeight + charHeight / 2 - paddingBottom;
+      break;
+    case 'middle':
+    default:
+      // height = height - paddingTop - paddingBottom;
+      // if (lineCount === 1) {
+      //   ty = height / 2 + paddingTop;
+
+      //   if (textType === 'W') {
+      //     ty -= lineMargin / 2
+      //   }
+      // } else {
+      ty = (height - textsHeight) / 2 + charHeight / 2 + paddingTop;
+      // }
+      break;
+  }
+
+  return { tx: tx, ty: ty };
 }
 },{}],19:[function(require,module,exports){
 'use strict';
