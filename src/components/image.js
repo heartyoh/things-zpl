@@ -51,7 +51,6 @@ function image(properties) {
     var commands = [
 			['~DG'+guid, imageGrf],
 			['^FO'+left, top],
-      // ['^A@'+rotate, charHeight, charWidth * 0.75],
 			['^XG'+'R:'+guid, 1, 1],
 			['^PQ'+1],
 			['^FS']

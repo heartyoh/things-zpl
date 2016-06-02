@@ -103,24 +103,15 @@ function calcTextPosition(model) {
     case 'top':
     case 'hanging':
       // height = height < textsHeight ? textsHeight : height;
-      ty = paddingTop + charHeight/2
+      ty = paddingTop
       break;
     case 'bottom':
     case 'alphabetic':
-      ty = (height - textsHeight) + charHeight / 2 - paddingBottom
+      ty = (height - textsHeight) - paddingBottom
       break;
     case 'middle':
     default:
-      // height = height - paddingTop - paddingBottom;
-      // if (lineCount === 1) {
-      //   ty = height / 2 + paddingTop;
-
-      //   if (textType === 'W') {
-      //     ty -= lineMargin / 2
-      //   }
-      // } else {
-        ty = (height - textsHeight) / 2 + charHeight / 2 + paddingTop;
-      // }
+      ty = (height - textsHeight) / 2 + paddingTop;
       break;
   }
 

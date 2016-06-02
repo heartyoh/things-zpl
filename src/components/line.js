@@ -24,7 +24,7 @@ function line(properties) {
 			zpl = gbLine.call(this, group);
 			return zpl;
 		} else {
-			var commands = gdLine(group);
+			var commands = gdLine.call(this, group);
 		}
 
 	  commands.forEach(c => {
@@ -68,7 +68,7 @@ function gdLine(group) {
 		x2 = '',
 		y1 = '',
 		y2 = '',
-		lineWidth,
+		lineWidth = '',
 		strokeStyle
 	} = this.model;
 
