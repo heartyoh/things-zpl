@@ -1,9 +1,10 @@
 var config = require('../../config').config
 var Line = require('./line').Line
-var transcoord = require('./transcoord').transcoord
+var textTranscoord = require('./transcoord').textTranscoord
+var transcoordS2P = require('./transcoord').transcoordS2P
 
 function text(properties) {
-  this.model = properties;
+  this.model = properties;  // text 에서는 left, top만 위치를 결정함, width, height는 의미가 없음.
 
   this.toZpl = function(group) {
     var {
@@ -33,7 +34,7 @@ function text(properties) {
       this.model.height = charHeight;
     }
 
-    var startPoint = transcoord(this.model)
+    var startPoint = textTranscoord(this.model)
     left = startPoint.x;
     top = startPoint.y;
 
@@ -92,7 +93,7 @@ function text(properties) {
     }
 
     var zpl = '';
-    zpl += lineZpl.call(this, group);
+    zpl += lineZpl.call(this, group, rotate, left, top);
     commands.forEach(c => {
       zpl += c.join(',') + '\n'
     });
@@ -101,45 +102,77 @@ function text(properties) {
   }
 }
 
-function lineZpl(group) {
+function lineZpl(group, rotate) {
   var {
     left,
     top,
     width,
     textWidth,
+    charHeight,
+    lineCount = 1,
+
     underLine,
     strike,
-    charHeight,
-    lineCount = 1
   } = this.model;
 
   textWidth = textWidth || width;
 
-  var x1 = left;
-  var x2 = left + textWidth;
+  var x = left;
 
+  var points = [];
   var zpl = '';
   if (underLine) {
     let y = top;
     for (let i = 0; i < lineCount; i++) {
-      y += charHeight
-      let properties = { x1, x2, y1: y, y2: y };
-      let line = new Line(properties);
-      zpl += line.toZpl(group);
+      y += charHeight;
+      points.push({x1: x, x2: x+textWidth, y1: y, y2: y});
     }
   }
 
   if (strike) {
     let y = top + charHeight/2;
     for (let i = 0; i < lineCount; i++) {
-      y += charHeight
-      let properties = { x1, x2, y1: y, y2: y };
-      let line = new Line(properties);
-      zpl += line.toZpl(group);
+      points.push({x1: x, x2: x+textWidth, y1: y, y2: y});
+      y += charHeight;
     }
   }
 
+  var rotatePoints = points.map((point) => {
+    let sp = transcoordS2P(point.x1, point.y1, this.model);
+    let ep = transcoordS2P(point.x2, point.y2, this.model);
+
+    console.log(sp)
+    console.log(ep)
+
+    return { x1: sp.x, x2: ep.x, y1: sp.y, y2: ep.y };
+  });
+
+  rotatePoints.forEach((point) => {
+    let line = new Line(point);
+    zpl += line.toZpl(group);
+  });
+
   return zpl;
+}
+
+function rotateLine(rotate, x, textWidth, y, ty, lineIndex) {
+  switch(rotate) {
+    case 'N':
+    default:
+      return {x1: x, x2: x+textWidth, y1: y+ty, y2: y+ty};
+      break;
+    case 'R':
+      return {x1: x+ty, x2: x+ty, y1: y, y2: y+textWidth};
+      break;
+    case 'I':
+      return {sx: x1, ex: x2, sy: y, ey: y};
+      break;
+    case 'B':
+      return {sx: x1, ex: x2, sy: y, ey: y};
+      break;
+  }
+
+
 }
 
 exports.Text = text;

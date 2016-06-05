@@ -8,7 +8,7 @@ function barcode(properties) {
 	this.toZpl = function() {
 		var {
 			height = '',
-			rotate = '',
+			rotation = '',
 			showText = 'Y',
 			textAbove = '',
 			text = '',
@@ -38,30 +38,30 @@ function barcode(properties) {
 		var dpi = config.dpi;	// FIXME
 
 		var symbolMap = new Map([
-			['code11', 					['^B1'+rotate, , height, showText, textAbove]],
-			['interleaved2of5', ['^B2'+rotate, height, showText, textAbove, ]],
-			['code39', 					['^B3'+rotate, , height, showText, textAbove]],
-			['code49', 					['^B4'+rotate, height, showText,]],
-			['planet', 					['^B5'+rotate, height, showText, textAbove]],
-			['pdf417', 					['^B7'+rotate, height, , , , ]],
-			['ean8', 						['^B8'+rotate, height, showText, textAbove]],
-			['upce', 						['^B9'+rotate, height, showText, textAbove, ]],
-			['code93', 					['^BA'+rotate, height, showText, textAbove, ]],
-			['codablock', 			['^BB'+rotate, height, , , , ]],
-			['code128', 				['^BC'+rotate, height, showText, textAbove, , ]],
-			['maxicode', 				['^BD'+rotate, , height, showText, textAbove]],
-			['ean13', 					['^BE'+rotate, height, showText, textAbove]],
+			['code11', 					['^B1'+rotation, , height, showText, textAbove]],
+			['interleaved2of5', ['^B2'+rotation, height, showText, textAbove, ]],
+			['code39', 					['^B3'+rotation, , height, showText, textAbove]],
+			['code49', 					['^B4'+rotation, height, showText,]],
+			['planet', 					['^B5'+rotation, height, showText, textAbove]],
+			['pdf417', 					['^B7'+rotation, height, , , , ]],
+			['ean8', 						['^B8'+rotation, height, showText, textAbove]],
+			['upce', 						['^B9'+rotation, height, showText, textAbove, ]],
+			['code93', 					['^BA'+rotation, height, showText, textAbove, ]],
+			['codablock', 			['^BB'+rotation, height, , , , ]],
+			['code128', 				['^BC'+rotation, height, showText, textAbove, , ]],
+			['maxicode', 				['^BD'+rotation, , height, showText, textAbove]],
+			['ean13', 					['^BE'+rotation, height, showText, textAbove]],
 			['micropdf417', 		['^BF'+'2', , ]],
-			['industrial2of5',	['^BI'+rotate, height, showText, textAbove]],
-			['standard2of5', 		['^BJ'+rotate, height, showText, textAbove]],
-			['ansicodabar', 		['^BK'+rotate, , height, showText, textAbove, , ]],
-			['logmars', 				['^BL'+rotate, height, textAbove]],
-			['msi', 						['^BM'+rotate, , height, showText, textAbove, ]],
-			['plessey', 				['^BP'+rotate, , height, showText, textAbove]],
-			['qrcode', 					['^BQ'+rotate, 2, Math.floor(height / dpi)]],	// TODO
-			['upca', 						['^BU'+rotate, height, showText, textAbove, ]],
+			['industrial2of5',	['^BI'+rotation, height, showText, textAbove]],
+			['standard2of5', 		['^BJ'+rotation, height, showText, textAbove]],
+			['ansicodabar', 		['^BK'+rotation, , height, showText, textAbove, , ]],
+			['logmars', 				['^BL'+rotation, height, textAbove]],
+			['msi', 						['^BM'+rotation, , height, showText, textAbove, ]],
+			['plessey', 				['^BP'+rotation, , height, showText, textAbove]],
+			['qrcode', 					['^BQ'+rotation, 2, Math.floor(height / dpi)]],	// TODO
+			['upca', 						['^BU'+rotation, height, showText, textAbove, ]],
 			['datamatrix', 			['^BX'+'']],	// TODO
-			['postal', 					['^BZ'+rotate, height, showText, textAbove]]
+			['postal', 					['^BZ'+rotation, height, showText, textAbove]]
 		]);
 
 		

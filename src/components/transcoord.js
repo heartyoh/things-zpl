@@ -40,7 +40,7 @@ export function transcoordS2P(x, y, model) {
   }
 }
 
-export function transcoord(model) {
+export function textTranscoord(model) {
   var {
     left,
     top,
