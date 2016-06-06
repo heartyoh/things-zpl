@@ -141,9 +141,6 @@ function lineZpl(group, rotate) {
     let sp = transcoordS2P(point.x1, point.y1, this.model);
     let ep = transcoordS2P(point.x2, point.y2, this.model);
 
-    console.log(sp)
-    console.log(ep)
-
     return { x1: sp.x, x2: ep.x, y1: sp.y, y2: ep.y };
   });
 
@@ -162,13 +159,13 @@ function rotateLine(rotate, x, textWidth, y, ty, lineIndex) {
       return {x1: x, x2: x+textWidth, y1: y+ty, y2: y+ty};
       break;
     case 'R':
-      return {x1: x+ty, x2: x+ty, y1: y, y2: y+textWidth};
+      return {x1: x, x2: x, y1: y, y2: y+textWidth};
       break;
     case 'I':
-      return {sx: x1, ex: x2, sy: y, ey: y};
+      return {x1: x, x2: x+textWidth, y1: y, y2: y};
       break;
     case 'B':
-      return {sx: x1, ex: x2, sy: y, ey: y};
+      return {x1: x+ty, x2: x+ty, y1: y, y2: y+textWidth};
       break;
   }
 

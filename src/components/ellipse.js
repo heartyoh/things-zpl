@@ -1,4 +1,5 @@
 var Text = require('./text').Text
+var shapeTranscoord = require('./transcoord').shapeTranscoord
 
 function ellipse(properties) {
 	this.model = properties;
@@ -13,9 +14,38 @@ function ellipse(properties) {
 			fillStyle,
 			left,
 			top,
-
+			rotation,
 			text
 		} = this.model;
+
+		var rotate = ''
+    if (Math.PI * -0.25 < rotation && rotation <= Math.PI * 0.25) {
+      rotate = 'N'
+    } else if (Math.PI * 0.25 < rotation && rotation <= Math.PI * 0.75) {
+      rotate = 'R'
+    } else if (Math.PI * 0.75 < rotation && rotation <= Math.PI * 1.25) {
+      rotate = 'I'
+    } else if (Math.PI < rotation * 1.25 && rotation <= Math.PI * 1.75) {
+      rotate = 'B'
+    }
+
+    switch(rotate) {
+    	case 'N':
+    	case 'I':
+    	default:
+    		break;
+    	case 'R':
+    	case 'B':
+    		let tmp = rx;
+    		rx = ry;
+    		ry = tmp;
+
+    		let startPoint = shapeTranscoord(this.model);
+    		left = startPoint.x;
+    		top = startPoint.y;
+    		break;
+    }
+
 
 		if (fillStyle === 'white' || fillStyle === '#fff'
 			|| (fillStyle === '#ffffff')) {

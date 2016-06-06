@@ -1,4 +1,4 @@
-exports.sample = [{	// wrap text, underline
+exports.sample = [/*{	// wrap text, underline
 	charHeight: 21,
 	charWidth: 15.556640625,
 	fontFamily: "serif",
@@ -18,7 +18,7 @@ exports.sample = [{	// wrap text, underline
 	underLine: true,
 	textWidth: 400,
 	width: 400
-}, {	// wrap text, rotation
+}, {	// wrap text, rotation Math.PI/2,
 	charHeight: 92,
 	charWidth: 77.783203125,
 	fillStyle: "#fff",
@@ -56,7 +56,7 @@ exports.sample = [{	// wrap text, underline
 	strike: true,
 	textWidth: 400,
 	width: 400
-}, {	// underline
+},*/ {	// underline
 	charHeight: 50,
 	charWidth: 14.65991798130565,
 	fontFamily: "Baskerville",
@@ -91,35 +91,89 @@ exports.sample = [{	// wrap text, underline
 	charWidth: 14.65991798130565,
 	fontFamily: "Baskerville",
 	height: 50,
+	width: 200,
 	italic: true,
 	rotation: Math.PI/2,
 	text: "04 Fit Case, Total Width Test",
 	textAlign: "left",
 	textType: "F",
 	top: 200,
+	left: 100,
 	type: "text",
-	stroke: true,
+	strike: true,
+	textWidth: 200,
+	width: 200
+}, {	// stroke, rotation 180
+	charHeight: 50,
+	charWidth: 14.65991798130565,
+	fontFamily: "Baskerville",
+	height: 50,
+	width: 200,
+	italic: true,
+	rotation: Math.PI,
+	text: "04 Fit Case, Total Width Test",
+	textAlign: "left",
+	textType: "F",
+	top: 200,
+	left: 100,
+	type: "text",
+	strike: true,
+	textWidth: 200,
+	width: 200
+}, {	// stroke, rotation 270
+	charHeight: 50,
+	charWidth: 14.65991798130565,
+	fontFamily: "Baskerville",
+	height: 50,
+	width: 200,
+	italic: true,
+	rotation: Math.PI/2*3,
+	text: "04 Fit Case, Total Width Test",
+	textAlign: "left",
+	textType: "F",
+	top: 200,
+	left: 100,
+	type: "text",
+	strike: true,
 	textWidth: 200,
 	width: 200
 }, {	// ellipse text
-	charHeight: 16,
-	charWidth: 13.33740234375,
-	cx: 355,
-	cy: 422,
+	type: "ellipse",
+	left: 200,
+	top: 350,
+	width: 200,
 	height: 100,
-	left: 255,
-	lineCap: 2,
-	lineCount: 2,
-	rotation: 0,
 	rx: 100,
 	ry: 50,
+	cx: 300,
+	cy: 400,
 	strokeStyle: "black",
 	text: "ASDFASDFASDF ASDFAS ASDFASDFASDFDFASDF",
 	textType: "W",
-	top: 372,
+	charHeight: 16,
+	charWidth: 13.33740234375,
+	lineCap: 2,
+	lineCount: 2,
+	rotation: 0
+}, {	// ellipse text, rotate 90
 	type: "ellipse",
-	width: 200
-}, {	// text align right, rect text
+	left: 200,
+	top: 350,
+	width: 200,
+	height: 100,
+	rx: 100,
+	ry: 50,
+	cx: 300,
+	cy: 400,
+	text: "ROTATED ASDFASDFASDF ASDFAS ASDFASDFASDFDFASDF",
+	textType: "W",
+	charHeight: 16,
+	charWidth: 13.33740234375,
+	lineCap: 2,
+	lineCount: 2,
+	strokeStyle: "black",
+	rotation: Math.PI/2
+}/*, {	// text align right, rect text
 	charHeight: 21,
 	charWidth: 17.783203125,
 	fontFamily: "serif",
@@ -139,7 +193,7 @@ exports.sample = [{	// wrap text, underline
 	top: 300,
 	type: "rect",
 	width: 400,
-}];
+}*/];
 
 
 

@@ -9,7 +9,7 @@ function line(properties) {
 			x2 = '',
 			y1 = '',
 			y2 = '',
-			fillStyle,
+			fillStyle
  		} = this.model;
 
 		if (fillStyle === 'white' || fillStyle === '#fff'
@@ -20,7 +20,7 @@ function line(properties) {
 		}
 
 		var zpl = '';		
-		if (x1 === x2 || y1 === y2) {
+		if (Math.round(x1*100) === Math.round(x2*100) || Math.round(y1*100) === Math.round(y2*100)) {
 			zpl = gbLine.call(this, group);
 			return zpl;
 		} else {

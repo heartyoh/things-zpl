@@ -29,18 +29,18 @@ function transcoordRR(x, y, rotatePoint = {x: 0, y: 0}, rotation = 0, scale = {x
  */
 export function transcoordS2P(x, y, model) {
 
-  var { left, top, width, height, rotation = 0, text, scale = {x: 1, y: 1} } = model;
+  var { left, top, width, height, rotation = 0, text } = model;
 
   var rotatePoint = calcCenter(left, top, width, height);
-  var point = transcoordRR(x, y, rotatePoint, rotation, scale)
+  var point = transcoordRR(x, y, rotatePoint, rotation)
 
   return {
-    x: point.x - (rotatePoint.x - rotatePoint.x / scale.x),
-    y: point.y - (rotatePoint.y - rotatePoint.y / scale.y)
+    x: point.x,
+    y: point.y
   }
 }
 
-export function textTranscoord(model) {
+export function shapeTranscoord(model) {
   var {
     left,
     top,
@@ -54,6 +54,14 @@ export function textTranscoord(model) {
 
   var x = Math.min(start.x, end.x);
   var y = Math.min(start.y, end.y);
+
+  return {x, y}
+}
+
+export function textTranscoord(model) {
+  var point = shapeTranscoord(model)
+  var x = point.x;
+  var y = point.y;
 
   var transValue = calcTextPosition(model);
   x += transValue.tx;
