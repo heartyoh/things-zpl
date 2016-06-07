@@ -942,8 +942,8 @@ function barcode(properties) {
 		var _model = this.model;
 		var _model$height = _model.height;
 		var height = _model$height === undefined ? '' : _model$height;
-		var _model$rotate = _model.rotate;
-		var rotate = _model$rotate === undefined ? '' : _model$rotate;
+		var _model$rotation = _model.rotation;
+		var rotation = _model$rotation === undefined ? '' : _model$rotation;
 		var _model$showText = _model.showText;
 		var showText = _model$showText === undefined ? 'Y' : _model$showText;
 		var _model$textAbove = _model.textAbove;
@@ -979,9 +979,9 @@ function barcode(properties) {
 
 		var dpi = config.dpi; // FIXME
 
-		var symbolMap = new Map([['code11', ['^B1' + rotate,, height, showText, textAbove]], ['interleaved2of5', ['^B2' + rotate, height, showText, textAbove]], ['code39', ['^B3' + rotate,, height, showText, textAbove]], ['code49', ['^B4' + rotate, height, showText]], ['planet', ['^B5' + rotate, height, showText, textAbove]], ['pdf417', ['^B7' + rotate, height,,,,]], ['ean8', ['^B8' + rotate, height, showText, textAbove]], ['upce', ['^B9' + rotate, height, showText, textAbove]], ['code93', ['^BA' + rotate, height, showText, textAbove]], ['codablock', ['^BB' + rotate, height,,,,]], ['code128', ['^BC' + rotate, height, showText, textAbove,,]], ['maxicode', ['^BD' + rotate,, height, showText, textAbove]], ['ean13', ['^BE' + rotate, height, showText, textAbove]], ['micropdf417', ['^BF' + '2',,]], ['industrial2of5', ['^BI' + rotate, height, showText, textAbove]], ['standard2of5', ['^BJ' + rotate, height, showText, textAbove]], ['ansicodabar', ['^BK' + rotate,, height, showText, textAbove,,]], ['logmars', ['^BL' + rotate, height, textAbove]], ['msi', ['^BM' + rotate,, height, showText, textAbove]], ['plessey', ['^BP' + rotate,, height, showText, textAbove]], ['qrcode', ['^BQ' + rotate, 2, Math.floor(height / dpi)]], // TODO
-		['upca', ['^BU' + rotate, height, showText, textAbove]], ['datamatrix', ['^BX' + '']], // TODO
-		['postal', ['^BZ' + rotate, height, showText, textAbove]]]);
+		var symbolMap = new Map([['code11', ['^B1' + rotation,, height, showText, textAbove]], ['interleaved2of5', ['^B2' + rotation, height, showText, textAbove]], ['code39', ['^B3' + rotation,, height, showText, textAbove]], ['code49', ['^B4' + rotation, height, showText]], ['planet', ['^B5' + rotation, height, showText, textAbove]], ['pdf417', ['^B7' + rotation, height,,,,]], ['ean8', ['^B8' + rotation, height, showText, textAbove]], ['upce', ['^B9' + rotation, height, showText, textAbove]], ['code93', ['^BA' + rotation, height, showText, textAbove]], ['codablock', ['^BB' + rotation, height,,,,]], ['code128', ['^BC' + rotation, height, showText, textAbove,,]], ['maxicode', ['^BD' + rotation,, height, showText, textAbove]], ['ean13', ['^BE' + rotation, height, showText, textAbove]], ['micropdf417', ['^BF' + '2',,]], ['industrial2of5', ['^BI' + rotation, height, showText, textAbove]], ['standard2of5', ['^BJ' + rotation, height, showText, textAbove]], ['ansicodabar', ['^BK' + rotation,, height, showText, textAbove,,]], ['logmars', ['^BL' + rotation, height, textAbove]], ['msi', ['^BM' + rotation,, height, showText, textAbove]], ['plessey', ['^BP' + rotation,, height, showText, textAbove]], ['qrcode', ['^BQ' + rotation, 2, Math.floor(height / dpi)]], // TODO
+		['upca', ['^BU' + rotation, height, showText, textAbove]], ['datamatrix', ['^BX' + '']], // TODO
+		['postal', ['^BZ' + rotation, height, showText, textAbove]]]);
 
 		var params = symbolMap.get(symbol);
 
@@ -1001,6 +1001,7 @@ exports.Barcode = barcode;
 'use strict';
 
 var Text = require('./text').Text;
+var shapeTranscoord = require('./transcoord').shapeTranscoord;
 
 function ellipse(properties) {
 	this.model = properties;
@@ -1020,8 +1021,37 @@ function ellipse(properties) {
 		var fillStyle = _model.fillStyle;
 		var left = _model.left;
 		var top = _model.top;
+		var rotation = _model.rotation;
 		var text = _model.text;
 
+
+		var rotate = '';
+		if (Math.PI * -0.25 < rotation && rotation <= Math.PI * 0.25) {
+			rotate = 'N';
+		} else if (Math.PI * 0.25 < rotation && rotation <= Math.PI * 0.75) {
+			rotate = 'R';
+		} else if (Math.PI * 0.75 < rotation && rotation <= Math.PI * 1.25) {
+			rotate = 'I';
+		} else if (Math.PI < rotation * 1.25 && rotation <= Math.PI * 1.75) {
+			rotate = 'B';
+		}
+
+		switch (rotate) {
+			case 'N':
+			case 'I':
+			default:
+				break;
+			case 'R':
+			case 'B':
+				var tmp = rx;
+				rx = ry;
+				ry = tmp;
+
+				var startPoint = shapeTranscoord(this.model);
+				left = startPoint.x;
+				top = startPoint.y;
+				break;
+		}
 
 		if (fillStyle === 'white' || fillStyle === '#fff' || fillStyle === '#ffffff') {
 			fillStyle = 'W';
@@ -1057,7 +1087,7 @@ function ellipse(properties) {
 }
 
 exports.Ellipse = ellipse;
-},{"./text":17}],13:[function(require,module,exports){
+},{"./text":17,"./transcoord":18}],13:[function(require,module,exports){
 "use strict";
 
 function group(properties) {
@@ -1119,9 +1149,7 @@ function image(properties) {
     }
 
     var guid = getGuid();
-    var commands = [['~DG' + guid, imageGrf], ['^FO' + left, top],
-    // ['^A@'+rotate, charHeight, charWidth * 0.75],
-    ['^XG' + 'R:' + guid, 1, 1], ['^PQ' + 1], ['^FS']];
+    var commands = [['~DG' + guid, imageGrf], ['^FO' + left, top], ['^XG' + 'R:' + guid, 1, 1], ['^PQ' + 1], ['^FS']];
 
     var zpl = '';
     commands.forEach(function (c) {
@@ -1168,11 +1196,11 @@ function line(properties) {
 		}
 
 		var zpl = '';
-		if (x1 === x2 || y1 === y2) {
+		if (Math.round(x1 * 100) === Math.round(x2 * 100) || Math.round(y1 * 100) === Math.round(y2 * 100)) {
 			zpl = gbLine.call(this, group);
 			return zpl;
 		} else {
-			var commands = gdLine(group);
+			var commands = gdLine.call(this, group);
 		}
 
 		commands.forEach(function (c) {
@@ -1226,7 +1254,8 @@ function gdLine(group) {
 	var y1 = _model3$y === undefined ? '' : _model3$y;
 	var _model3$y2 = _model3.y2;
 	var y2 = _model3$y2 === undefined ? '' : _model3$y2;
-	var lineWidth = _model3.lineWidth;
+	var _model3$lineWidth = _model3.lineWidth;
+	var lineWidth = _model3$lineWidth === undefined ? '' : _model3$lineWidth;
 	var strokeStyle = _model3.strokeStyle;
 
 
@@ -1258,7 +1287,7 @@ exports.Line = line;
 },{"./rect":16}],16:[function(require,module,exports){
 'use strict';
 
-var T = require('./text').Text;
+var T = require('./text');
 
 function rect(properties) {
 	this.model = properties;
@@ -1309,7 +1338,6 @@ function rect(properties) {
 
 		// make text command
 		if (text) {
-			console.log(T);
 			var texts = new T.Text(this.model);
 			zpl += texts.toZpl(group);
 		}
@@ -1324,10 +1352,11 @@ exports.Rect = rect;
 
 var config = require('../../config').config;
 var Line = require('./line').Line;
-var transcoord = require('./transcoord').transcoord;
+var textTranscoord = require('./transcoord').textTranscoord;
+var transcoordS2P = require('./transcoord').transcoordS2P;
 
 function text(properties) {
-  this.model = properties;
+  this.model = properties; // text 에서는 left, top만 위치를 결정함, width, height는 의미가 없음.
 
   this.toZpl = function (group) {
     var _model = this.model;
@@ -1364,7 +1393,7 @@ function text(properties) {
       this.model.height = charHeight;
     }
 
-    var startPoint = transcoord(this.model);
+    var startPoint = textTranscoord(this.model);
     left = startPoint.x;
     top = startPoint.y;
 
@@ -1415,7 +1444,7 @@ function text(properties) {
     }
 
     var zpl = '';
-    zpl += lineZpl.call(this, group);
+    zpl += lineZpl.call(this, group, rotate, left, top);
     commands.forEach(function (c) {
       zpl += c.join(',') + '\n';
     });
@@ -1424,46 +1453,74 @@ function text(properties) {
   };
 }
 
-function lineZpl(group) {
+function lineZpl(group, rotate) {
+  var _this = this;
+
   var _model2 = this.model;
   var left = _model2.left;
   var top = _model2.top;
   var width = _model2.width;
   var textWidth = _model2.textWidth;
-  var underLine = _model2.underLine;
-  var strike = _model2.strike;
   var charHeight = _model2.charHeight;
   var _model2$lineCount = _model2.lineCount;
   var lineCount = _model2$lineCount === undefined ? 1 : _model2$lineCount;
+  var underLine = _model2.underLine;
+  var strike = _model2.strike;
 
 
   textWidth = textWidth || width;
 
-  var x1 = left;
-  var x2 = left + textWidth;
+  var x = left;
 
+  var points = [];
   var zpl = '';
   if (underLine) {
     var y = top;
     for (var i = 0; i < lineCount; i++) {
       y += charHeight;
-      var properties = { x1: x1, x2: x2, y1: y, y2: y };
-      var line = new Line(properties);
-      zpl += line.toZpl(group);
+      points.push({ x1: x, x2: x + textWidth, y1: y, y2: y });
     }
   }
 
   if (strike) {
     var _y = top + charHeight / 2;
     for (var _i = 0; _i < lineCount; _i++) {
+      points.push({ x1: x, x2: x + textWidth, y1: _y, y2: _y });
       _y += charHeight;
-      var _properties = { x1: x1, x2: x2, y1: _y, y2: _y };
-      var _line = new Line(_properties);
-      zpl += _line.toZpl(group);
     }
   }
 
+  var rotatePoints = points.map(function (point) {
+    var sp = transcoordS2P(point.x1, point.y1, _this.model);
+    var ep = transcoordS2P(point.x2, point.y2, _this.model);
+
+    return { x1: sp.x, x2: ep.x, y1: sp.y, y2: ep.y };
+  });
+
+  rotatePoints.forEach(function (point) {
+    var line = new Line(point);
+    zpl += line.toZpl(group);
+  });
+
   return zpl;
+}
+
+function rotateLine(rotate, x, textWidth, y, ty, lineIndex) {
+  switch (rotate) {
+    case 'N':
+    default:
+      return { x1: x, x2: x + textWidth, y1: y + ty, y2: y + ty };
+      break;
+    case 'R':
+      return { x1: x, x2: x, y1: y, y2: y + textWidth };
+      break;
+    case 'I':
+      return { x1: x, x2: x + textWidth, y1: y, y2: y };
+      break;
+    case 'B':
+      return { x1: x + ty, x2: x + ty, y1: y, y2: y + textWidth };
+      break;
+  }
 }
 
 exports.Text = text;
@@ -1474,7 +1531,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.transcoordS2P = transcoordS2P;
-exports.transcoord = transcoord;
+exports.shapeTranscoord = shapeTranscoord;
+exports.textTranscoord = textTranscoord;
 /*
  * 좌표 변환 API.
  */
@@ -1516,20 +1574,18 @@ function transcoordS2P(x, y, model) {
   var _model$rotation = model.rotation;
   var rotation = _model$rotation === undefined ? 0 : _model$rotation;
   var text = model.text;
-  var _model$scale = model.scale;
-  var scale = _model$scale === undefined ? { x: 1, y: 1 } : _model$scale;
 
 
   var rotatePoint = calcCenter(left, top, width, height);
-  var point = transcoordRR(x, y, rotatePoint, rotation, scale);
+  var point = transcoordRR(x, y, rotatePoint, rotation);
 
   return {
-    x: point.x - (rotatePoint.x - rotatePoint.x / scale.x),
-    y: point.y - (rotatePoint.y - rotatePoint.y / scale.y)
+    x: point.x,
+    y: point.y
   };
 }
 
-function transcoord(model) {
+function shapeTranscoord(model) {
   var left = model.left;
   var top = model.top;
   var width = model.width;
@@ -1542,6 +1598,14 @@ function transcoord(model) {
 
   var x = Math.min(start.x, end.x);
   var y = Math.min(start.y, end.y);
+
+  return { x: x, y: y };
+}
+
+function textTranscoord(model) {
+  var point = shapeTranscoord(model);
+  var x = point.x;
+  var y = point.y;
 
   var transValue = calcTextPosition(model);
   x += transValue.tx;
@@ -1597,24 +1661,15 @@ function calcTextPosition(model) {
     case 'top':
     case 'hanging':
       // height = height < textsHeight ? textsHeight : height;
-      ty = paddingTop + charHeight / 2;
+      ty = paddingTop;
       break;
     case 'bottom':
     case 'alphabetic':
-      ty = height - textsHeight + charHeight / 2 - paddingBottom;
+      ty = height - textsHeight - paddingBottom;
       break;
     case 'middle':
     default:
-      // height = height - paddingTop - paddingBottom;
-      // if (lineCount === 1) {
-      //   ty = height / 2 + paddingTop;
-
-      //   if (textType === 'W') {
-      //     ty -= lineMargin / 2
-      //   }
-      // } else {
-      ty = (height - textsHeight) / 2 + charHeight / 2 + paddingTop;
-      // }
+      ty = (height - textsHeight) / 2 + paddingTop;
       break;
   }
 

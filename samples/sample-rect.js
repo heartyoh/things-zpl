@@ -1,14 +1,5 @@
 // text, line, ellipse, rect, barcode
-exports.sample = [{
-  type: 'text',
-  top: 30,
-  left: 30,
-  textAlign: 'left',
-  fontSize: '30',
-  height: 10,
-  fontFamily: 'serif',
-  text: 'line, ellipse, barcode(code39, planet), text를 테스트 합니다.'
-}, {
+exports.sample = [/*{
   type: 'line',
   lineWidth: 5,
   fillStyle: 'B',
@@ -24,54 +15,43 @@ exports.sample = [{
   fillStyle: 'W',
   cx: 340,
   cy: 340
-},{
+},*/{
   type: 'rect',
   top: 120,
   left:140,
   width: 200,
-  height: 190
-},{
-  type: 'barcode',
+  height: 150
+}, {
+  type: 'rect',
+  top: 120,
+  left:140,
+  rotation: Math.PI/2,
+  width: 200,
+  height: 150
+}, {  // barcode type code39
   left: 200,
-  top: 200,
-  width: 800,
+  top: 110,
+  width: 510,
   height: 200,
+  rot: "N",
+  rotation: 0.1,
+  scale_h: 1,
+  scale_w: 2,
   symbol: "code39",
   text: "1234567890",
-  // alttext: "8741493123493123",
-  alttext : 'N',
-  scale_h: 1,
-  scale_w: 2,
-  rot: "N",
-  rotation: .1
-}, {
-  type: 'barcode',
-  left: 100,
-  top: 350,
-  width: 300,
-  height: 300,
-  symbol: "planet",
-  text: "http://www.hatiolab.com",
-  scale_h: 1,
-  scale_w: 2,
-  rot: "I",
-  rotation: 1.5
-}, {
-  type: 'text',
-  left: 30,
-  top: 60,
-  width: 200,
+  alttext: "1234567890",
+  type: "barcode"
+}, {  // barcode type code39 rotation 90
+  left: 200,
+  top: 110,
+  width: 510,
   height: 200,
-  text: 'TEST FITTED TEXT'
-}, {
-  "left": 25,
-  "top": 50,
-  "blockLine": 350,
-  "lineLimited": 4,
-  "portraitWidth": 30,
-  "textAlign": "L",
-  "hangingIndent": null,
-  "text": "\"FD\" statement that IS preceded by an \"FB\" command.",
-  "type": "text",
-  "toFit": true
+  rot: "N",
+  rotation: Math.PI/2,
+  scale_h: 1,
+  scale_w: 2,
+  symbol: "code39",
+  text: "1234567890",
+  alttext: "1234567890",
+  type: "barcode"
 }]

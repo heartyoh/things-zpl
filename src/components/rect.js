@@ -1,4 +1,5 @@
 var T = require('./text')
+var shapeTranscoord = require('./transcoord').shapeTranscoord
 
 function rect(properties) {
 	this.model = properties;
@@ -12,9 +13,38 @@ function rect(properties) {
 			strokeStyle,
 			left,
 			top,
-
+			rotation,
 			text
 		} = this.model
+
+		var rotate = ''
+    if (Math.PI * -0.25 < rotation && rotation <= Math.PI * 0.25) {
+      rotate = 'N'
+    } else if (Math.PI * 0.25 < rotation && rotation <= Math.PI * 0.75) {
+      rotate = 'R'
+    } else if (Math.PI * 0.75 < rotation && rotation <= Math.PI * 1.25) {
+      rotate = 'I'
+    } else if (Math.PI < rotation * 1.25 && rotation <= Math.PI * 1.75) {
+      rotate = 'B'
+    }
+
+    switch(rotate) {
+    	case 'N':
+    	case 'I':
+    	default:
+    		break;
+    	case 'R':
+    	case 'B':
+    		let tmp = width;
+    		width = height;
+    		height = tmp;
+
+    		let startPoint = shapeTranscoord(this.model);
+    		left = startPoint.x;
+    		top = startPoint.y;
+    		break;
+    }
+
 
 		if (strokeStyle === 'white' || strokeStyle === '#fff'
 			|| (strokeStyle === '#ffffff')) {
