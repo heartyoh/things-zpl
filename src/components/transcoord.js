@@ -137,7 +137,7 @@ export function calcDotSize(model) {
 
     let size = model[property];
     if (typeof size === 'number') {
-      model[property] = config.dpi * size / 2.54
+      model[property] = config.dpi * size / 25.4
     }
   }
 }
