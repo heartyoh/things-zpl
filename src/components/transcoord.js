@@ -1,3 +1,4 @@
+
 /*
  * 좌표 변환 API.
  */
@@ -124,4 +125,19 @@ function calcTextPosition(model) {
   }
 
   return {tx, ty};
+}
+
+
+var config = require('../../config').config
+export function calcDotSize(model) {
+  for (var property in model) {
+    if (property === 'rotation' || property === 'scale_w' || property === 'scale_w') {
+      continue;
+    }
+
+    let size = model[property];
+    if (typeof size === 'number') {
+      model[property] = config.dpi * size / 2.54
+    }
+  }
 }

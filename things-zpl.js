@@ -932,6 +932,7 @@ exports.specific = function (obj) {
 'use strict';
 
 var config = require('../../config').config;
+var shapeTranscoord = require('./transcoord').shapeTranscoord;
 
 var scaleBuf = {};
 
@@ -940,6 +941,8 @@ function barcode(properties) {
 
 	this.toZpl = function () {
 		var _model = this.model;
+		var _model$width = _model.width;
+		var width = _model$width === undefined ? '' : _model$width;
 		var _model$height = _model.height;
 		var height = _model$height === undefined ? '' : _model$height;
 		var _model$rotation = _model.rotation;
@@ -951,15 +954,39 @@ function barcode(properties) {
 		var _model$text = _model.text;
 		var text = _model$text === undefined ? '' : _model$text;
 		var symbol = _model.symbol;
-		var _model$top = _model.top;
-		var top = _model$top === undefined ? '' : _model$top;
 		var _model$left = _model.left;
 		var left = _model$left === undefined ? '' : _model$left;
+		var _model$top = _model.top;
+		var top = _model$top === undefined ? '' : _model$top;
 		var _model$scale_w = _model.scale_w;
 		var scale_w = _model$scale_w === undefined ? '' : _model$scale_w;
 		var _model$scale_h = _model.scale_h;
 		var scale_h = _model$scale_h === undefined ? '' : _model$scale_h;
 
+
+		var rotate = '';
+		if (Math.PI * -0.25 < rotation && rotation <= Math.PI * 0.25) {
+			rotate = 'N';
+		} else if (Math.PI * 0.25 < rotation && rotation <= Math.PI * 0.75) {
+			rotate = 'R';
+		} else if (Math.PI * 0.75 < rotation && rotation <= Math.PI * 1.25) {
+			rotate = 'I';
+		} else if (Math.PI < rotation * 1.25 && rotation <= Math.PI * 1.75) {
+			rotate = 'B';
+		}
+
+		switch (rotate) {
+			case 'N':
+			case 'I':
+			default:
+				break;
+			case 'R':
+			case 'B':
+				var startPoint = shapeTranscoord(this.model);
+				left = startPoint.x;
+				top = startPoint.y;
+				break;
+		}
 
 		var scale = '';
 		var lines = [];
@@ -979,9 +1006,9 @@ function barcode(properties) {
 
 		var dpi = config.dpi; // FIXME
 
-		var symbolMap = new Map([['code11', ['^B1' + rotation,, height, showText, textAbove]], ['interleaved2of5', ['^B2' + rotation, height, showText, textAbove]], ['code39', ['^B3' + rotation,, height, showText, textAbove]], ['code49', ['^B4' + rotation, height, showText]], ['planet', ['^B5' + rotation, height, showText, textAbove]], ['pdf417', ['^B7' + rotation, height,,,,]], ['ean8', ['^B8' + rotation, height, showText, textAbove]], ['upce', ['^B9' + rotation, height, showText, textAbove]], ['code93', ['^BA' + rotation, height, showText, textAbove]], ['codablock', ['^BB' + rotation, height,,,,]], ['code128', ['^BC' + rotation, height, showText, textAbove,,]], ['maxicode', ['^BD' + rotation,, height, showText, textAbove]], ['ean13', ['^BE' + rotation, height, showText, textAbove]], ['micropdf417', ['^BF' + '2',,]], ['industrial2of5', ['^BI' + rotation, height, showText, textAbove]], ['standard2of5', ['^BJ' + rotation, height, showText, textAbove]], ['ansicodabar', ['^BK' + rotation,, height, showText, textAbove,,]], ['logmars', ['^BL' + rotation, height, textAbove]], ['msi', ['^BM' + rotation,, height, showText, textAbove]], ['plessey', ['^BP' + rotation,, height, showText, textAbove]], ['qrcode', ['^BQ' + rotation, 2, Math.floor(height / dpi)]], // TODO
-		['upca', ['^BU' + rotation, height, showText, textAbove]], ['datamatrix', ['^BX' + '']], // TODO
-		['postal', ['^BZ' + rotation, height, showText, textAbove]]]);
+		var symbolMap = new Map([['code11', ['^B1' + rotate,, height, showText, textAbove]], ['interleaved2of5', ['^B2' + rotate, height, showText, textAbove]], ['code39', ['^B3' + rotate,, height, showText, textAbove]], ['code49', ['^B4' + rotate, height, showText]], ['planet', ['^B5' + rotate, height, showText, textAbove]], ['pdf417', ['^B7' + rotate, height,,,,]], ['ean8', ['^B8' + rotate, height, showText, textAbove]], ['upce', ['^B9' + rotate, height, showText, textAbove]], ['code93', ['^BA' + rotate, height, showText, textAbove]], ['codablock', ['^BB' + rotate, height,,,,]], ['code128', ['^BC' + rotate, height, showText, textAbove,,]], ['maxicode', ['^BD' + rotate,, height, showText, textAbove]], ['ean13', ['^BE' + rotate, height, showText, textAbove]], ['micropdf417', ['^BF' + '2',,]], ['industrial2of5', ['^BI' + rotate, height, showText, textAbove]], ['standard2of5', ['^BJ' + rotate, height, showText, textAbove]], ['ansicodabar', ['^BK' + rotate,, height, showText, textAbove,,]], ['logmars', ['^BL' + rotate, height, textAbove]], ['msi', ['^BM' + rotate,, height, showText, textAbove]], ['plessey', ['^BP' + rotate,, height, showText, textAbove]], ['qrcode', ['^BQ' + rotate, 2, Math.floor(height / dpi)]], // TODO
+		['upca', ['^BU' + rotate, height, showText, textAbove]], ['datamatrix', ['^BX' + '']], // TODO
+		['postal', ['^BZ' + rotate, height, showText, textAbove]]]);
 
 		var params = symbolMap.get(symbol);
 
@@ -997,7 +1024,7 @@ function barcode(properties) {
 }
 
 exports.Barcode = barcode;
-},{"../../config":1}],12:[function(require,module,exports){
+},{"../../config":1,"./transcoord":18}],12:[function(require,module,exports){
 'use strict';
 
 var Text = require('./text').Text;
@@ -1288,6 +1315,7 @@ exports.Line = line;
 'use strict';
 
 var T = require('./text');
+var shapeTranscoord = require('./transcoord').shapeTranscoord;
 
 function rect(properties) {
 	this.model = properties;
@@ -1305,8 +1333,37 @@ function rect(properties) {
 		var strokeStyle = _model.strokeStyle;
 		var left = _model.left;
 		var top = _model.top;
+		var rotation = _model.rotation;
 		var text = _model.text;
 
+
+		var rotate = '';
+		if (Math.PI * -0.25 < rotation && rotation <= Math.PI * 0.25) {
+			rotate = 'N';
+		} else if (Math.PI * 0.25 < rotation && rotation <= Math.PI * 0.75) {
+			rotate = 'R';
+		} else if (Math.PI * 0.75 < rotation && rotation <= Math.PI * 1.25) {
+			rotate = 'I';
+		} else if (Math.PI < rotation * 1.25 && rotation <= Math.PI * 1.75) {
+			rotate = 'B';
+		}
+
+		switch (rotate) {
+			case 'N':
+			case 'I':
+			default:
+				break;
+			case 'R':
+			case 'B':
+				var tmp = width;
+				width = height;
+				height = tmp;
+
+				var startPoint = shapeTranscoord(this.model);
+				left = startPoint.x;
+				top = startPoint.y;
+				break;
+		}
 
 		if (strokeStyle === 'white' || strokeStyle === '#fff' || strokeStyle === '#ffffff') {
 			strokeStyle = 'W';
@@ -1347,7 +1404,7 @@ function rect(properties) {
 }
 
 exports.Rect = rect;
-},{"./text":17}],17:[function(require,module,exports){
+},{"./text":17,"./transcoord":18}],17:[function(require,module,exports){
 'use strict';
 
 var config = require('../../config').config;
@@ -1533,6 +1590,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.transcoordS2P = transcoordS2P;
 exports.shapeTranscoord = shapeTranscoord;
 exports.textTranscoord = textTranscoord;
+exports.calcDotSize = calcDotSize;
+
 /*
  * 좌표 변환 API.
  */
@@ -1675,7 +1734,21 @@ function calcTextPosition(model) {
 
   return { tx: tx, ty: ty };
 }
-},{}],19:[function(require,module,exports){
+
+var config = require('../../config').config;
+function calcDotSize(model) {
+  for (var property in model) {
+    if (property === 'rotation' || property === 'scale_w' || property === 'scale_w') {
+      continue;
+    }
+
+    var size = model[property];
+    if (typeof size === 'number') {
+      model[property] = config.dpi * size / 2.54;
+    }
+  }
+}
+},{"../../config":1}],19:[function(require,module,exports){
 'use strict';
 
 var Utils = require('./commands/utils');
@@ -1869,7 +1942,9 @@ var Line = require('./components/line').Line;
 var Group = require('./components/group').Group;
 var Image = require('./components/image').Image;
 
-exports.revert = function (components, option) {
+var calcDotSize = require('./components/transcoord').calcDotSize;
+
+exports.revert = function (components) {
 	if (!components) return;
 
 	var zpl = '^XA\n';
@@ -1880,7 +1955,7 @@ exports.revert = function (components, option) {
 };
 
 var groups = [];
-function makeZpl(components, zpl, option) {
+function makeZpl(components, zpl) {
 	if (!components) return;
 
 	if (groups.length > 0) {
@@ -1888,6 +1963,8 @@ function makeZpl(components, zpl, option) {
 	}
 
 	components.forEach(function (c) {
+		calcDotSize(c);
+
 		switch (c.type) {
 			case 'group':
 				groups.push(new Group(c));
@@ -1924,4 +2001,4 @@ function makeZpl(components, zpl, option) {
 
 	return zpl;
 }
-},{"./components/barcode":11,"./components/ellipse":12,"./components/group":13,"./components/image":14,"./components/line":15,"./components/rect":16,"./components/text":17}]},{},[2]);
+},{"./components/barcode":11,"./components/ellipse":12,"./components/group":13,"./components/image":14,"./components/line":15,"./components/rect":16,"./components/text":17,"./components/transcoord":18}]},{},[2]);

@@ -17,22 +17,22 @@ exports.sample = [/*{
   cy: 340
 },*/{
   type: 'rect',
-  top: 120,
-  left:140,
-  width: 200,
-  height: 150
+  top: 6,
+  left:7,
+  width: 10,
+  height: 7.5
 }, {
   type: 'rect',
-  top: 120,
-  left:140,
+  top: 12,
+  left:14,
   rotation: Math.PI/2,
-  width: 200,
-  height: 150
+  width: 20,
+  height: 15
 }, {  // barcode type code39
-  left: 200,
-  top: 110,
-  width: 510,
-  height: 200,
+  left: 20,
+  top: 11,
+  width: 51,
+  height: 20,
   rot: "N",
   rotation: 0.1,
   scale_h: 1,
@@ -42,10 +42,10 @@ exports.sample = [/*{
   alttext: "1234567890",
   type: "barcode"
 }, {  // barcode type code39 rotation 90
-  left: 200,
-  top: 110,
-  width: 510,
-  height: 200,
+  left: 20,
+  top: 11,
+  width: 51,
+  height: 20,
   rot: "N",
   rotation: Math.PI/2,
   scale_h: 1,

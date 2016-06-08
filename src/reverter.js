@@ -6,7 +6,10 @@ var Line = require('./components/line').Line
 var Group = require('./components/group').Group
 var Image = require('./components/image').Image
 
-exports.revert = function(components, option) {
+var calcDotSize = require('./components/transcoord').calcDotSize
+
+
+exports.revert = function(components) {
 	if (!components) return;
 
 	var zpl = '^XA\n';
@@ -18,7 +21,7 @@ exports.revert = function(components, option) {
 
 
 var groups = [];
-function makeZpl(components, zpl, option) {
+function makeZpl(components, zpl) {
 	if (!components) return;
 
 	if (groups.length > 0) {
@@ -26,6 +29,8 @@ function makeZpl(components, zpl, option) {
 	}
 
 	components.forEach((c) => {
+		calcDotSize(c);
+
 		switch(c.type) {
 			case 'group':
 				groups.push(new Group(c));
@@ -54,11 +59,11 @@ function makeZpl(components, zpl, option) {
 				break;
 		}
 
-    if(obj) {
-      zpl += obj.toZpl(group);
-      zpl += '\n';
-    }
+		if(obj) {
+			zpl += obj.toZpl(group);
+			zpl += '\n';
+		}
 	});
 
-  return zpl;
+	return zpl;
 }
