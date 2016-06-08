@@ -56,7 +56,7 @@ exports.sample = [/*{	// wrap text, underline
 	strike: true,
 	textWidth: 400,
 	width: 400
-},*/ {	// underline
+}, {	// underline
 	charHeight: 50,
 	charWidth: 14.65991798130565,
 	fontFamily: "Baskerville",
@@ -173,7 +173,7 @@ exports.sample = [/*{	// wrap text, underline
 	lineCount: 2,
 	strokeStyle: "black",
 	rotation: Math.PI/2
-}/*, {	// text align right, rect text
+}, {	// text align right, rect text
 	charHeight: 21,
 	charWidth: 17.783203125,
 	fontFamily: "serif",
@@ -193,7 +193,25 @@ exports.sample = [/*{	// wrap text, underline
 	top: 300,
 	type: "rect",
 	width: 400,
-}*/];
+}*/{
+	charHeight: 23.62204724409449,
+	charWidth: 22.891187292384352,
+	fillStyle: "black",
+	fontFamily: "Sans-serif",
+	fontSize: 118.11023622047244,
+	height: 123.41255508199094,
+	hidden: false,
+	left: 57.93686339666249,
+	top: 128.73004406559266,
+	linewidth: 3.937007874015748,
+	rotation: 1.5707963267948966,
+	strokeStyle: "white",
+	text: "TEST",
+	textType: "S",
+	textWidth: 70.23007850947343,
+	type: "text",
+	width: 347.26576609116535
+}];
 
 
 
