@@ -1964,6 +1964,8 @@ function makeZpl(components, zpl) {
 	}
 
 	components.forEach(function (c) {
+		calcDotSize(c);
+
 		switch (c.type) {
 			case 'group':
 				groups.push(new Group(c));
