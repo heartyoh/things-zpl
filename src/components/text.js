@@ -2,6 +2,7 @@ var config = require('../../config').config
 var Line = require('./line').Line
 var textTranscoord = require('./transcoord').textTranscoord
 var transcoordS2P = require('./transcoord').transcoordS2P
+var rotateCase = require('./transcoord').rotateCase
 
 function text(properties) {
   this.model = properties;  // text 에서는 left, top만 위치를 결정함, width, height는 의미가 없음.
@@ -46,15 +47,7 @@ function text(properties) {
 
     var textAlign = this.model.textAlign || '';
 
-    if (Math.PI * -0.25 < rotate && rotate <= Math.PI * 0.25) {
-      rotate = 'N'
-    } else if (Math.PI * 0.25 < rotate && rotate <= Math.PI * 0.75) {
-      rotate = 'R'
-    } else if (Math.PI * 0.75 < rotate && rotate <= Math.PI * 1.25) {
-      rotate = 'I'
-    } else if (Math.PI < rotate * 1.25 && rotate <= Math.PI * 1.75) {
-      rotate = 'B'
-    }
+    rotate = rotateCase(rotation);
 
     var fontNo = config.fontNo || 0;
     if (textType === 'W' || textType === 'w') {

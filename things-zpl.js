@@ -934,6 +934,7 @@ exports.specific = function (obj) {
 
 var config = require('../../config').config;
 var shapeTranscoord = require('./transcoord').shapeTranscoord;
+var rotateCase = require('./transcoord').rotateCase;
 
 var scaleBuf = {};
 
@@ -965,16 +966,7 @@ function barcode(properties) {
 		var scale_h = _model$scale_h === undefined ? '' : _model$scale_h;
 
 
-		var rotate = '';
-		if (Math.PI * -0.25 < rotation && rotation <= Math.PI * 0.25) {
-			rotate = 'N';
-		} else if (Math.PI * 0.25 < rotation && rotation <= Math.PI * 0.75) {
-			rotate = 'R';
-		} else if (Math.PI * 0.75 < rotation && rotation <= Math.PI * 1.25) {
-			rotate = 'I';
-		} else if (Math.PI < rotation * 1.25 && rotation <= Math.PI * 1.75) {
-			rotate = 'B';
-		}
+		var rotate = rotateCase(rotation);
 
 		switch (rotate) {
 			case 'N':
@@ -1030,6 +1022,7 @@ exports.Barcode = barcode;
 
 var Text = require('./text').Text;
 var shapeTranscoord = require('./transcoord').shapeTranscoord;
+var rotateCase = require('./transcoord').rotateCase;
 
 function ellipse(properties) {
 	this.model = properties;
@@ -1053,16 +1046,7 @@ function ellipse(properties) {
 		var text = _model.text;
 
 
-		var rotate = '';
-		if (Math.PI * -0.25 < rotation && rotation <= Math.PI * 0.25) {
-			rotate = 'N';
-		} else if (Math.PI * 0.25 < rotation && rotation <= Math.PI * 0.75) {
-			rotate = 'R';
-		} else if (Math.PI * 0.75 < rotation && rotation <= Math.PI * 1.25) {
-			rotate = 'I';
-		} else if (Math.PI < rotation * 1.25 && rotation <= Math.PI * 1.75) {
-			rotate = 'B';
-		}
+		var rotate = rotateCase(rotation);
 
 		switch (rotate) {
 			case 'N':
@@ -1317,6 +1301,7 @@ exports.Line = line;
 
 var T = require('./text');
 var shapeTranscoord = require('./transcoord').shapeTranscoord;
+var rotateCase = require('./transcoord').rotateCase;
 
 function rect(properties) {
 	this.model = properties;
@@ -1335,19 +1320,13 @@ function rect(properties) {
 		var left = _model.left;
 		var top = _model.top;
 		var rotation = _model.rotation;
-		var text = _model.text;
+		var _model$round = _model.round;
+		var round = _model$round === undefined ? 0 : _model$round;
+		var // 1 ~ 100
+		text = _model.text;
 
 
-		var rotate = '';
-		if (Math.PI * -0.25 < rotation && rotation <= Math.PI * 0.25) {
-			rotate = 'N';
-		} else if (Math.PI * 0.25 < rotation && rotation <= Math.PI * 0.75) {
-			rotate = 'R';
-		} else if (Math.PI * 0.75 < rotation && rotation <= Math.PI * 1.25) {
-			rotate = 'I';
-		} else if (Math.PI < rotation * 1.25 && rotation <= Math.PI * 1.75) {
-			rotate = 'B';
-		}
+		var rotate = rotateCase(rotation);
 
 		switch (rotate) {
 			case 'N':
@@ -1386,7 +1365,7 @@ function rect(properties) {
 		left += group ? group.left || 0 : 0;
 		top += group ? group.top || 0 : 0;
 
-		var commands = [['^FO' + left, top], ['^GB' + width, height, lineWidth, strokeStyle], ['^FS']];
+		var commands = [['^FO' + left, top], ['^GB' + width, height, lineWidth, strokeStyle, Math.round(round * 8 / 100)], ['^FS']];
 
 		var zpl = '';
 		commands.forEach(function (c) {
@@ -1412,6 +1391,7 @@ var config = require('../../config').config;
 var Line = require('./line').Line;
 var textTranscoord = require('./transcoord').textTranscoord;
 var transcoordS2P = require('./transcoord').transcoordS2P;
+var rotateCase = require('./transcoord').rotateCase;
 
 function text(properties) {
   this.model = properties; // text 에서는 left, top만 위치를 결정함, width, height는 의미가 없음.
@@ -1463,15 +1443,7 @@ function text(properties) {
 
     var textAlign = this.model.textAlign || '';
 
-    if (Math.PI * -0.25 < rotate && rotate <= Math.PI * 0.25) {
-      rotate = 'N';
-    } else if (Math.PI * 0.25 < rotate && rotate <= Math.PI * 0.75) {
-      rotate = 'R';
-    } else if (Math.PI * 0.75 < rotate && rotate <= Math.PI * 1.25) {
-      rotate = 'I';
-    } else if (Math.PI < rotate * 1.25 && rotate <= Math.PI * 1.75) {
-      rotate = 'B';
-    }
+    rotate = rotateCase(rotation);
 
     var fontNo = config.fontNo || 0;
     if (textType === 'W' || textType === 'w') {
@@ -1592,6 +1564,7 @@ exports.transcoordS2P = transcoordS2P;
 exports.shapeTranscoord = shapeTranscoord;
 exports.textTranscoord = textTranscoord;
 exports.calcDotSize = calcDotSize;
+exports.rotateCase = rotateCase;
 
 /*
  * 좌표 변환 API.
@@ -1668,14 +1641,26 @@ function textTranscoord(model) {
   var y = point.y;
 
   var transValue = calcTextPosition(model);
-  x += transValue.tx;
-  y += transValue.ty;
+
+  var rotate = rotateCase(model.rotation);
+  if (rotate === 'N' || rotate === 'I') {
+    x += transValue.tx;
+    y += transValue.ty;
+  } else {
+    x += transValue.ty;
+    y += transValue.tx;
+  }
 
   return { x: x, y: y };
 }
 
 function calcTextPosition(model) {
-  var _model$textAlign = model.textAlign;
+  var _model$textAlign =
+  // paddingLeft = 0,
+  // paddingRight = 0,
+  // paddingTop = 0,
+  // paddingBottom = 0
+  model.textAlign;
   var textAlign = _model$textAlign === undefined ? 'center' : _model$textAlign;
   var _model$textBaseline = model.textBaseline;
   var textBaseline = _model$textBaseline === undefined ? 'middle' : _model$textBaseline;
@@ -1683,53 +1668,100 @@ function calcTextPosition(model) {
   var height = model.height;
   var charHeight = model.charHeight;
   var textWidth = model.textWidth;
+  var rotation = model.rotation;
   var _model$lineMargin = model.lineMargin;
   var lineMargin = _model$lineMargin === undefined ? 0 : _model$lineMargin;
   var _model$lineCount = model.lineCount;
   var lineCount = _model$lineCount === undefined ? 1 : _model$lineCount;
-  var _model$paddingLeft = model.paddingLeft;
-  var paddingLeft = _model$paddingLeft === undefined ? 0 : _model$paddingLeft;
-  var _model$paddingRight = model.paddingRight;
-  var paddingRight = _model$paddingRight === undefined ? 0 : _model$paddingRight;
-  var _model$paddingTop = model.paddingTop;
-  var paddingTop = _model$paddingTop === undefined ? 0 : _model$paddingTop;
-  var _model$paddingBottom = model.paddingBottom;
-  var paddingBottom = _model$paddingBottom === undefined ? 0 : _model$paddingBottom;
 
 
   textWidth = textWidth || width;
 
+  width = Math.max(width, textWidth);
+  var textsHeight = (charHeight + lineMargin) * lineCount;
+  height = Math.max(height, textsHeight);
+
   var tx = 0;
+  // switch(textAlign) {
+  //   case 'left':
+  //   case 'justify':
+  //     tx = paddingLeft;
+  //     break;
+  //   case 'right':
+  //     tx = (width - textWidth - paddingRight);
+  //     break;
+  //   case 'center':
+  //   default:
+  //     let myWidth = width - paddingLeft - paddingRight;
+  //     if (rotateCase(rotation) === 'N') {
+  //       tx = (myWidth - textWidth) / 2 + paddingLeft;
+  //     } else if(rotateCase(rotation) === 'R') {
+  //       tx = (myHeight - textsHeight) / 2 + paddingBottom;
+  //     } else if(rotateCase(rotation) === 'I') {
+  //       tx = (myWidth - textWidth) / 2 + paddingRight;
+  //     } else if(rotateCase(rotation) === 'B') {
+  //       tx = (myHeight - textsHeight) / 2 + paddingTop;
+  //     }
+
+  //     break;
+  // }
+
   switch (textAlign) {
     case 'left':
     case 'justify':
-      tx = paddingLeft;
+      tx = 0;
       break;
     case 'right':
-      tx = width - textWidth - paddingRight;
+      tx = left + width - textWidth;
       break;
     case 'center':
     default:
-      width = width - paddingLeft - paddingRight;
-      tx = (width - textWidth) / 2 + paddingLeft;
+      tx = (width - textWidth) / 2;
+
       break;
   }
 
-  var textsHeight = (charHeight + lineMargin) * lineCount;
   var ty = 0;
+  // switch(textBaseline) {
+  //   case 'top':
+  //   case 'hanging':
+  //     // height = height < textsHeight ? textsHeight : height;
+  //     ty = paddingTop
+  //     break;
+  //   case 'bottom':
+  //   case 'alphabetic':
+  //     ty = (height - textsHeight) - paddingBottom
+  //     break;
+  //   case 'middle':
+  //   default:
+  //     // let myWidth = width - paddingLeft - paddingRight;
+  //     // let myHeight = height - paddingTop - paddingBottom;
+  //     // if (rotateCase(rotation) === 'N') {
+  //     //   ty = (myHeight - textsHeight) / 2 + paddingTop;
+  //     // } else if (rotateCase(rotation) === 'R') {
+  //     //   ty = (myWidth - textWidth) / 2 + paddingLeft;
+  //     // } else if (rotateCase(rotation) === 'I') {
+  //     //   ty = (height - charHeight) / 2 + paddingBottom;
+  //     // } else if (rotateCase(rotation) === 'B') {
+  //     //   ty = (myWidth - textWidth) / 2 + paddingRight;
+  //     // }
+
+  //     break;
+  // }
+
   switch (textBaseline) {
     case 'top':
     case 'hanging':
-      // height = height < textsHeight ? textsHeight : height;
-      ty = paddingTop;
+      ty = 0;
       break;
     case 'bottom':
     case 'alphabetic':
-      ty = height - textsHeight - paddingBottom;
+      ty = top + height - textsHeight;
       break;
     case 'middle':
     default:
-      ty = (height - textsHeight) / 2 + paddingTop;
+      ty = (height - textsHeight) / 2;
+
       break;
   }
 
@@ -1748,6 +1780,21 @@ function calcDotSize(model) {
       model[property] = Math.round(config.dpi * size / 25.4);
     }
   }
+}
+
+function rotateCase(rotate) {
+  if (Math.PI * 0.25 < rotate && rotate <= Math.PI * 0.75) {
+    rotate = 'R';
+  } else if (Math.PI * 0.75 < rotate && rotate <= Math.PI * 1.25) {
+    rotate = 'I';
+  } else if (Math.PI < rotate * 1.25 && rotate <= Math.PI * 1.75) {
+    rotate = 'B';
+  } else {
+    // if (Math.PI * -0.25 < rotate && rotate <= Math.PI * 0.25) {
+    rotate = 'N';
+  }
+
+  return rotate;
 }
 },{"../../config":1}],19:[function(require,module,exports){
 'use strict';

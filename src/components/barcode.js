@@ -1,5 +1,6 @@
 var config = require('../../config').config
 var shapeTranscoord = require('./transcoord').shapeTranscoord
+var rotateCase = require('./transcoord').rotateCase
 
 var scaleBuf = {};
 
@@ -22,16 +23,7 @@ function barcode(properties) {
 		} = this.model;
 
 
-		var rotate = ''
-		if (Math.PI * -0.25 < rotation && rotation <= Math.PI * 0.25) {
-			rotate = 'N'
-		} else if (Math.PI * 0.25 < rotation && rotation <= Math.PI * 0.75) {
-			rotate = 'R'
-		} else if (Math.PI * 0.75 < rotation && rotation <= Math.PI * 1.25) {
-			rotate = 'I'
-		} else if (Math.PI < rotation * 1.25 && rotation <= Math.PI * 1.75) {
-			rotate = 'B'
-		}
+		var rotate = rotateCase(rotation);
 
 		switch(rotate) {
 			case 'N':

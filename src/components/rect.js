@@ -1,5 +1,6 @@
 var T = require('./text')
 var shapeTranscoord = require('./transcoord').shapeTranscoord
+var rotateCase = require('./transcoord').rotateCase
 
 function rect(properties) {
 	this.model = properties;
@@ -14,36 +15,28 @@ function rect(properties) {
 			left,
 			top,
 			rotation,
+			round = 0,	// 1 ~ 100
 			text
 		} = this.model
 
-		var rotate = ''
-    if (Math.PI * -0.25 < rotation && rotation <= Math.PI * 0.25) {
-      rotate = 'N'
-    } else if (Math.PI * 0.25 < rotation && rotation <= Math.PI * 0.75) {
-      rotate = 'R'
-    } else if (Math.PI * 0.75 < rotation && rotation <= Math.PI * 1.25) {
-      rotate = 'I'
-    } else if (Math.PI < rotation * 1.25 && rotation <= Math.PI * 1.75) {
-      rotate = 'B'
-    }
+		var rotate = rotateCase(rotation);
 
-    switch(rotate) {
-    	case 'N':
-    	case 'I':
-    	default:
-    		break;
-    	case 'R':
-    	case 'B':
-    		let tmp = width;
-    		width = height;
-    		height = tmp;
+		switch(rotate) {
+			case 'N':
+			case 'I':
+			default:
+				break;
+			case 'R':
+			case 'B':
+				let tmp = width;
+				width = height;
+				height = tmp;
 
-    		let startPoint = shapeTranscoord(this.model);
-    		left = startPoint.x;
-    		top = startPoint.y;
-    		break;
-    }
+				let startPoint = shapeTranscoord(this.model);
+				left = startPoint.x;
+				top = startPoint.y;
+				break;
+		}
 
 
 		if (strokeStyle === 'white' || strokeStyle === '#fff'
@@ -67,10 +60,10 @@ function rect(properties) {
 
 		left += group ? group.left || 0 : 0;
 		top += group ? group.top || 0 : 0;
-		
+
 		var commands = [
 			['^FO'+left, top],
-			['^GB'+width, height, lineWidth, strokeStyle],
+			['^GB'+width, height, lineWidth, strokeStyle, Math.round(round*8/100)],
 			['^FS']
 		];
 

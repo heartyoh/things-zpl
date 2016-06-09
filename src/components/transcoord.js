@@ -65,8 +65,16 @@ export function textTranscoord(model) {
   var y = point.y;
 
   var transValue = calcTextPosition(model);
-  x += transValue.tx;
-  y += transValue.ty;
+
+  var rotate = rotateCase(model.rotation);
+  if (rotate === 'N' || rotate === 'I') {
+    x += transValue.tx;
+    y += transValue.ty;
+  } else {
+    x += transValue.ty;
+    y += transValue.tx;
+  }
+  
 
   return {x, y};
 }
@@ -80,47 +88,104 @@ function calcTextPosition(model) {
     height,
     charHeight,
     textWidth,
+    rotation,
     lineMargin = 0,
     lineCount = 1,
-    paddingLeft = 0,
-    paddingRight = 0,
-    paddingTop = 0,
-    paddingBottom = 0
+    // paddingLeft = 0,
+    // paddingRight = 0,
+    // paddingTop = 0,
+    // paddingBottom = 0
   } = model;
 
   textWidth = textWidth || width;
 
+  width = Math.max(width, textWidth);
+  var textsHeight = (charHeight + lineMargin) * lineCount;
+  height = Math.max(height, textsHeight);
+
   var tx = 0;
+  // switch(textAlign) {
+  //   case 'left':
+  //   case 'justify':
+  //     tx = paddingLeft;
+  //     break;
+  //   case 'right':
+  //     tx = (width - textWidth - paddingRight);
+  //     break;
+  //   case 'center':
+  //   default:
+  //     let myWidth = width - paddingLeft - paddingRight;
+  //     if (rotateCase(rotation) === 'N') {
+  //       tx = (myWidth - textWidth) / 2 + paddingLeft;
+  //     } else if(rotateCase(rotation) === 'R') {
+  //       tx = (myHeight - textsHeight) / 2 + paddingBottom;
+  //     } else if(rotateCase(rotation) === 'I') {
+  //       tx = (myWidth - textWidth) / 2 + paddingRight;
+  //     } else if(rotateCase(rotation) === 'B') {
+  //       tx = (myHeight - textsHeight) / 2 + paddingTop;
+  //     }
+
+  //     break;
+  // }
+
+
   switch(textAlign) {
     case 'left':
     case 'justify':
-      tx = paddingLeft;
+      tx = 0;
       break;
     case 'right':
-      tx = (width - textWidth - paddingRight);
+      tx = left + width - textWidth;
       break;
     case 'center':
     default:
-      width = width - paddingLeft - paddingRight;
-      tx = (width - textWidth) / 2 + paddingLeft;
+      tx = (width - textWidth) / 2;
+
       break;
   }
 
-  var textsHeight = (charHeight + lineMargin) * lineCount;
   var ty = 0;
+  // switch(textBaseline) {
+  //   case 'top':
+  //   case 'hanging':
+  //     // height = height < textsHeight ? textsHeight : height;
+  //     ty = paddingTop
+  //     break;
+  //   case 'bottom':
+  //   case 'alphabetic':
+  //     ty = (height - textsHeight) - paddingBottom
+  //     break;
+  //   case 'middle':
+  //   default:
+  //     // let myWidth = width - paddingLeft - paddingRight;
+  //     // let myHeight = height - paddingTop - paddingBottom;
+  //     // if (rotateCase(rotation) === 'N') {
+  //     //   ty = (myHeight - textsHeight) / 2 + paddingTop;
+  //     // } else if (rotateCase(rotation) === 'R') {
+  //     //   ty = (myWidth - textWidth) / 2 + paddingLeft;
+  //     // } else if (rotateCase(rotation) === 'I') {
+  //     //   ty = (height - charHeight) / 2 + paddingBottom;
+  //     // } else if (rotateCase(rotation) === 'B') {
+  //     //   ty = (myWidth - textWidth) / 2 + paddingRight;
+  //     // }
+
+
+  //     break;
+  // }
+
   switch(textBaseline) {
     case 'top':
     case 'hanging':
-      // height = height < textsHeight ? textsHeight : height;
-      ty = paddingTop
+      ty = 0;
       break;
     case 'bottom':
     case 'alphabetic':
-      ty = (height - textsHeight) - paddingBottom
+      ty = top + height - textsHeight;
       break;
     case 'middle':
     default:
-      ty = (height - textsHeight) / 2 + paddingTop;
+      ty = (height - textsHeight) / 2
+
       break;
   }
 
@@ -141,3 +206,18 @@ export function calcDotSize(model) {
     }
   }
 }
+
+export function rotateCase(rotate) {
+  if (Math.PI * 0.25 < rotate && rotate <= Math.PI * 0.75) {
+    rotate = 'R'
+  } else if (Math.PI * 0.75 < rotate && rotate <= Math.PI * 1.25) {
+    rotate = 'I'
+  } else if (Math.PI < rotate * 1.25 && rotate <= Math.PI * 1.75) {
+    rotate = 'B'
+  } else { // if (Math.PI * -0.25 < rotate && rotate <= Math.PI * 0.25) {
+    rotate = 'N'
+  }
+
+  return rotate;
+}
+
