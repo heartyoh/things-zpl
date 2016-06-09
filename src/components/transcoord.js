@@ -196,7 +196,7 @@ function calcTextPosition(model) {
 var config = require('../../config').config
 export function calcDotSize(model) {
   for (var property in model) {
-    if (property === 'rotation' || property === 'scale_w' || property === 'scale_w') {
+    if (property === 'rotation' || property === 'scale_w' || property === 'scale_w' || property === 'round') {
       continue;
     }
 

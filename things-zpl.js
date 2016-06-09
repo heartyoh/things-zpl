@@ -1322,7 +1322,7 @@ function rect(properties) {
 		var rotation = _model.rotation;
 		var _model$round = _model.round;
 		var round = _model$round === undefined ? 0 : _model$round;
-		var // 1 ~ 100
+		var // 0 ~ 100
 		text = _model.text;
 
 
@@ -1771,7 +1771,7 @@ function calcTextPosition(model) {
 var config = require('../../config').config;
 function calcDotSize(model) {
   for (var property in model) {
-    if (property === 'rotation' || property === 'scale_w' || property === 'scale_w') {
+    if (property === 'rotation' || property === 'scale_w' || property === 'scale_w' || property === 'round') {
       continue;
     }
 

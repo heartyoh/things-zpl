@@ -15,7 +15,7 @@ function rect(properties) {
 			left,
 			top,
 			rotation,
-			round = 0,	// 1 ~ 100
+			round = 0,	// 0 ~ 100
 			text
 		} = this.model
 
