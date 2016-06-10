@@ -21,8 +21,8 @@ var reverter = require('./lib/reverter')
 // var sample = require('./samples/sample-group');
 // var sample = require('./samples/sample-label');
 // var sample = require('./samples/sample-line');
-// var sample = require('./samples/sample-rect');
-var sample = require('./samples/sample-text');
+var sample = require('./samples/sample-rect');
+// var sample = require('./samples/sample-text');
 
 var components = sample.sample;
 var command = reverter.revert(components)

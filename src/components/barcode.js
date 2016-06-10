@@ -2,24 +2,20 @@ var config = require('../../config').config
 var shapeTranscoord = require('./transcoord').shapeTranscoord
 var rotateCase = require('./transcoord').rotateCase
 
-var scaleBuf = {};
-
 function barcode(properties) {
 	this.model = properties;
 
 	this.toZpl = function() {
 		var {
+			left = '',
+			top = '',
 			width = '',
 			height = '',
+			symbol = '',
 			rotation = '',
 			showText = 'Y',
 			textAbove = '',
-			text = '',
-			symbol,
-			left = '',
-			top = '',
-			scale_w = '',
-			scale_h = ''
+			text = ''
 		} = this.model;
 
 
@@ -38,18 +34,8 @@ function barcode(properties) {
 				break;
 		}
 
-
-		var scale = '';
 		var lines = [];
-		if(scaleBuf.w != scale_w || scaleBuf.h != scale_h) {
-			scaleBuf.w = scale_w;
-			scaleBuf.h = scale_h;
-			scale = ['^BY'+scale_w, scale_h]
-
-			lines.push(scale)
-		} else {
-			scale_w = '';
-		}
+		lines.push(['^BY'+1, 3])
 
 		if (showText) {
 			height = height / 1.2;	// barcode 높이는 문자 뺀 다음의 높이임.

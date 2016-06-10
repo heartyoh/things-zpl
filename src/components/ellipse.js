@@ -13,6 +13,7 @@ function ellipse(properties) {
 			cy = '',
 			lineWidth = '',
 			fillStyle,
+			strokeStyle,
 			left,
 			top,
 			rotation,
@@ -38,12 +39,23 @@ function ellipse(properties) {
 				break;
 		}
 
-
-		if (fillStyle === 'white' || fillStyle === '#fff'
-			|| (fillStyle === '#ffffff')) {
-			fillStyle = 'W';
+		if (strokeStyle === 'white' || strokeStyle === '#fff'
+			|| (strokeStyle === '#ffffff')) {
+			strokeStyle = 'W';
 		} else {
-			fillStyle = 'B'
+			strokeStyle = 'B'
+		}
+
+		if (fillStyle) {
+			if (fillStyle === 'white' || fillStyle === '#fff'
+				|| (fillStyle === '#ffffff')) {
+				fillStyle = 'W';
+			} else {
+				fillStyle = 'B'
+			}
+
+			lineWidth = Math.max(rx, ry);
+			strokeStyle = fillStyle;
 		}
 
 		left += group ? group.left || 0 : 0
@@ -57,8 +69,8 @@ function ellipse(properties) {
 
 
 		var symbolMap = new Map([
-			['GC', 		['^GC' + rx*2, lineWidth, fillStyle]],
-			['GE', 		['^GE' + rx*2, ry*2, lineWidth, fillStyle]],
+			['GC', 		['^GC' + rx*2, lineWidth, strokeStyle]],
+			['GE', 		['^GE' + rx*2, ry*2, lineWidth, strokeStyle]],
 		]);
 
 		var zpl = [];

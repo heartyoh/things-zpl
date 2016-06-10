@@ -1,5 +1,5 @@
 // text, line, ellipse, rect, barcode
-exports.sample = [/*{
+exports.sample = [{
   type: 'line',
   lineWidth: 5,
   fillStyle: 'B',
@@ -12,15 +12,16 @@ exports.sample = [/*{
   rx: 300,
   ry: 200,
   lineWidth: 20,
-  fillStyle: 'W',
+  fillStyle: 'black',
   cx: 340,
   cy: 340
-},*/{
+},{
   type: 'rect',
   top: 6,
   left:7,
   width: 10,
-  height: 7.5
+  height: 7.5,
+  fillStyle: 'black'
 }, {
   type: 'rect',
   top: 12,

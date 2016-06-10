@@ -1,27 +1,34 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+"use strict";
+
 var config = {
 	fontNo: 6,
 	dpi: 203
 	// dpi: 300
-}
+};
 
 exports.config = config;
+
 },{}],2:[function(require,module,exports){
+'use strict';
+
 // var zpl = require("./src/api");
 var zpl = require("./lib/api");
 
-if (typeof window !== 'undefined')
-  window.zpl = zpl
+if (typeof window !== 'undefined') window.zpl = zpl;
 
 if (typeof exports !== 'undefined') {
-	exports.zpl = zpl;
+  exports.zpl = zpl;
 }
+
 },{"./lib/api":3}],3:[function(require,module,exports){
 'use strict';
 
 exports.convert = require('./converter').convert;
 exports.revert = require('./reverter').revert;
-},{"./converter":19,"./reverter":20}],4:[function(require,module,exports){
+exports.config = require('../config').config;
+
+},{"../config":1,"./converter":19,"./reverter":20}],4:[function(require,module,exports){
 'use strict';
 
 var barcodes = {
@@ -464,6 +471,7 @@ function mpt(p) {
 }
 
 exports.barcodes = barcodes;
+
 },{}],5:[function(require,module,exports){
 'use strict';
 
@@ -513,6 +521,7 @@ var common = {
 		handler: function handler(p) {}
 	}
 };
+
 },{}],6:[function(require,module,exports){
 'use strict';
 
@@ -615,6 +624,7 @@ var fields = {
 };
 
 exports.fields = fields;
+
 },{}],7:[function(require,module,exports){
 'use strict';
 
@@ -733,6 +743,7 @@ var fonts = {
 };
 
 exports.fonts = fonts;
+
 },{"./utils":10}],8:[function(require,module,exports){
 'use strict';
 
@@ -754,6 +765,7 @@ var commands = function () {
 }();
 
 exports.commands = commands;
+
 },{"./barcodes":4,"./common":5,"./fields":6,"./fonts":7,"./shapes":9}],9:[function(require,module,exports){
 'use strict';
 
@@ -844,6 +856,7 @@ var shapes = {
 };
 
 exports.shapes = shapes;
+
 },{}],10:[function(require,module,exports){
 'use strict';
 
@@ -929,6 +942,7 @@ exports.specific = function (obj) {
 
 	return obj;
 };
+
 },{}],11:[function(require,module,exports){
 'use strict';
 
@@ -936,17 +950,21 @@ var config = require('../../config').config;
 var shapeTranscoord = require('./transcoord').shapeTranscoord;
 var rotateCase = require('./transcoord').rotateCase;
 
-var scaleBuf = {};
-
 function barcode(properties) {
 	this.model = properties;
 
 	this.toZpl = function () {
 		var _model = this.model;
+		var _model$left = _model.left;
+		var left = _model$left === undefined ? '' : _model$left;
+		var _model$top = _model.top;
+		var top = _model$top === undefined ? '' : _model$top;
 		var _model$width = _model.width;
 		var width = _model$width === undefined ? '' : _model$width;
 		var _model$height = _model.height;
 		var height = _model$height === undefined ? '' : _model$height;
+		var _model$symbol = _model.symbol;
+		var symbol = _model$symbol === undefined ? '' : _model$symbol;
 		var _model$rotation = _model.rotation;
 		var rotation = _model$rotation === undefined ? '' : _model$rotation;
 		var _model$showText = _model.showText;
@@ -955,16 +973,6 @@ function barcode(properties) {
 		var textAbove = _model$textAbove === undefined ? '' : _model$textAbove;
 		var _model$text = _model.text;
 		var text = _model$text === undefined ? '' : _model$text;
-		var symbol = _model.symbol;
-		var _model$left = _model.left;
-		var left = _model$left === undefined ? '' : _model$left;
-		var _model$top = _model.top;
-		var top = _model$top === undefined ? '' : _model$top;
-		var _model$scale_w = _model.scale_w;
-		var scale_w = _model$scale_w === undefined ? '' : _model$scale_w;
-		var _model$scale_h = _model.scale_h;
-		var scale_h = _model$scale_h === undefined ? '' : _model$scale_h;
-
 
 		var rotate = rotateCase(rotation);
 
@@ -981,17 +989,8 @@ function barcode(properties) {
 				break;
 		}
 
-		var scale = '';
 		var lines = [];
-		if (scaleBuf.w != scale_w || scaleBuf.h != scale_h) {
-			scaleBuf.w = scale_w;
-			scaleBuf.h = scale_h;
-			scale = ['^BY' + scale_w, scale_h];
-
-			lines.push(scale);
-		} else {
-			scale_w = '';
-		}
+		lines.push(['^BY' + 1, 3]);
 
 		if (showText) {
 			height = height / 1.2; // barcode 높이는 문자 뺀 다음의 높이임.
@@ -1017,6 +1016,7 @@ function barcode(properties) {
 }
 
 exports.Barcode = barcode;
+
 },{"../../config":1,"./transcoord":18}],12:[function(require,module,exports){
 'use strict';
 
@@ -1040,11 +1040,11 @@ function ellipse(properties) {
 		var _model$lineWidth = _model.lineWidth;
 		var lineWidth = _model$lineWidth === undefined ? '' : _model$lineWidth;
 		var fillStyle = _model.fillStyle;
+		var strokeStyle = _model.strokeStyle;
 		var left = _model.left;
 		var top = _model.top;
 		var rotation = _model.rotation;
 		var text = _model.text;
-
 
 		var rotate = rotateCase(rotation);
 
@@ -1065,10 +1065,21 @@ function ellipse(properties) {
 				break;
 		}
 
-		if (fillStyle === 'white' || fillStyle === '#fff' || fillStyle === '#ffffff') {
-			fillStyle = 'W';
+		if (strokeStyle === 'white' || strokeStyle === '#fff' || strokeStyle === '#ffffff') {
+			strokeStyle = 'W';
 		} else {
-			fillStyle = 'B';
+			strokeStyle = 'B';
+		}
+
+		if (fillStyle) {
+			if (fillStyle === 'white' || fillStyle === '#fff' || fillStyle === '#ffffff') {
+				fillStyle = 'W';
+			} else {
+				fillStyle = 'B';
+			}
+
+			lineWidth = Math.max(rx, ry);
+			strokeStyle = fillStyle;
 		}
 
 		left += group ? group.left || 0 : 0;
@@ -1077,7 +1088,7 @@ function ellipse(properties) {
 		var command;
 		if (rx === ry) command = 'GC';else command = 'GE';
 
-		var symbolMap = new Map([['GC', ['^GC' + rx * 2, lineWidth, fillStyle]], ['GE', ['^GE' + rx * 2, ry * 2, lineWidth, fillStyle]]]);
+		var symbolMap = new Map([['GC', ['^GC' + rx * 2, lineWidth, strokeStyle]], ['GE', ['^GE' + rx * 2, ry * 2, lineWidth, strokeStyle]]]);
 
 		var zpl = [];
 		var params = symbolMap.get(command);
@@ -1099,6 +1110,7 @@ function ellipse(properties) {
 }
 
 exports.Ellipse = ellipse;
+
 },{"./text":17,"./transcoord":18}],13:[function(require,module,exports){
 "use strict";
 
@@ -1109,6 +1121,7 @@ function group(properties) {
 }
 
 exports.Group = group;
+
 },{}],14:[function(require,module,exports){
 'use strict';
 
@@ -1180,6 +1193,7 @@ function getGuid() {
   }
   return s4() + s4() + s4() + s4() + s4() + s4() + s4() + s4();
 }
+
 },{}],15:[function(require,module,exports){
 'use strict';
 
@@ -1199,7 +1213,6 @@ function line(properties) {
 		var _model$y2 = _model.y2;
 		var y2 = _model$y2 === undefined ? '' : _model$y2;
 		var fillStyle = _model.fillStyle;
-
 
 		if (fillStyle === 'white' || fillStyle === '#fff' || fillStyle === '#ffffff') {
 			fillStyle = 'W';
@@ -1239,7 +1252,6 @@ function gbLine(group) {
 	var _model2$rotation = _model2.rotation;
 	var rotation = _model2$rotation === undefined ? 0 : _model2$rotation;
 
-
 	var left = Math.min(x1, x2);
 	var top = Math.min(y1, y2);
 
@@ -1270,7 +1282,6 @@ function gdLine(group) {
 	var lineWidth = _model3$lineWidth === undefined ? '' : _model3$lineWidth;
 	var strokeStyle = _model3.strokeStyle;
 
-
 	var left = Math.min(x1, x2);
 	var top = Math.min(y1, y2);
 	var width = Math.abs(x2 - x1);
@@ -1296,6 +1307,7 @@ function gdLine(group) {
 }
 
 exports.Line = line;
+
 },{"./rect":16}],16:[function(require,module,exports){
 'use strict';
 
@@ -1324,7 +1336,6 @@ function rect(properties) {
 		var round = _model$round === undefined ? 0 : _model$round;
 		var // 0 ~ 100
 		text = _model.text;
-
 
 		var rotate = rotateCase(rotation);
 
@@ -1384,6 +1395,7 @@ function rect(properties) {
 }
 
 exports.Rect = rect;
+
 },{"./text":17,"./transcoord":18}],17:[function(require,module,exports){
 'use strict';
 
@@ -1421,7 +1433,6 @@ function text(properties) {
     var maxLines = _model$maxLines === undefined ? 100 : _model$maxLines;
     var hangingIndent = _model.hangingIndent;
     var lineMargin = _model.lineMargin;
-
 
     if (!width) {
       this.model.width = charWidth * text.length;
@@ -1497,7 +1508,6 @@ function lineZpl(group, rotate) {
   var underLine = _model2.underLine;
   var strike = _model2.strike;
 
-
   textWidth = textWidth || width;
 
   var x = left;
@@ -1554,6 +1564,7 @@ function rotateLine(rotate, x, textWidth, y, ty, lineIndex) {
 }
 
 exports.Text = text;
+
 },{"../../config":1,"./line":15,"./transcoord":18}],18:[function(require,module,exports){
 'use strict';
 
@@ -1607,7 +1618,6 @@ function transcoordS2P(x, y, model) {
   var _model$rotation = model.rotation;
   var rotation = _model$rotation === undefined ? 0 : _model$rotation;
   var text = model.text;
-
 
   var rotatePoint = calcCenter(left, top, width, height);
   var point = transcoordRR(x, y, rotatePoint, rotation);
@@ -1673,7 +1683,6 @@ function calcTextPosition(model) {
   var lineMargin = _model$lineMargin === undefined ? 0 : _model$lineMargin;
   var _model$lineCount = model.lineCount;
   var lineCount = _model$lineCount === undefined ? 1 : _model$lineCount;
-
 
   textWidth = textWidth || width;
 
@@ -1771,7 +1780,7 @@ function calcTextPosition(model) {
 var config = require('../../config').config;
 function calcDotSize(model) {
   for (var property in model) {
-    if (property === 'rotation' || property === 'scale_w' || property === 'scale_w' || property === 'round') {
+    if (property === 'rotation' || property === 'scale_w' || property === 'scale_h' || property === 'round') {
       continue;
     }
 
@@ -1796,6 +1805,7 @@ function rotateCase(rotate) {
 
   return rotate;
 }
+
 },{"../../config":1}],19:[function(require,module,exports){
 'use strict';
 
@@ -1979,6 +1989,7 @@ var specific = function specific(obj) {
 function error_log(c) {
 	console.log('Command: ' + c + ' parameter error');
 }
+
 },{"./commands/index":8,"./commands/utils":10}],20:[function(require,module,exports){
 'use strict';
 
@@ -2049,4 +2060,5 @@ function makeZpl(components, zpl) {
 
 	return zpl;
 }
+
 },{"./components/barcode":11,"./components/ellipse":12,"./components/group":13,"./components/image":14,"./components/line":15,"./components/rect":16,"./components/text":17,"./components/transcoord":18}]},{},[2]);
