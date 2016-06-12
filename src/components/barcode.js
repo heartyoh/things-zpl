@@ -13,6 +13,7 @@ function barcode(properties) {
 			height = '',
 			symbol = '',
 			rotation = '',
+			scale_w = 1,
 			showText = 'Y',
 			textAbove = '',
 			text = ''
@@ -35,7 +36,7 @@ function barcode(properties) {
 		}
 
 		var lines = [];
-		lines.push(['^BY'+1, 3])
+		lines.push(['^BY'+scale_w, 3])
 
 		if (showText) {
 			height = height / 1.2;	// barcode 높이는 문자 뺀 다음의 높이임.
