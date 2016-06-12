@@ -967,6 +967,8 @@ function barcode(properties) {
 		var symbol = _model$symbol === undefined ? '' : _model$symbol;
 		var _model$rotation = _model.rotation;
 		var rotation = _model$rotation === undefined ? '' : _model$rotation;
+		var _model$scale_w = _model.scale_w;
+		var scale_w = _model$scale_w === undefined ? 1 : _model$scale_w;
 		var _model$showText = _model.showText;
 		var showText = _model$showText === undefined ? 'Y' : _model$showText;
 		var _model$textAbove = _model.textAbove;
@@ -990,7 +992,7 @@ function barcode(properties) {
 		}
 
 		var lines = [];
-		lines.push(['^BY' + 1, 3]);
+		lines.push(['^BY' + scale_w, 3]);
 
 		if (showText) {
 			height = height / 1.2; // barcode 높이는 문자 뺀 다음의 높이임.
