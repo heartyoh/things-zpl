@@ -39,7 +39,7 @@ function barcode(properties) {
 		lines.push(['^BY'+scale_w, 3])
 
 		if (showText) {
-			height = height / 1.2;	// barcode 높이는 문자 뺀 다음의 높이임.
+			height -= (scale_w * 6 + 8);	// barcode 높이는 문자 뺀 다음의 높이임.
 		}
 
 		var dpi = config.dpi;	// FIXME

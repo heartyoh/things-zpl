@@ -84,6 +84,7 @@ function calcTextPosition(model) {
   var {
     textAlign = 'center',
     textBaseline = 'middle',
+    left,
     width,
     height,
     charHeight,
@@ -135,7 +136,7 @@ function calcTextPosition(model) {
       tx = 0;
       break;
     case 'right':
-      tx = left + width - textWidth;
+      tx = width - textWidth;
       break;
     case 'center':
     default:
@@ -180,7 +181,7 @@ function calcTextPosition(model) {
       break;
     case 'bottom':
     case 'alphabetic':
-      ty = top + height - textsHeight;
+      ty = height - textsHeight;
       break;
     case 'middle':
     default:
