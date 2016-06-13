@@ -5,7 +5,7 @@ var rotateCase = require('./transcoord').rotateCase
 function barcode(properties) {
 	this.model = properties;
 
-	this.toZpl = function() {
+	this.toZpl = function(group) {
 		var {
 			left = '',
 			top = '',
@@ -19,6 +19,8 @@ function barcode(properties) {
 			text = ''
 		} = this.model;
 
+		left += group ? group.left || 0 : 0;
+		top += group ? group.top || 0 : 0;
 
 		var rotate = rotateCase(rotation);
 

@@ -953,7 +953,7 @@ var rotateCase = require('./transcoord').rotateCase;
 function barcode(properties) {
 	this.model = properties;
 
-	this.toZpl = function () {
+	this.toZpl = function (group) {
 		var _model = this.model;
 		var _model$left = _model.left;
 		var left = _model$left === undefined ? '' : _model$left;
@@ -975,6 +975,9 @@ function barcode(properties) {
 		var textAbove = _model$textAbove === undefined ? '' : _model$textAbove;
 		var _model$text = _model.text;
 		var text = _model$text === undefined ? '' : _model$text;
+
+		left += group ? group.left || 0 : 0;
+		top += group ? group.top || 0 : 0;
 
 		var rotate = rotateCase(rotation);
 
@@ -1254,6 +1257,12 @@ function gbLine(group) {
 	var _model2$rotation = _model2.rotation;
 	var rotation = _model2$rotation === undefined ? 0 : _model2$rotation;
 
+	if (strokeStyle === 'white' || strokeStyle === '#fff' || strokeStyle === '#ffffff') {
+		strokeStyle = 'W';
+	} else {
+		strokeStyle = 'B';
+	}
+
 	var left = Math.min(x1, x2);
 	var top = Math.min(y1, y2);
 
@@ -1261,9 +1270,6 @@ function gbLine(group) {
 	var ty = Math.abs(y2 - y1);
 	var width = tx === 0 ? lineWidth : tx;
 	var height = ty === 0 ? lineWidth : ty;
-
-	left += group ? group.left || 0 : 0;
-	top += group ? group.top || 0 : 0;
 
 	var properties = { left: left, top: top, width: width, height: height, lineWidth: lineWidth, strokeStyle: strokeStyle };
 	var rect = new Rect(properties);
@@ -1283,6 +1289,12 @@ function gdLine(group) {
 	var _model3$lineWidth = _model3.lineWidth;
 	var lineWidth = _model3$lineWidth === undefined ? '' : _model3$lineWidth;
 	var strokeStyle = _model3.strokeStyle;
+
+	if (strokeStyle === 'white' || strokeStyle === '#fff' || strokeStyle === '#ffffff') {
+		strokeStyle = 'W';
+	} else {
+		strokeStyle = 'B';
+	}
 
 	var left = Math.min(x1, x2);
 	var top = Math.min(y1, y2);
@@ -1648,13 +1660,37 @@ function shapeTranscoord(model) {
 }
 
 function textTranscoord(model) {
-  var point = shapeTranscoord(model);
+  var point = shapeTranscoord(model); // start point
   var x = point.x;
   var y = point.y;
 
-  var transValue = calcTextPosition(model);
-
   var rotate = rotateCase(model.rotation);
+
+  switch (rotate) {
+    case 'N':
+      break;
+    case 'R':
+      break;
+    case 'I':
+      if (model.textAlign === 'left') {
+        model.textAlign = 'right';
+      } else if (model.textAlign === 'right') {
+        model.textAlign = 'left';
+      }
+      break;
+    case 'B':
+      if (model.textAlign === 'left') {
+        model.textAlign = 'right';
+      } else if (model.textAlign === 'right') {
+        model.textAlign = 'left';
+      }
+
+      model.text = model.text.split('').reverse().join('');
+
+      break;
+  }
+
+  var transValue = calcTextPosition(model);
   if (rotate === 'N' || rotate === 'I') {
     x += transValue.tx;
     y += transValue.ty;
@@ -1787,9 +1823,9 @@ function calcDotSize(model) {
       continue;
     }
 
-    var size = model[property];
-    if (typeof size === 'number') {
-      model[property] = Math.round(config.dpi * size / 25.4);
+    var value = model[property];
+    if (typeof value === 'number') {
+      model[property] = Math.round(config.dpi * value / 25.4);
     }
   }
 }
@@ -1797,9 +1833,9 @@ function calcDotSize(model) {
 function rotateCase(rotate) {
   if (Math.PI * 0.25 < rotate && rotate <= Math.PI * 0.75) {
     rotate = 'R';
-  } else if (Math.PI * 0.75 < rotate && rotate <= Math.PI * 1.25) {
+  } else if (Math.PI * 0.75 < rotate && rotate <= Math.PI * 1.25 || Math.PI * -1.25 < rotate && rotate <= Math.PI * -0.75) {
     rotate = 'I';
-  } else if (Math.PI < rotate * 1.25 && rotate <= Math.PI * 1.75) {
+  } else if (Math.PI < rotate * 1.25 && rotate <= Math.PI * 1.75 || Math.PI * -0.75 < rotate && rotate <= Math.PI * -0.25) {
     rotate = 'B';
   } else {
     // if (Math.PI * -0.25 < rotate && rotate <= Math.PI * 0.25) {

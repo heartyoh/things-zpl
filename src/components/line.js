@@ -46,6 +46,13 @@ function gbLine(group) {	// graphic box
 		rotation = 0
 	} = this.model;
 
+	if (strokeStyle === 'white' || strokeStyle === '#fff'
+		|| (strokeStyle === '#ffffff')) {
+		strokeStyle = 'W';
+	} else {
+		strokeStyle = 'B'
+	}
+
 	var left = Math.min(x1, x2);
 	var top = Math.min(y1, y2);
 
@@ -53,9 +60,6 @@ function gbLine(group) {	// graphic box
 	var ty = Math.abs(y2 - y1);
 	var width = tx === 0 ? lineWidth : tx;
 	var height = ty === 0 ? lineWidth : ty;
-
-	left += group ? group.left || 0 : 0;
-	top += group ? group.top || 0 : 0;
 
 	var properties = { left, top, width, height, lineWidth, strokeStyle };
 	var rect = new Rect(properties);
@@ -71,6 +75,13 @@ function gdLine(group) {
 		lineWidth = '',
 		strokeStyle
 	} = this.model;
+
+	if (strokeStyle === 'white' || strokeStyle === '#fff'
+		|| (strokeStyle === '#ffffff')) {
+		strokeStyle = 'W';
+	} else {
+		strokeStyle = 'B'
+	}
 
 	var left = Math.min(x1, x2);
 	var top = Math.min(y1, y2);

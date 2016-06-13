@@ -60,13 +60,38 @@ export function shapeTranscoord(model) {
 }
 
 export function textTranscoord(model) {
-  var point = shapeTranscoord(model)
+  var point = shapeTranscoord(model)  // start point
   var x = point.x;
   var y = point.y;
 
-  var transValue = calcTextPosition(model);
-
   var rotate = rotateCase(model.rotation);
+
+  switch(rotate) {
+    case 'N':
+      break;
+    case 'R':
+      break;
+    case 'I':
+      if (model.textAlign === 'left') {
+        model.textAlign = 'right'
+      } else if (model.textAlign === 'right') {
+        model.textAlign = 'left'
+      }
+      break;
+    case 'B':
+      if (model.textAlign === 'left') {
+        model.textAlign = 'right'
+      } else if (model.textAlign === 'right') {
+        model.textAlign = 'left'
+      }
+
+      model.text = model.text.split('').reverse().join('');
+
+      break;
+  }
+
+
+  var transValue = calcTextPosition(model);
   if (rotate === 'N' || rotate === 'I') {
     x += transValue.tx;
     y += transValue.ty;
@@ -201,9 +226,9 @@ export function calcDotSize(model) {
       continue;
     }
 
-    let size = model[property];
-    if (typeof size === 'number') {
-      model[property] = Math.round(config.dpi * size / 25.4)
+    let value = model[property];
+    if (typeof value === 'number') {
+      model[property] = Math.round(config.dpi * value / 25.4)
     }
   }
 }
@@ -211,9 +236,11 @@ export function calcDotSize(model) {
 export function rotateCase(rotate) {
   if (Math.PI * 0.25 < rotate && rotate <= Math.PI * 0.75) {
     rotate = 'R'
-  } else if (Math.PI * 0.75 < rotate && rotate <= Math.PI * 1.25) {
+  } else if ((Math.PI * 0.75 < rotate && rotate <= Math.PI * 1.25)
+    || (Math.PI * -1.25 < rotate && rotate <= Math.PI * -0.75)) {
     rotate = 'I'
-  } else if (Math.PI < rotate * 1.25 && rotate <= Math.PI * 1.75) {
+  } else if ((Math.PI < rotate * 1.25 && rotate <= Math.PI * 1.75)
+    || (Math.PI * -0.75 < rotate && rotate <= Math.PI * -0.25)) {
     rotate = 'B'
   } else { // if (Math.PI * -0.25 < rotate && rotate <= Math.PI * 0.25) {
     rotate = 'N'
