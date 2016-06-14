@@ -67,7 +67,7 @@ function barcode(properties) {
 			['logmars', 				['^BL'+rotate, height, textAbove]],
 			['msi', 						['^BM'+rotate, , height, showText, textAbove, ]],
 			['plessey', 				['^BP'+rotate, , height, showText, textAbove]],
-			['qrcode', 					['^BQ'+rotate, 2, Math.floor(height / dpi)]],	// TODO
+			['qrcode', 					['^BQ'+rotate, 2, Math.round(height*25.4 / 100)]],
 			['upca', 						['^BU'+rotate, height, showText, textAbove, ]],
 			['datamatrix', 			['^BX'+'']],	// TODO
 			['postal', 					['^BZ'+rotate, height, showText, textAbove]]
@@ -78,7 +78,12 @@ function barcode(properties) {
 
 		lines.push('^FO' + left + ',' + top)
 		lines.push(params.join(','))
-		lines.push('^FD' + text)
+		if (symbol === 'qrcode') {
+			lines.push('^FDQ,' + 'A' + text);
+		} else {
+			lines.push('^FD' + text);
+		}
+		
 		lines.push('^FS')
 
 		var zpl = lines.join('\n') + '\n'
