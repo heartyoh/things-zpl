@@ -40,7 +40,7 @@ function barcode(properties) {
 		var lines = [];
 		lines.push(['^BY'+scale_w, 3])
 
-		if (showText) {
+		if (showText && symbol != 'qrcode') {
 			height -= (scale_w * 6 + 8);	// barcode 높이는 문자 뺀 다음의 높이임.
 		}
 
@@ -67,7 +67,7 @@ function barcode(properties) {
 			['logmars', 				['^BL'+rotate, height, textAbove]],
 			['msi', 						['^BM'+rotate, , height, showText, textAbove, ]],
 			['plessey', 				['^BP'+rotate, , height, showText, textAbove]],
-			['qrcode', 					['^BQ'+rotate, 2, Math.round(height*25.4 / 100)]],
+			['qrcode', 					['^BQ'+rotate, 2, Math.round(height / 19.54)]],
 			['upca', 						['^BU'+rotate, height, showText, textAbove, ]],
 			['datamatrix', 			['^BX'+'']],	// TODO
 			['postal', 					['^BZ'+rotate, height, showText, textAbove]]
