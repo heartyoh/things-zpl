@@ -9,12 +9,14 @@ exports.sample = [{
   y2: 400
 },{
   type: 'ellipse',
-  rx: 300,
-  ry: 200,
+  left: 10,
+  top: 20,
+  rx: 30,
+  ry: 20,
   lineWidth: 20,
   fillStyle: 'black',
-  cx: 340,
-  cy: 340
+  cx: 34,
+  cy: 34
 },{
   type: 'rect',
   top: 6,

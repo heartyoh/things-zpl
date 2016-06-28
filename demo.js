@@ -10,7 +10,7 @@ fs.readFile(__dirname + '/samples/sample.zpl', function (err, data) {
 
   var command = data.toString();
   var converted = converter.convert(command)
-	// console.log(JSON.stringify(converted, null, 2))
+	console.log(JSON.stringify(converted, null, 2))
 });
 
 
