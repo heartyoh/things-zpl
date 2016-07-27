@@ -67,11 +67,9 @@ function rect(properties) {
 			['^FS']
 		];
 
-		var zpl = '';
-		commands.forEach(c => {
-			zpl += (c.join(',') + '\n')
-		});
-		zpl += '\n';
+		var zpl = commands.map(command => {
+			return command.join(',')
+		}).join('\n') + '\n\n';
 
 		// make text command
 		if (text) {
