@@ -99,7 +99,7 @@ export function textTranscoord(model) {
     x += transValue.ty;
     y += transValue.tx;
   }
-  
+
 
   return {x, y};
 }
